@@ -1,6 +1,11 @@
 import type { BuiltinAction } from '../actions/types'
 import { window } from '@/lib/window'
 import { commandRegistry } from '../actions/CommandRegistry'
+import {
+  getCommandSelectionHistory,
+  recordCommandSelection,
+  sortByCommandSelectionHistory,
+} from '@/lib/commandHistory'
 
 export function helpShowCommands(): BuiltinAction {
   return {
@@ -8,8 +13,10 @@ export function helpShowCommands(): BuiltinAction {
     title: 'Show All Commands',
     execute: async () => {
       const allCommands = commandRegistry.getAllCommands()
+      const history = await getCommandSelectionHistory()
+      const sortedCommands = sortByCommandSelectionHistory(allCommands, history)
       const result = await window.showQuickPick(
-        allCommands.map(cmd => ({
+        sortedCommands.map(cmd => ({
           label: cmd.title,
           description: cmd.command,
           value: cmd.command,
@@ -21,6 +28,7 @@ export function helpShowCommands(): BuiltinAction {
       )
 
       if (result?.value) {
+        await recordCommandSelection(result.value)
         await commandRegistry.executeCommand(result.value)
       }
     },

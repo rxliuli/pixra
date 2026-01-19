@@ -1,6 +1,5 @@
 import type { BuiltinAction } from '../actions/types'
 import { appStateStore } from '../store'
-import { removeBg } from '@/lib/removeBg'
 
 export function editRemoveBg(): BuiltinAction {
   return {
@@ -20,7 +19,7 @@ export function editRemoveBg(): BuiltinAction {
             cancellable: false,
           },
           async (progress) => {
-            // 在 Worker 中执行背景移除
+            const { removeBg } = await import('@/lib/removeBg')
             const newImageData = await removeBg(imageData, {
               onProgress: (message, percentage) => {
                 progress.report({ message, percentage })

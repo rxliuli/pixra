@@ -4,7 +4,6 @@ import {
   getCapabilities,
 } from 'rembg-webgpu'
 import { env } from '@huggingface/transformers'
-import { fileSave } from './fileSave'
 
 export interface RemoveBgOptions {
   onProgress?: (message: string, percentage: number) => void
