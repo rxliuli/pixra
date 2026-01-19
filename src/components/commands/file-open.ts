@@ -29,6 +29,8 @@ export function fileOpen(): BuiltinAction {
       appStateStore.historyStore.clear()
       // 设置新图片
       appStateStore.sceneStore.setImageData(bitmap)
+      // 保存原始文件名
+      appStateStore.sceneStore.setOriginalFileName(file.name)
       // 重置视图并计算适配缩放
       appStateStore.sceneStore.resetView()
       const fitScale = appStateStore.sceneStore.calculateFitScale(

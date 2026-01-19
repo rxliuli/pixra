@@ -124,6 +124,7 @@ class HistoryStore {
 
 class SceneStore {
   imageData: ImageBitmap | null = null
+  originalFileName: string = 'image' // 原始文件名（不含扩展名）
   canvasWidth = 0
   canvasHeight = 0
   // 视图状态
@@ -142,6 +143,11 @@ class SceneStore {
         appStateStore.historyStore.pushState(imageData)
       }
     }
+  }
+
+  setOriginalFileName(fileName: string) {
+    // 移除扩展名
+    this.originalFileName = fileName.replace(/\.[^/.]+$/, '')
   }
 
   setCanvasSize(width: number, height: number) {
@@ -269,12 +275,29 @@ class QuickPickStore {
   }
 }
 
+class ExportDialogStore {
+  isOpen = false
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+
+  open() {
+    this.isOpen = true
+  }
+
+  close() {
+    this.isOpen = false
+  }
+}
+
 class AppStateStore {
   readonly toolbarStore = new AppToolbarStore()
   readonly sceneStore = new SceneStore()
   readonly editorStore = new EditorStore()
   readonly historyStore = new HistoryStore()
   readonly quickPickStore = new QuickPickStore()
+  readonly exportDialogStore = new ExportDialogStore()
 
   constructor() {
     makeAutoObservable(this)
