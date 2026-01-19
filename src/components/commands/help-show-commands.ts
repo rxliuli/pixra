@@ -1,11 +1,28 @@
 import type { BuiltinAction } from '../actions/types'
+import { window } from '@/lib/window'
+import { commandRegistry } from '../actions/CommandRegistry'
 
 export function helpShowCommands(): BuiltinAction {
   return {
     command: 'help.showCommands',
     title: 'Show All Commands',
-    execute: async (command: string) => {
-      console.log('Show Commands')
+    execute: async () => {
+      const allCommands = commandRegistry.getAllCommands()
+      const result = await window.showQuickPick(
+        allCommands.map(cmd => ({
+          label: cmd.title,
+          description: cmd.command,
+          value: cmd.command,
+        })),
+        {
+          title: 'Commands',
+          placeholder: 'Type to search commands...',
+        }
+      )
+
+      if (result?.value) {
+        await commandRegistry.executeCommand(result.value)
+      }
     },
     keybinding: {
       key: 'ctrl+shift+p',

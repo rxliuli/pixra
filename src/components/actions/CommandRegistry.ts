@@ -56,7 +56,7 @@ export class CommandRegistry {
     }
 
     try {
-      await command.execute(commandId)
+      await command.execute()
     } catch (error) {
       console.error(`Error executing command ${commandId}:`, error)
     }

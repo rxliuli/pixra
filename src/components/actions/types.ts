@@ -9,7 +9,7 @@ export interface Command {
   command: string
   title: string
   enablement?: string // 条件表达式
-  execute: (command: string) => void | Promise<void>
+  execute: () => void | Promise<void>
 }
 
 // 快捷键定义
@@ -38,7 +38,7 @@ export interface MenuGroup {
 export type BuiltinActionSingle = {
   command: string
   title: string
-  execute: (command: string) => void | Promise<void>
+  execute: () => void | Promise<void>
   keybinding?: Omit<Keybinding, 'commandId'>
   menu: {
     group: string // 菜单组 ID，如 'file', 'edit'

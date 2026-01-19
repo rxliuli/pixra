@@ -2,6 +2,7 @@ import { Toolbar } from './components/gui/Toolbar'
 import { Renderer } from './components/gui/Renderer'
 import { ToolPanel } from './components/gui/ToolPanel'
 import { SecondaryToolbar } from './components/gui/SecondaryToolbar'
+import { QuickPick } from './components/gui/QuickPick'
 import { useEffect } from 'react'
 import { registerBuiltinActions } from './components/actions'
 import { observer } from 'mobx-react-lite'
@@ -30,6 +31,7 @@ const App = observer(() => {
         <ToolPanel />
         <Renderer className="flex-1" />
       </div>
+      <QuickPick />
     </div>
   )
 })
