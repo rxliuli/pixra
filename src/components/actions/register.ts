@@ -10,6 +10,7 @@ import {
   editCut,
   editCopy,
   editPaste,
+  editRemoveBg,
   viewZoomIn,
   viewZoomOut,
   viewResetZoom,
@@ -49,6 +50,7 @@ export function registerBuiltinActions() {
     editCut(),
     editCopy(),
     editPaste(),
+    editRemoveBg(),
 
     // View 菜单
     viewZoomIn(),

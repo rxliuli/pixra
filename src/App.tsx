@@ -4,6 +4,7 @@ import { ToolPanel } from './components/gui/ToolPanel'
 import { SecondaryToolbar } from './components/gui/SecondaryToolbar'
 import { QuickPick } from './components/gui/QuickPick'
 import { ExportDialog } from './components/gui/ExportDialog'
+import { ProgressDialog } from './components/gui/ProgressDialog'
 import { exportImageWithOptions } from './components/commands/file-export'
 import { useEffect } from 'react'
 import { registerBuiltinActions } from './components/actions'
@@ -45,6 +46,7 @@ const App = observer(() => {
         <Renderer className="flex-1" />
       </div>
       <QuickPick />
+      <ProgressDialog />
       <ExportDialog
         open={appStateStore.exportDialogStore.isOpen}
         onOpenChange={(open) => {
