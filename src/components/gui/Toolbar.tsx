@@ -24,8 +24,8 @@ function renderMenuItem(
 
   if (item.type === 'submenu' && item.submenu) {
     return (
-      <MenubarSub key={item.label}>
-        <MenubarSubTrigger>{item.label}</MenubarSubTrigger>
+      <MenubarSub key={item.title}>
+        <MenubarSubTrigger>{item.title}</MenubarSubTrigger>
         <MenubarSubContent>
           {item.submenu.map((subItem) => renderMenuItem(subItem, onExecute))}
         </MenubarSubContent>
@@ -34,22 +34,22 @@ function renderMenuItem(
   }
 
   // 普通菜单项
-  if (item.commandId) {
-    const command = actionRegistry.getCommandRegistry().getCommand(item.commandId)
+  if (item.command) {
+    const command = actionRegistry.getCommandRegistry().getCommand(item.command)
     const keybindings = actionRegistry
       .getKeybindingRegistry()
-      .getKeybindings(item.commandId)
+      .getKeybindings(item.command)
     const shortcut = keybindings[0]
       ? actionRegistry.getKeybindingRegistry().formatKeybinding(keybindings[0])
       : undefined
 
     return (
       <MenubarItem
-        key={item.commandId}
-        onClick={() => onExecute(item.commandId!)}
+        key={item.command}
+        onClick={() => onExecute(item.command!)}
         disabled={!command}
       >
-        {item.label || command?.label}
+        {item.title || command?.title}
         {shortcut && <MenubarShortcut>{shortcut}</MenubarShortcut>}
       </MenubarItem>
     )
@@ -66,10 +66,10 @@ export const Toolbar = observer(function Toolbar() {
   }
 
   return (
-    <Menubar className={'border-none'}>
+    <Menubar className={'rounded-none'}>
       {menuGroups.map((group: MenuGroup) => (
         <MenubarMenu key={group.id}>
-          <MenubarTrigger>{group.label}</MenubarTrigger>
+          <MenubarTrigger>{group.title}</MenubarTrigger>
           <MenubarContent>
             {group.items.map((item: MenuItem) => renderMenuItem(item, handleExecute))}
           </MenubarContent>

@@ -1,7 +1,7 @@
 import { commandRegistry, CommandRegistry } from './CommandRegistry'
 import { menuRegistry, MenuRegistry } from './MenuRegistry'
 import { keybindingRegistry, KeybindingRegistry } from './KeybindingRegistry'
-import type { Action } from './types'
+import type { BuiltinAction } from './types'
 
 /**
  * 动作注册中心（便捷集成）
@@ -15,7 +15,7 @@ export class ActionRegistry {
   constructor(
     cmdRegistry?: CommandRegistry,
     mnuRegistry?: MenuRegistry,
-    kbRegistry?: KeybindingRegistry
+    kbRegistry?: KeybindingRegistry,
   ) {
     this.commandRegistry = cmdRegistry || commandRegistry
     this.menuRegistry = mnuRegistry || menuRegistry
@@ -30,40 +30,52 @@ export class ActionRegistry {
   /**
    * 注册一个完整的 Action（命令 + 菜单 + 快捷键）
    */
-  registerAction(action: Action): void {
-    // 注册命令
-    this.commandRegistry.registerCommand({
-      id: action.id,
-      label: action.label,
-      execute: action.execute,
-    })
-
+  registerAction(action: BuiltinAction): void {
     // 注册菜单项
-    if (action.menu) {
+    // 如果包含子菜单，则忽略 execute 和 keybinding
+    if ('submenu' in action) {
+      this.registerActions(action.submenu)
+      this.menuRegistry.addMenuItem(action.menu.group, {
+        type: 'submenu',
+        title: action.title,
+        submenu: [
+          { type: 'item', command: 'file.export.png', title: 'Export as PNG' },
+          { type: 'item', command: 'file.export.jpg', title: 'Export as JPG' },
+        ],
+      })
+    } else {
       this.menuRegistry.addMenuItem(
         action.menu.group,
         {
           type: 'item',
-          commandId: action.id,
-          label: action.label,
+          command: action.command,
+          title: action.title,
         },
-        action.menu.order
+        action.menu.order,
       )
-    }
-
-    // 注册快捷键
-    if (action.keybinding) {
-      this.keybindingRegistry.registerKeybinding({
-        commandId: action.id,
-        ...action.keybinding,
+      // 注册命令
+      if (!action.execute) {
+        throw new Error(`Action ${action.command} is missing execute function`)
+      }
+      this.commandRegistry.registerCommand({
+        command: action.command,
+        title: action.title,
+        execute: () => action.execute!(action.command),
       })
+      // 注册快捷键
+      if (action.keybinding) {
+        this.keybindingRegistry.registerKeybinding({
+          commandId: action.command,
+          ...action.keybinding,
+        })
+      }
     }
   }
 
   /**
    * 批量注册 Actions
    */
-  registerActions(actions: Action[]): void {
+  registerActions(actions: BuiltinAction[]): void {
     actions.forEach((action) => this.registerAction(action))
   }
 
@@ -74,7 +86,7 @@ export class ActionRegistry {
     // 从所有 registry 中移除
     this.commandRegistry.unregisterCommand(actionId)
     this.keybindingRegistry.unregisterKeybinding(actionId)
-    
+
     // 从所有菜单组中移除
     const allGroups = this.menuRegistry.getAllMenuGroups()
     allGroups.forEach((group: any) => {

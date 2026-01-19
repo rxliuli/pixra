@@ -16,10 +16,12 @@ export class CommandRegistry {
    * 注册一个命令
    */
   registerCommand(command: Command): void {
-    if (this.commands.has(command.id)) {
-      console.warn(`Command ${command.id} already registered, overwriting...`)
+    if (this.commands.has(command.command)) {
+      console.warn(
+        `Command ${command.command} already registered, overwriting...`,
+      )
     }
-    this.commands.set(command.id, command)
+    this.commands.set(command.command, command)
   }
 
   /**
@@ -54,7 +56,7 @@ export class CommandRegistry {
     }
 
     try {
-      await command.execute()
+      await command.execute(commandId)
     } catch (error) {
       console.error(`Error executing command ${commandId}:`, error)
     }

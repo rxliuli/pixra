@@ -119,11 +119,15 @@ export class KeybindingRegistry {
     const hasShift = modifiers.includes('shift') || modifiers.includes('⇧')
     const hasMeta = modifiers.includes('meta') || modifiers.includes('cmd')
 
+    // 在 Mac 上，cmd 和 ctrl 都映射到 metaKey
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    const expectsCtrlOrMeta = hasCtrl || hasMeta
+    const hasCtrlOrMeta = isMac ? event.metaKey : event.ctrlKey
+
     return (
-      (hasCtrl ? event.ctrlKey || event.metaKey : !event.ctrlKey && !event.metaKey) &&
+      (expectsCtrlOrMeta ? hasCtrlOrMeta : !event.ctrlKey && !event.metaKey) &&
       (hasAlt ? event.altKey : !event.altKey) &&
-      (hasShift ? event.shiftKey : !event.shiftKey) &&
-      (hasMeta ? event.metaKey : true) // Meta is optional on Mac
+      (hasShift ? event.shiftKey : !event.shiftKey)
     )
   }
 

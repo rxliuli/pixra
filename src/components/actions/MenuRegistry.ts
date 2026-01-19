@@ -84,7 +84,7 @@ export class MenuRegistry {
     if (!group) return
 
     const index = group.items.findIndex(
-      (item) => item.commandId === commandId
+      (item) => item.command === commandId
     )
     if (index !== -1) {
       group.items.splice(index, 1)

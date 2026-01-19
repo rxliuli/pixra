@@ -3,14 +3,13 @@ export interface CommandRegistry {
   title: string
 }
 
-export interface MenuRegistry {
-
-}
+export interface MenuRegistry {}
 // 命令定义
 export interface Command {
-  id: string
-  label: string
-  execute: () => void | Promise<void>
+  command: string
+  title: string
+  enablement?: string // 条件表达式
+  execute: (command: string) => void | Promise<void>
 }
 
 // 快捷键定义
@@ -18,32 +17,41 @@ export interface Keybinding {
   commandId: string
   key: string // Windows/Linux
   mac?: string // macOS
-  when?: string // 条件表达式
 }
 
 // 菜单项定义
 export interface MenuItem {
   type?: 'item' | 'separator' | 'submenu'
-  commandId?: string
-  label?: string
+  command?: string
+  title?: string
   submenu?: MenuItem[]
 }
 
 // 菜单组定义
 export interface MenuGroup {
   id: string
-  label: string
+  title: string
   items: MenuItem[]
 }
 
 // 完整 Action 定义（便捷集成用）
-export interface Action {
-  id: string
-  label: string
-  execute: () => void | Promise<void>
+export type BuiltinActionSingle = {
+  command: string
+  title: string
+  execute: (command: string) => void | Promise<void>
   keybinding?: Omit<Keybinding, 'commandId'>
-  menu?: {
+  menu: {
     group: string // 菜单组 ID，如 'file', 'edit'
     order?: number // 在菜单组中的顺序
   }
 }
+type BuiltinActionGroup = {
+  command: string
+  title: string
+  submenu: BuiltinAction[]
+  menu: {
+    group: string // 菜单组 ID，如 'file', 'edit'
+    order?: number // 在菜单组中的顺序
+  }
+}
+export type BuiltinAction = BuiltinActionSingle | BuiltinActionGroup
