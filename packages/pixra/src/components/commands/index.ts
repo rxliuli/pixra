@@ -1,6 +1,7 @@
 // File commands
 export { fileNew } from './file-new'
 export { fileOpen } from './file-open'
+export { fileClose } from './file-close'
 export { fileSave } from './file-save'
 export { fileExport } from './file-export'
 

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx'
+import { DocumentStore } from './DocumentStore'
 
 export type ToolType = 'move' | 'marquee' | 'crop' | 'brush'
 export type CropAspectRatio = 'free' | '1:1' | '16:9' | '4:3' | '3:2'
@@ -49,105 +50,42 @@ class EditorStore {
   }
 }
 
-// 历史记录条目
-interface HistoryEntry {
-  imageData: ImageBitmap
-  timestamp: number
-}
-
-class HistoryStore {
-  private history: HistoryEntry[] = []
-  private currentIndex = -1
-  private maxHistorySize = 50
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-
-  // 添加新的历史记录
-  pushState(imageData: ImageBitmap) {
-    // 移除当前位置之后的所有历史
-    this.history = this.history.slice(0, this.currentIndex + 1)
-
-    // 添加新状态
-    this.history.push({
-      imageData,
-      timestamp: Date.now(),
-    })
-
-    // 限制历史记录大小
-    if (this.history.length > this.maxHistorySize) {
-      this.history.shift()
-    } else {
-      this.currentIndex++
-    }
-  }
-
-  // 撤销
-  undo(): ImageBitmap | null {
-    if (!this.canUndo) return null
-    this.currentIndex--
-    return this.history[this.currentIndex].imageData
-  }
-
-  // 重做
-  redo(): ImageBitmap | null {
-    if (!this.canRedo) return null
-    this.currentIndex++
-    return this.history[this.currentIndex].imageData
-  }
-
-  // 清空历史
-  clear() {
-    this.history = []
-    this.currentIndex = -1
-  }
-
-  // 是否可以撤销
-  get canUndo(): boolean {
-    return this.currentIndex > 0
-  }
-
-  // 是否可以重做
-  get canRedo(): boolean {
-    return this.currentIndex < this.history.length - 1
-  }
-
-  // 获取当前状态
-  get currentState(): ImageBitmap | null {
-    if (this.currentIndex >= 0 && this.currentIndex < this.history.length) {
-      return this.history[this.currentIndex].imageData
-    }
-    return null
-  }
-}
-
 class SceneStore {
-  imageData: ImageBitmap | null = null
-  originalFileName: string = 'image' // 原始文件名（不含扩展名）
+  // 画布尺寸保持为全局属性（UI 层面）
   canvasWidth = 0
   canvasHeight = 0
-  // 视图状态
-  pan = { x: 0, y: 0 }
-  scale = 1
+  #documentStore: DocumentStore
 
-  constructor() {
+  constructor(documentStore: DocumentStore) {
+    this.#documentStore = documentStore
     makeAutoObservable(this)
+  }
+
+  // 代理到当前活动文档
+  get imageData(): ImageBitmap | null {
+    return this.#documentStore.activeDocument?.imageData ?? null
+  }
+
+  get originalFileName(): string {
+    return this.#documentStore.activeDocument?.name ?? 'image'
+  }
+
+  get pan(): { x: number; y: number } {
+    return this.#documentStore.activeDocument?.viewState.pan ?? { x: 0, y: 0 }
+  }
+
+  get scale(): number {
+    return this.#documentStore.activeDocument?.viewState.scale ?? 1
   }
 
   setImageData(imageData: ImageBitmap | null, addToHistory = true) {
-    this.imageData = imageData
-    if (imageData) {
-      // 添加到历史记录
-      if (addToHistory) {
-        appStateStore.historyStore.pushState(imageData)
-      }
-    }
+    this.#documentStore.setImageData(imageData, addToHistory)
   }
 
   setOriginalFileName(fileName: string) {
-    // 移除扩展名
-    this.originalFileName = fileName.replace(/\.[^/.]+$/, '')
+    // 移除扩展名并设置文档名称
+    const name = fileName.replace(/\.[^/.]+$/, '')
+    this.#documentStore.setDocumentName(name)
   }
 
   setCanvasSize(width: number, height: number) {
@@ -156,11 +94,11 @@ class SceneStore {
   }
 
   setPan(x: number, y: number) {
-    this.pan = { x, y }
+    this.#documentStore.setPan(x, y)
   }
 
   setScale(scale: number) {
-    this.scale = scale
+    this.#documentStore.setScale(scale)
   }
 
   // 计算适配屏幕的缩放比例
@@ -176,8 +114,7 @@ class SceneStore {
 
   // 重置视图
   resetView() {
-    this.pan = { x: 0, y: 0 }
-    this.scale = 1
+    this.#documentStore.resetView()
   }
 }
 
@@ -369,31 +306,36 @@ class ProgressStore {
 
 class AppStateStore {
   readonly toolbarStore = new AppToolbarStore()
-  readonly sceneStore = new SceneStore()
+  readonly documentStore = new DocumentStore()
+  readonly sceneStore: SceneStore
   readonly editorStore = new EditorStore()
-  readonly historyStore = new HistoryStore()
   readonly quickPickStore = new QuickPickStore()
   readonly exportDialogStore = new ExportDialogStore()
   readonly progressStore = new ProgressStore()
 
   constructor() {
+    this.sceneStore = new SceneStore(this.documentStore)
     makeAutoObservable(this)
+  }
+
+  // 是否可以撤销
+  get canUndo(): boolean {
+    return this.documentStore.canUndo
+  }
+
+  // 是否可以重做
+  get canRedo(): boolean {
+    return this.documentStore.canRedo
   }
 
   // 撤销
   undo() {
-    const imageData = this.historyStore.undo()
-    if (imageData) {
-      this.sceneStore.setImageData(imageData, false)
-    }
+    this.documentStore.undo()
   }
 
   // 重做
   redo() {
-    const imageData = this.historyStore.redo()
-    if (imageData) {
-      this.sceneStore.setImageData(imageData, false)
-    }
+    this.documentStore.redo()
   }
 }
 

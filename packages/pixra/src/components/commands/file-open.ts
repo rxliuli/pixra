@@ -26,13 +26,14 @@ export function fileOpen(): BuiltinAction {
         img.onerror = reject
       })
       const bitmap = await createImageBitmap(img)
-      appStateStore.historyStore.clear()
-      // 设置新图片
-      appStateStore.sceneStore.setImageData(bitmap)
-      // 保存原始文件名
-      appStateStore.sceneStore.setOriginalFileName(file.name)
-      // 重置视图并计算适配缩放
-      appStateStore.sceneStore.resetView()
+
+      // 获取文件名（不含扩展名）
+      const fileName = file.name.replace(/\.[^/.]+$/, '')
+
+      // 创建新文档
+      appStateStore.documentStore.createDocument(bitmap, fileName)
+
+      // 计算适配缩放
       const fitScale = appStateStore.sceneStore.calculateFitScale(
         bitmap.width,
         bitmap.height,

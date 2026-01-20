@@ -3,6 +3,7 @@ import { menuRegistry } from './MenuRegistry'
 import {
   fileNew,
   fileOpen,
+  fileClose,
   fileSave,
   fileExport,
   editUndo,
@@ -44,6 +45,7 @@ export function registerBuiltinActions() {
     // File 菜单
     fileNew(),
     fileOpen(),
+    fileClose(),
     fileSave(),
     fileExport(),
 
