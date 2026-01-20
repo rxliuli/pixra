@@ -1,7 +1,7 @@
 import type { PluginManifest } from '@pixra/plugin-sdk'
 import { PluginLoader, type InstalledPlugin } from './PluginLoader'
 import { PluginStorage } from './PluginStorage'
-import { commandRegistry } from '../../components/actions'
+import { commandRegistry, menuRegistry } from '../../components/actions'
 import esbuildWasmUrl from 'esbuild-wasm/esbuild.wasm?url'
 import sdkRuntimeCode from '@pixra/plugin-sdk/runtime?bundle'
 import { type Plugin } from 'esbuild-wasm'
@@ -221,6 +221,12 @@ export class PluginManager {
     const commands = manifest.contributes?.commands || []
     const commandIds: string[] = []
 
+    // Build a map of command id -> title for menu registration
+    const commandTitleMap = new Map<string, string>()
+    for (const cmd of commands) {
+      commandTitleMap.set(cmd.command, cmd.title)
+    }
+
     for (const cmd of commands) {
       commandRegistry.registerCommand({
         command: cmd.command,
@@ -236,6 +242,23 @@ export class PluginManager {
         },
       })
       commandIds.push(cmd.command)
+    }
+
+    // Register menu contributions
+    const menus = manifest.contributes?.menus
+    if (menus) {
+      for (const [groupId, menuItems] of Object.entries(menus)) {
+        for (const menuItem of menuItems) {
+          const title = commandTitleMap.get(menuItem.command)
+          if (title) {
+            menuRegistry.addMenuItem(groupId, {
+              type: 'item',
+              command: menuItem.command,
+              title,
+            })
+          }
+        }
+      }
     }
 
     // Track registered commands for this plugin

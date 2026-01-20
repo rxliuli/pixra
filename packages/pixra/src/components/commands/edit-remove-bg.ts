@@ -28,7 +28,7 @@ export function editRemoveBg(): BuiltinAction {
 
             // 更新场景中的图片
             appStateStore.sceneStore.setImageData(newImageData)
-          }
+          },
         )
       } catch (error) {
         console.error('Failed to remove background:', error)
@@ -40,7 +40,7 @@ export function editRemoveBg(): BuiltinAction {
       mac: 'cmd+shift+b',
     },
     menu: {
-      group: 'edit',
+      group: 'tools',
       order: 100,
     },
   }

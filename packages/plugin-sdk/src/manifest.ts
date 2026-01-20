@@ -15,6 +15,7 @@ export interface PluginManifest {
   /** Plugin contributions */
   contributes?: {
     commands?: CommandContribution[]
+    menus?: MenuContributions
   }
 }
 
@@ -23,4 +24,14 @@ export interface CommandContribution {
   command: string
   /** Display title */
   title: string
+}
+
+/**
+ * Menu contributions - key is menu group id (e.g., 'file', 'edit', 'tools')
+ */
+export type MenuContributions = Record<'tools', MenuContribution[]>
+
+export interface MenuContribution {
+  /** Command identifier to execute when menu item is clicked */
+  command: string
 }

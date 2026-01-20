@@ -10,6 +10,13 @@
         "command": "chromeIcons.export",
         "title": "Export Chrome Icons"
       }
-    ]
+    ],
+    "menus": {
+      "tools": [
+        {
+          "command": "chromeIcons.export"
+        }
+      ]
+    }
   }
 }
