@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { appStateStore } from '../store'
 import { commandRegistry } from '../actions'
+import { useEffectOnce } from '@/lib/hooks/useEffectOnce'
 
 interface Point {
   x: number
@@ -74,6 +75,10 @@ export const Renderer = observer((props: { className?: string }) => {
       const imgX = (canvas.width - imgWidth) / 2 + pan.x
       const imgY = (canvas.height - imgHeight) / 2 + pan.y
 
+      // 设置高质量图像平滑，避免缩小时出现锯齿
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+
       ctx.drawImage(imageData, imgX, imgY, imgWidth, imgHeight)
 
       // 绘制当前正在进行的笔触（临时预览）
@@ -124,6 +129,11 @@ export const Renderer = observer((props: { className?: string }) => {
         const imgHeight = imageData.height * scale
         const imgX = (canvas.width - imgWidth) / 2 + pan.x
         const imgY = (canvas.height - imgHeight) / 2 + pan.y
+
+        // 设置高质量图像平滑
+        ctx.imageSmoothingEnabled = true
+        ctx.imageSmoothingQuality = 'high'
+
         ctx.drawImage(imageData, imgX, imgY, imgWidth, imgHeight)
       }
 
@@ -137,6 +147,21 @@ export const Renderer = observer((props: { className?: string }) => {
       drawCropHandles(ctx, cropRect)
     }
   }
+
+  // 阻止浏览器/系统的缩放手势
+  useEffectOnce(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const handleNativeWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault()
+      }
+    }
+
+    canvas.addEventListener('wheel', handleNativeWheel, { passive: false })
+    return () => canvas.removeEventListener('wheel', handleNativeWheel)
+  })
 
   // 初始化画布
   useEffect(() => {
@@ -159,7 +184,16 @@ export const Renderer = observer((props: { className?: string }) => {
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)
     return () => window.removeEventListener('resize', resizeCanvas)
-  }, [imageData, currentSelection, currentStroke, pan, scale, cropRect, isCropMode, currentTool])
+  }, [
+    imageData,
+    currentSelection,
+    currentStroke,
+    pan,
+    scale,
+    cropRect,
+    isCropMode,
+    currentTool,
+  ])
 
   // 进入裁剪模式时，初始化裁剪框（只在首次进入时）
   useEffect(() => {
@@ -237,10 +271,13 @@ export const Renderer = observer((props: { className?: string }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // 防止在输入框中触发
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
         return
       }
-      
+
       // 按下空格键
       if (e.code === 'Space' && !isSpacePressed) {
         e.preventDefault()
@@ -259,7 +296,7 @@ export const Renderer = observer((props: { className?: string }) => {
 
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('keyup', handleKeyUp)
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
@@ -677,8 +714,42 @@ export const Renderer = observer((props: { className?: string }) => {
   // 鼠标滚轮缩放
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
     e.preventDefault()
-    const delta = e.deltaY > 0 ? 0.9 : 1.1
+    e.stopPropagation()
+    
+    if (!imageData) return
+    
+    const canvas = canvasRef.current
+    if (!canvas) return
+    
+    const delta = e.deltaY > 0 ? 0.95 : 1.05
     const newScale = Math.max(0.1, Math.min(5, scale * delta))
+    
+    // 获取鼠标在 canvas 上的位置
+    const rect = canvas.getBoundingClientRect()
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+    
+    // 计算图片当前的位置和大小
+    const imgWidth = imageData.width * scale
+    const imgHeight = imageData.height * scale
+    const imgX = (canvas.width - imgWidth) / 2 + pan.x
+    const imgY = (canvas.height - imgHeight) / 2 + pan.y
+    
+    // 鼠标相对于图片的位置（0-1范围）
+    const relX = (mouseX - imgX) / imgWidth
+    const relY = (mouseY - imgY) / imgHeight
+    
+    // 新的图片尺寸
+    const newImgWidth = imageData.width * newScale
+    const newImgHeight = imageData.height * newScale
+    
+    // 计算新的 pan 值，使鼠标位置保持不变
+    // mouseX = newImgX + relX * newImgWidth
+    // mouseX = (canvas.width - newImgWidth) / 2 + newPanX + relX * newImgWidth
+    const newPanX = mouseX - (canvas.width - newImgWidth) / 2 - relX * newImgWidth
+    const newPanY = mouseY - (canvas.height - newImgHeight) / 2 - relY * newImgHeight
+    
+    appStateStore.sceneStore.setPan(newPanX, newPanY)
     appStateStore.sceneStore.setScale(newScale)
   }
 
@@ -688,7 +759,7 @@ export const Renderer = observer((props: { className?: string }) => {
     if (isSpacePressed) {
       return isSpacePanning ? 'grabbing' : 'grab'
     }
-    
+
     if (isCropMode && cropRect) {
       return 'crosshair'
     }

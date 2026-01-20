@@ -6,16 +6,17 @@ import { QuickPick } from './components/gui/QuickPick'
 import { ExportDialog } from './components/gui/ExportDialog'
 import { ProgressDialog } from './components/gui/ProgressDialog'
 import { exportImageWithOptions } from './components/commands/file-export'
-import { useEffect } from 'react'
 import { registerBuiltinActions } from './components/actions'
 import { observer } from 'mobx-react-lite'
 import { appStateStore } from './components/store'
+import { useMount } from './lib/hooks/useMount'
+import { useEffectOnce } from './lib/hooks/useEffectOnce'
 
 const App = observer(() => {
   // 初始化系统内置命令
-  useEffect(() => {
+  useMount(() => {
     registerBuiltinActions()
-  }, [])
+  })
 
   const handleCropConfirm = () => {
     // 这个回调会传递给 Renderer
@@ -26,7 +27,9 @@ const App = observer(() => {
     appStateStore.editorStore.exitCropMode()
   }
 
-  const handleExport = async (options: Parameters<typeof exportImageWithOptions>[1]) => {
+  const handleExport = async (
+    options: Parameters<typeof exportImageWithOptions>[1],
+  ) => {
     const { imageData, originalFileName } = appStateStore.sceneStore
     if (!imageData) return
 
@@ -40,7 +43,10 @@ const App = observer(() => {
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <Toolbar />
-      <SecondaryToolbar onCropConfirm={handleCropConfirm} onCropCancel={handleCropCancel} />
+      <SecondaryToolbar
+        onCropConfirm={handleCropConfirm}
+        onCropCancel={handleCropCancel}
+      />
       <div className="flex flex-1 overflow-hidden">
         <ToolPanel />
         <Renderer className="flex-1" />
