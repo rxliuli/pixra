@@ -118,30 +118,18 @@ export const Renderer = observer((props: { className?: string }) => {
 
     // 绘制裁剪框
     if (cropRect && isCropMode) {
-      // 半透明遮罩
+      // 使用路径绘制遮罩，排除裁剪区域
+      // 绘制四个矩形区域作为遮罩（裁剪框外的部分）
       ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // 清除裁剪区域，显示原图
-      ctx.clearRect(cropRect.x, cropRect.y, cropRect.width, cropRect.height)
-      if (imageData) {
-        const imgWidth = imageData.width * scale
-        const imgHeight = imageData.height * scale
-        const imgX = (canvas.width - imgWidth) / 2 + pan.x
-        const imgY = (canvas.height - imgHeight) / 2 + pan.y
-
-        // 设置高质量图像平滑
-        ctx.imageSmoothingEnabled = true
-        ctx.imageSmoothingQuality = 'high'
-
-        ctx.drawImage(imageData, imgX, imgY, imgWidth, imgHeight)
-      }
-
-      // 裁剪框边框
-      ctx.strokeStyle = '#ffffff'
-      ctx.lineWidth = 2
-      ctx.setLineDash([])
-      ctx.strokeRect(cropRect.x, cropRect.y, cropRect.width, cropRect.height)
+      // 上方区域
+      ctx.fillRect(0, 0, canvas.width, cropRect.y)
+      // 下方区域
+      ctx.fillRect(0, cropRect.y + cropRect.height, canvas.width, canvas.height - cropRect.y - cropRect.height)
+      // 左侧区域（中间高度）
+      ctx.fillRect(0, cropRect.y, cropRect.x, cropRect.height)
+      // 右侧区域（中间高度）
+      ctx.fillRect(cropRect.x + cropRect.width, cropRect.y, canvas.width - cropRect.x - cropRect.width, cropRect.height)
 
       // 绘制调整手柄
       drawCropHandles(ctx, cropRect)
@@ -238,8 +226,20 @@ export const Renderer = observer((props: { className?: string }) => {
     if (isCropMode && cropRect && cropRectRatio && cropAspectRatio !== 'free') {
       const ratio = getAspectRatioValue(cropAspectRatio)
       const newRect = { ...cropRect }
-      // 基于当前宽度计算新高度
-      newRect.height = newRect.width / ratio
+
+      // 计算基于宽度和基于高度的两种可能尺寸
+      const widthBasedHeight = newRect.width / ratio
+      const heightBasedWidth = newRect.height * ratio
+
+      // 选择较小的尺寸，确保裁剪框不会超出原有区域
+      if (widthBasedHeight <= newRect.height) {
+        // 基于宽度计算高度
+        newRect.height = widthBasedHeight
+      } else {
+        // 基于高度计算宽度
+        newRect.width = heightBasedWidth
+      }
+
       setCropRect(newRect)
 
       // 更新比例位置

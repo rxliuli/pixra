@@ -33,6 +33,8 @@ export function fileOpen(): BuiltinAction {
       // 创建新文档
       appStateStore.documentStore.createDocument(bitmap, fileName)
 
+      // 等待下一帧，确保 canvas 尺寸已更新
+      await new Promise(requestAnimationFrame)
       // 计算适配缩放
       const fitScale = appStateStore.sceneStore.calculateFitScale(
         bitmap.width,
