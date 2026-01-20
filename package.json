@@ -4,8 +4,5 @@
   "scripts": {
     "build": "pnpm -r run build"
   },
-  "packageManager": "pnpm@10.26.2",
-  "dependencies": {
-    "@huggingface/transformers": "link:../transformers.js"
-  }
+  "packageManager": "pnpm@10.26.2"
 }
