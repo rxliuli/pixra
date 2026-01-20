@@ -65,6 +65,13 @@ export interface Workspace {
    * Update the active image
    */
   updateActiveImage(imageData: ImageData): Promise<void>
+
+  /**
+   * Download a file to the user's device
+   * @param filename - The suggested filename for download
+   * @param data - The file content as ArrayBuffer
+   */
+  downloadFile(filename: string, data: ArrayBuffer): Promise<void>
 }
 
 // Type declarations - these will be provided by the runtime at runtime

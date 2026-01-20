@@ -15,6 +15,22 @@ importers:
         specifier: link:../transformers.js
         version: link:../transformers.js
 
+  packages/chrome-icons:
+    dependencies:
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
+    devDependencies:
+      '@pixra/plugin-cli':
+        specifier: workspace:*
+        version: link:../plugin-cli
+      '@pixra/plugin-sdk':
+        specifier: workspace:*
+        version: link:../plugin-sdk
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/hello-world:
     devDependencies:
       '@pixra/plugin-cli':
@@ -23,12 +39,15 @@ importers:
       '@pixra/plugin-sdk':
         specifier: workspace:*
         version: link:../plugin-sdk
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   packages/pixra:
     dependencies:
       '@huggingface/transformers':
         specifier: link:../../../transformers.js
-        version: link:../transformers.js
+        version: link:../../../transformers.js
       '@pixra/plugin-sdk':
         specifier: workspace:*
         version: link:../plugin-sdk
@@ -74,6 +93,9 @@ importers:
       mobx-react-lite:
         specifier: ^4.1.1
         version: 4.1.1(mobx@6.15.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react:
         specifier: ^19.2.0
         version: 19.2.3
@@ -82,7 +104,10 @@ importers:
         version: 19.2.3(react@19.2.3)
       rembg-webgpu:
         specifier: ^0.2.1
-        version: 0.2.1(@huggingface/transformers@packages+transformers.js)
+        version: 0.2.1(@huggingface/transformers@transformers.js)
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
@@ -2195,6 +2220,12 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
+  next-themes@0.4.6:
+    resolution: {integrity: sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
+
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
@@ -2471,6 +2502,12 @@ packages:
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
     engines: {node: '>=18'}
+
+  sonner@2.0.7:
+    resolution: {integrity: sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -4595,6 +4632,11 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
+  next-themes@0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+
   node-releases@2.0.27: {}
 
   normalize-path@3.0.0: {}
@@ -4731,9 +4773,9 @@ snapshots:
 
   readdirp@4.1.2: {}
 
-  rembg-webgpu@0.2.1(@huggingface/transformers@packages+transformers.js):
+  rembg-webgpu@0.2.1(@huggingface/transformers@transformers.js):
     dependencies:
-      '@huggingface/transformers': link:packages/transformers.js
+      '@huggingface/transformers': link:../transformers.js
 
   resolve-from@4.0.0: {}
 
@@ -4866,6 +4908,11 @@ snapshots:
       '@polka/url': 1.0.0-next.29
       mrmime: 2.0.1
       totalist: 3.0.1
+
+  sonner@2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
 
   source-map-js@1.2.1: {}
 

@@ -73,6 +73,7 @@ export const commands: Commands = {
 export const workspace = {
   getActiveImage: createApiProxy('workspace.getActiveImage'),
   updateActiveImage: createApiProxy('workspace.updateActiveImage'),
+  downloadFile: createApiProxy('workspace.downloadFile'),
 }
 
 // Clean up dangerous globals

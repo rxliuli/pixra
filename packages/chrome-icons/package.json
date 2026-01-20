@@ -1,14 +1,16 @@
 {
-  "name": "@pixra-plugins/hello-world",
+  "name": "@pixra-plugins/chrome-icons",
   "version": "0.0.1",
-  "description": "A simple hello world plugin for Pixra",
+  "description": "Export Chrome extension icons (16/32/48/96/128) as ZIP",
   "scripts": {
     "build": "pixra build",
     "zip": "pixra zip"
   },
   "keywords": [
     "pixra-plugin",
-    "example"
+    "chrome",
+    "icons",
+    "export"
   ],
   "author": "Pixra Team",
   "license": "MIT",
@@ -16,5 +18,8 @@
     "@pixra/plugin-cli": "workspace:*",
     "@pixra/plugin-sdk": "workspace:*",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
   }
 }

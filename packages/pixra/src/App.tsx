@@ -5,6 +5,7 @@ import { SecondaryToolbar } from './components/gui/SecondaryToolbar'
 import { QuickPick } from './components/gui/QuickPick'
 import { ExportDialog } from './components/gui/ExportDialog'
 import { ProgressDialog } from './components/gui/ProgressDialog'
+import { Toaster } from './components/ui/sonner'
 import { exportImageWithOptions } from './components/commands/file-export'
 import { registerBuiltinActions } from './components/actions'
 import { pluginManager } from './lib/plugin'
@@ -68,6 +69,7 @@ const App = observer(() => {
         originalHeight={appStateStore.sceneStore.imageData?.height || 0}
         onExport={handleExport}
       />
+      <Toaster position="bottom-right" richColors closeButton />
     </div>
   )
 })

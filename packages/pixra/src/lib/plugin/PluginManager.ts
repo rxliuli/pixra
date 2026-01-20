@@ -5,6 +5,7 @@ import { commandRegistry } from '../../components/actions'
 import esbuildWasmUrl from 'esbuild-wasm/esbuild.wasm?url'
 import sdkRuntimeCode from '@pixra/plugin-sdk/runtime?bundle'
 import { type Plugin } from 'esbuild-wasm'
+import { executeApiCall, type ApiContext } from './api'
 
 /**
  * Active plugin instance
@@ -319,21 +320,13 @@ export class PluginManager {
 
     const { callId, method, args } = message
 
-    try {
-      let result: any
+    const ctx: ApiContext = {
+      pluginId,
+      disposables: active.disposables,
+    }
 
-      // Handle different API calls
-      if (method === 'window.showInformationMessage') {
-        result = await this.showMessage('info', args[0])
-      } else if (method === 'window.showWarningMessage') {
-        result = await this.showMessage('warning', args[0])
-      } else if (method === 'window.showErrorMessage') {
-        result = await this.showMessage('error', args[0])
-      } else if (method === 'commands.registerCommand') {
-        result = this.registerWorkerCommand(pluginId, args[0], args[1])
-      } else {
-        throw new Error(`Unknown API method: ${method}`)
-      }
+    try {
+      const result = await executeApiCall(method, ctx, args)
 
       active.worker.postMessage({
         type: 'apiResult',
@@ -347,39 +340,6 @@ export class PluginManager {
         error: error instanceof Error ? error.message : String(error),
       })
     }
-  }
-
-  /**
-   * Show message to user
-   */
-  private async showMessage(
-    level: 'info' | 'warning' | 'error',
-    message: string,
-  ): Promise<void> {
-    // TODO: integrate with actual UI notification system
-    console[level === 'error' ? 'error' : level === 'warning' ? 'warn' : 'log'](
-      message,
-    )
-    alert(message) // Temporary simple implementation
-  }
-
-  /**
-   * Register command from worker
-   */
-  private registerWorkerCommand(
-    pluginId: string,
-    _command: string,
-    _callback: string,
-  ): void {
-    const active = this.activePlugins.get(pluginId)
-    if (!active) return
-
-    // Store disposable for cleanup
-    const dispose = () => {
-      // TODO: unregister command
-    }
-
-    active.disposables.push(dispose)
   }
 
   /**
