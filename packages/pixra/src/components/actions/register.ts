@@ -16,6 +16,7 @@ import {
   viewResetZoom,
   helpAbout,
   helpShowCommands,
+  pluginInstall,
 } from '../commands'
 
 let initialized = false
@@ -34,7 +35,8 @@ export function registerBuiltinActions() {
   menuRegistry.registerMenuGroup({ id: 'file', title: 'File', items: [] }, 0)
   menuRegistry.registerMenuGroup({ id: 'edit', title: 'Edit', items: [] }, 1)
   menuRegistry.registerMenuGroup({ id: 'view', title: 'View', items: [] }, 2)
-  menuRegistry.registerMenuGroup({ id: 'help', title: 'Help', items: [] }, 3)
+  menuRegistry.registerMenuGroup({ id: 'plugin', title: 'Plugin', items: [] }, 3)
+  menuRegistry.registerMenuGroup({ id: 'help', title: 'Help', items: [] }, 4)
 
   // 2. 注册所有内置命令
   actionRegistry.registerActions([
@@ -56,6 +58,9 @@ export function registerBuiltinActions() {
     viewZoomIn(),
     viewZoomOut(),
     viewResetZoom(),
+
+    // Plugin 菜单
+    pluginInstall(),
 
     // Help 菜单
     helpAbout(),

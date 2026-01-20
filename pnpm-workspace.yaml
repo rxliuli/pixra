@@ -1,2 +1,5 @@
 packages:
   - packages/*
+
+overrides:
+  '@huggingface/transformers': link:../transformers.js

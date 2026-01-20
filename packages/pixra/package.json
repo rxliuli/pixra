@@ -1,5 +1,5 @@
 {
-  "name": "pixra",
+  "name": "@pixra/pixra",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",
+    "@pixra/plugin-sdk": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-menubar": "^1.1.16",
     "@radix-ui/react-slot": "^1.2.4",
@@ -20,7 +21,9 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "comlink": "^4.4.2",
+    "esbuild-wasm": "^0.27.2",
     "idb-keyval": "^6.2.2",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.562.0",
     "mobx": "^6.15.0",
     "mobx-react-lite": "^4.1.1",
@@ -37,6 +40,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/browser-playwright": "^4.0.17",
+    "esbuild": "^0.24.2",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

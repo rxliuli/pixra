@@ -1,0 +1,15 @@
+{
+  "id": "pixra.hello-world",
+  "name": "Hello World",
+  "version": "0.1.0",
+  "description": "A simple hello world plugin",
+  "main": "main.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "helloWorld.sayHello",
+        "title": "Hello World"
+      }
+    ]
+  }
+}

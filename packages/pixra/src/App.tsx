@@ -7,15 +7,17 @@ import { ExportDialog } from './components/gui/ExportDialog'
 import { ProgressDialog } from './components/gui/ProgressDialog'
 import { exportImageWithOptions } from './components/commands/file-export'
 import { registerBuiltinActions } from './components/actions'
+import { pluginManager } from './lib/plugin'
 import { observer } from 'mobx-react-lite'
 import { appStateStore } from './components/store'
 import { useMount } from './lib/hooks/useMount'
-import { useEffectOnce } from './lib/hooks/useEffectOnce'
 
 const App = observer(() => {
   // 初始化系统内置命令
   useMount(() => {
     registerBuiltinActions()
+    // 初始化插件系统
+    pluginManager.initialize()
   })
 
   const handleCropConfirm = () => {

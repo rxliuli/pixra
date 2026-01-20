@@ -1,0 +1,19 @@
+{
+  "name": "@pixra-plugins/hello-world",
+  "version": "1.0.0",
+  "description": "A simple hello world plugin for Pixra",
+  "scripts": {
+    "build": "pixra build",
+    "zip": "pixra zip"
+  },
+  "keywords": [
+    "pixra-plugin",
+    "example"
+  ],
+  "author": "Pixra Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@pixra/plugin-cli": "workspace:*",
+    "@pixra/plugin-sdk": "workspace:*"
+  }
+}
