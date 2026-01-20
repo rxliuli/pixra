@@ -1,12 +1,12 @@
 import type { BuiltinAction } from '../actions/types'
+import { appStateStore } from '../store'
 
 export function editUndo(): BuiltinAction {
   return {
     command: 'edit.undo',
     title: 'Undo',
     execute: () => {
-      console.log('Undo')
-      // TODO: 实现撤销逻辑
+      appStateStore.undo()
     },
     keybinding: {
       key: 'ctrl+z',

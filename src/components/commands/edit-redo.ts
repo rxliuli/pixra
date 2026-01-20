@@ -1,12 +1,12 @@
 import type { BuiltinAction } from '../actions/types'
+import { appStateStore } from '../store'
 
 export function editRedo(): BuiltinAction {
   return {
     command: 'edit.redo',
     title: 'Redo',
     execute: () => {
-      console.log('Redo')
-      // TODO: 实现重做逻辑
+      appStateStore.redo()
     },
     keybinding: {
       key: 'ctrl+shift+z',
