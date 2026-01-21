@@ -56,6 +56,35 @@ export const Renderer = observer((props: { className?: string }) => {
     appStateStore.editorStore
   const { imageData, pan, scale } = appStateStore.sceneStore
 
+  // 绘制棋盘格图案（用于显示透明区域）
+  const drawCheckerboard = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    cellSize: number = 10,
+  ) => {
+    ctx.save()
+    ctx.beginPath()
+    ctx.rect(x, y, width, height)
+    ctx.clip()
+
+    const startCol = Math.floor(x / cellSize)
+    const startRow = Math.floor(y / cellSize)
+    const endCol = Math.ceil((x + width) / cellSize)
+    const endRow = Math.ceil((y + height) / cellSize)
+
+    for (let row = startRow; row < endRow; row++) {
+      for (let col = startCol; col < endCol; col++) {
+        ctx.fillStyle = (row + col) % 2 === 0 ? '#ffffff' : '#cccccc'
+        ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize)
+      }
+    }
+
+    ctx.restore()
+  }
+
   // 绘制画布
   const redrawCanvas = () => {
     const canvas = canvasRef.current
@@ -74,6 +103,9 @@ export const Renderer = observer((props: { className?: string }) => {
       const imgHeight = imageData.height * scale
       const imgX = (canvas.width - imgWidth) / 2 + pan.x
       const imgY = (canvas.height - imgHeight) / 2 + pan.y
+
+      // 先在图片区域绘制棋盘格背景（用于显示透明区域）
+      drawCheckerboard(ctx, imgX, imgY, imgWidth, imgHeight)
 
       // 设置高质量图像平滑，避免缩小时出现锯齿
       ctx.imageSmoothingEnabled = true
