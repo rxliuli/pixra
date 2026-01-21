@@ -26,6 +26,7 @@ export class PluginManager {
   private initialized = false
   private esbuildInitialized = false
   private registeredPluginCommands = new Map<string, string[]>() // pluginId -> command ids
+  private registeredPluginMenuItems = new Map<string, Array<{ groupId: string; commandId: string }>>() // pluginId -> menu items
 
   /**
    * Initialize plugin system - load all installed plugins and register commands
@@ -248,6 +249,7 @@ export class PluginManager {
 
     // Register menu contributions
     const menus = manifest.contributes?.menus
+    const menuItemsTracked: Array<{ groupId: string; commandId: string }> = []
     if (menus) {
       for (const [groupId, menuItems] of Object.entries(menus)) {
         for (const menuItem of menuItems) {
@@ -258,28 +260,38 @@ export class PluginManager {
               command: menuItem.command,
               title,
             })
+            menuItemsTracked.push({ groupId, commandId: menuItem.command })
           }
         }
       }
     }
 
-    // Track registered commands for this plugin
+    // Track registered commands and menu items for this plugin
     this.registeredPluginCommands.set(manifest.id, commandIds)
+    this.registeredPluginMenuItems.set(manifest.id, menuItemsTracked)
   }
 
   /**
-   * Unregister plugin commands
+   * Unregister plugin commands and menu items
    */
   private unregisterPluginCommands(pluginId: string): void {
-    const commandIds = this.registeredPluginCommands.get(pluginId)
-    if (!commandIds) return
-
     // Unregister all commands for this plugin
-    for (const commandId of commandIds) {
-      commandRegistry.unregisterCommand(commandId)
+    const commandIds = this.registeredPluginCommands.get(pluginId)
+    if (commandIds) {
+      for (const commandId of commandIds) {
+        commandRegistry.unregisterCommand(commandId)
+      }
+      this.registeredPluginCommands.delete(pluginId)
     }
 
-    this.registeredPluginCommands.delete(pluginId)
+    // Unregister all menu items for this plugin
+    const menuItems = this.registeredPluginMenuItems.get(pluginId)
+    if (menuItems) {
+      for (const { groupId, commandId } of menuItems) {
+        menuRegistry.removeMenuItem(groupId, commandId)
+      }
+      this.registeredPluginMenuItems.delete(pluginId)
+    }
   }
 
   /**

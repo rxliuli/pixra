@@ -59,7 +59,10 @@ function renderMenuItem(
 }
 
 export const Toolbar = observer(function Toolbar() {
-  const menuGroups = actionRegistry.getMenuRegistry().getAllMenuGroups()
+  const menuGroups = actionRegistry
+    .getMenuRegistry()
+    .getAllMenuGroups()
+    .filter((group) => group.items.length > 0)
 
   const handleExecute = (commandId: string) => {
     actionRegistry.executeCommand(commandId)
