@@ -4,6 +4,7 @@ import {
   getCapabilities,
 } from 'rembg-webgpu'
 import { env } from '@huggingface/transformers'
+import { imageBitmapToArrayBuffer } from './imageBitmap'
 
 export interface RemoveBgOptions {
   onProgress?: (message: string, percentage: number) => void
@@ -27,39 +28,6 @@ function configureTransformersEnv() {
   if (ortWasmPaths && env.backends?.onnx?.wasm) {
     env.backends.onnx.wasm.wasmPaths = ortWasmPaths
   }
-}
-
-async function imageBitmapToArrayBuffer(
-  imageData: ImageBitmap,
-): Promise<ArrayBuffer> {
-  const width = imageData.width
-  const height = imageData.height
-
-  // Prefer OffscreenCanvas when available (works in workers too)
-  if (typeof OffscreenCanvas !== 'undefined') {
-    const canvas = new OffscreenCanvas(width, height)
-    const ctx = canvas.getContext('2d')
-    if (!ctx) {
-      throw new Error('Failed to get canvas context')
-    }
-    ctx.drawImage(imageData, 0, 0)
-    const blob = await canvas.convertToBlob({ type: 'image/png' })
-    return await blob.arrayBuffer()
-  }
-
-  // Fallback for browsers without OffscreenCanvas (e.g. some Safari versions)
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
-  const ctx = canvas.getContext('2d')
-  if (!ctx) {
-    throw new Error('Failed to get canvas context')
-  }
-  ctx.drawImage(imageData, 0, 0)
-  const blob = await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('toBlob failed'))), 'image/png')
-  })
-  return await blob.arrayBuffer()
 }
 
 export async function removeBg(

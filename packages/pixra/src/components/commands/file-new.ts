@@ -1,5 +1,6 @@
 import type { BuiltinAction } from '../actions/types'
 import { appStateStore } from '../store'
+import { createBlankImageBitmap } from '@/lib/imageBitmap'
 
 export function fileNew(): BuiltinAction {
   return {
@@ -10,21 +11,7 @@ export function fileNew(): BuiltinAction {
       const width = 800
       const height = 600
 
-      const canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        ctx.fillStyle = '#ffffff'
-        ctx.fillRect(0, 0, width, height)
-      }
-
-      const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve),
-      )
-      if (!blob) return
-
-      const bitmap = await createImageBitmap(blob)
+      const bitmap = await createBlankImageBitmap({ width, height, fillColor: '#ffffff' })
 
       // 创建新文档
       appStateStore.documentStore.createDocument(bitmap, 'Untitled')
