@@ -162,6 +162,7 @@ export class DocumentStore {
 
     doc.historyIndex--
     doc.imageData = doc.history[doc.historyIndex].imageData
+    doc.isDirty = true
     return doc.imageData
   }
 
@@ -172,6 +173,7 @@ export class DocumentStore {
 
     doc.historyIndex++
     doc.imageData = doc.history[doc.historyIndex].imageData
+    doc.isDirty = true
     return doc.imageData
   }
 

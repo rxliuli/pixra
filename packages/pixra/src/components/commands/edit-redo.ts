@@ -6,7 +6,7 @@ export function editRedo(): BuiltinAction {
     command: 'edit.redo',
     title: 'Redo',
     execute: () => {
-      appStateStore.redo()
+      appStateStore.documentStore.redo()
     },
     keybinding: {
       key: 'ctrl+shift+z',

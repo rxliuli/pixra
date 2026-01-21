@@ -165,7 +165,7 @@ class QuickPickStore {
 
   showQuickPick<T = any>(
     items: QuickPickItem<T>[],
-    options?: { title?: string; placeholder?: string }
+    options?: { title?: string; placeholder?: string },
   ): Promise<QuickPickItem<T> | undefined> {
     return new Promise((resolve, reject) => {
       this.state = {
@@ -260,7 +260,7 @@ class ProgressStore {
     options: ProgressOptions,
     task: (progress: {
       report: (value: { message?: string; percentage?: number }) => void
-    }) => Promise<T>
+    }) => Promise<T>,
   ): Promise<T> {
     this.state = {
       title: options.title,
@@ -316,26 +316,6 @@ class AppStateStore {
   constructor() {
     this.sceneStore = new SceneStore(this.documentStore)
     makeAutoObservable(this)
-  }
-
-  // 是否可以撤销
-  get canUndo(): boolean {
-    return this.documentStore.canUndo
-  }
-
-  // 是否可以重做
-  get canRedo(): boolean {
-    return this.documentStore.canRedo
-  }
-
-  // 撤销
-  undo() {
-    this.documentStore.undo()
-  }
-
-  // 重做
-  redo() {
-    this.documentStore.redo()
   }
 }
 
