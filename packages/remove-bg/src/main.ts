@@ -78,6 +78,7 @@ async function removeBg(): Promise<void> {
           percentage = 0
         }
 
+        console.log(`${message} (${percentage}%)`)
         progress.report({ message, percentage })
       })
 

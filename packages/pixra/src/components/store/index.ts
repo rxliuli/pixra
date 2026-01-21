@@ -228,104 +228,6 @@ class ExportDialogStore {
   }
 }
 
-export interface ProgressOptions {
-  title: string
-  cancellable?: boolean
-}
-
-interface ProgressState {
-  title: string
-  message?: string
-  percentage?: number
-  cancellable: boolean
-  onCancel?: () => void
-}
-
-class ProgressStore {
-  private state: ProgressState | null = null
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-
-  get isOpen() {
-    return this.state !== null
-  }
-
-  get currentState() {
-    return this.state
-  }
-
-  async withProgress<T>(
-    options: ProgressOptions,
-    task: (progress: {
-      report: (value: { message?: string; percentage?: number }) => void
-    }) => Promise<T>,
-  ): Promise<T> {
-    this.state = {
-      title: options.title,
-      cancellable: options.cancellable ?? false,
-    }
-
-    let cancelled = false
-    const onCancel = () => {
-      cancelled = true
-    }
-
-    if (options.cancellable) {
-      this.state.onCancel = onCancel
-    }
-
-    try {
-      const result = await task({
-        report: (value) => {
-          if (cancelled) {
-            throw new Error('Operation cancelled')
-          }
-          if (this.state) {
-            this.state = {
-              ...this.state,
-              message: value.message,
-              percentage: value.percentage,
-            }
-          }
-        },
-      })
-      return result
-    } finally {
-      this.state = null
-    }
-  }
-
-  cancel() {
-    if (this.state?.onCancel) {
-      this.state.onCancel()
-    }
-  }
-
-  // Methods for plugin progress API
-  show(options: { title: string; cancellable?: boolean }) {
-    this.state = {
-      title: options.title,
-      cancellable: options.cancellable ?? false,
-    }
-  }
-
-  update(value: { message?: string; percentage?: number }) {
-    if (this.state) {
-      this.state = {
-        ...this.state,
-        message: value.message,
-        percentage: value.percentage,
-      }
-    }
-  }
-
-  hide() {
-    this.state = null
-  }
-}
-
 class AppStateStore {
   readonly toolbarStore = new AppToolbarStore()
   readonly documentStore = new DocumentStore()
@@ -333,7 +235,6 @@ class AppStateStore {
   readonly editorStore = new EditorStore()
   readonly quickPickStore = new QuickPickStore()
   readonly exportDialogStore = new ExportDialogStore()
-  readonly progressStore = new ProgressStore()
 
   constructor() {
     this.sceneStore = new SceneStore(this.documentStore)

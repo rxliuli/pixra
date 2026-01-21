@@ -5,7 +5,6 @@
 
 import { toast } from 'sonner'
 import type { ApiContext } from './index'
-import { appStateStore } from '../../../components/store'
 
 export async function showInformationMessage(
   _ctx: ApiContext,
@@ -28,27 +27,38 @@ export async function showErrorMessage(
   toast.error(message)
 }
 
-/** Active progress sessions */
+/** Active progress sessions with toast IDs */
 const progressSessions = new Map<
   string,
   {
+    toastId: string | number
     title: string
+    message?: string
+    percentage?: number
     cancellable: boolean
+    onCancel?: () => void
   }
 >()
+
+function renderProgressDescription(
+  message?: string,
+  percentage?: number,
+): string | undefined {
+  const parts: string[] = []
+  if (message) parts.push(message)
+  if (percentage !== undefined) parts.push(`${Math.round(percentage)}%`)
+  return parts.length > 0 ? parts.join(' · ') : undefined
+}
 
 export async function startProgress(
   _ctx: ApiContext,
   progressId: string,
   options: { title: string; cancellable?: boolean },
 ): Promise<void> {
-  progressSessions.set(progressId, {
-    title: options.title,
-    cancellable: options.cancellable ?? false,
-  })
+  const toastId = toast.loading(options.title)
 
-  // Show initial progress state
-  appStateStore.progressStore.show({
+  progressSessions.set(progressId, {
+    toastId,
     title: options.title,
     cancellable: options.cancellable ?? false,
   })
@@ -61,10 +71,19 @@ export function reportProgress(
   const session = progressSessions.get(progressId)
   if (!session) return
 
-  appStateStore.progressStore.update(value)
+  session.message = value.message ?? session.message
+  session.percentage = value.percentage ?? session.percentage
+
+  toast.loading(session.title, {
+    id: session.toastId,
+    description: renderProgressDescription(session.message, session.percentage),
+  })
 }
 
 export function endProgress(progressId: string): void {
+  const session = progressSessions.get(progressId)
+  if (!session) return
+
+  toast.dismiss(session.toastId)
   progressSessions.delete(progressId)
-  appStateStore.progressStore.hide()
 }

@@ -23,6 +23,7 @@
     "fetch"
   ],
   "host_permissions": [
-    "https://cdn.jsdelivr.net/*"
+    "https://cdn.jsdelivr.net/*",
+    "https://huggingface.co/*"
   ]
 }

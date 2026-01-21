@@ -4,7 +4,6 @@ import { ToolPanel } from './components/gui/ToolPanel'
 import { SecondaryToolbar } from './components/gui/SecondaryToolbar'
 import { QuickPick } from './components/gui/QuickPick'
 import { ExportDialog } from './components/gui/ExportDialog'
-import { ProgressDialog } from './components/gui/ProgressDialog'
 import { TabBar } from './components/gui/TabBar'
 import { WelcomePage } from './components/gui/WelcomePage'
 import { Toaster } from './components/ui/sonner'
@@ -90,7 +89,6 @@ const App = observer(() => {
         )}
       </div>
       <QuickPick />
-      <ProgressDialog />
       <ExportDialog
         open={appStateStore.exportDialogStore.isOpen}
         onOpenChange={(open) => {
