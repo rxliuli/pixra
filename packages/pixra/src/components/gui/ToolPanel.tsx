@@ -4,10 +4,10 @@ import { Crop, MousePointer2, Paintbrush, Square } from 'lucide-react'
 import { Button } from '../ui/button'
 
 const tools: { id: ToolType; icon: React.ComponentType<any>; label: string }[] = [
-  { id: 'move', icon: MousePointer2, label: '移动' },
-  { id: 'marquee', icon: Square, label: '矩形选框' },
-  { id: 'crop', icon: Crop, label: '裁剪' },
-  { id: 'brush', icon: Paintbrush, label: '画笔' },
+  { id: 'move', icon: MousePointer2, label: 'Move' },
+  { id: 'marquee', icon: Square, label: 'Marquee' },
+  { id: 'crop', icon: Crop, label: 'Crop' },
+  { id: 'brush', icon: Paintbrush, label: 'Brush' },
 ]
 
 export const ToolPanel = observer(() => {

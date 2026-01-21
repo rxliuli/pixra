@@ -4,7 +4,7 @@ import { Button } from '../ui/button'
 import { Check, X } from 'lucide-react'
 
 const aspectRatios: { value: CropAspectRatio; label: string }[] = [
-  { value: 'free', label: '自由' },
+  { value: 'free', label: 'Free' },
   { value: '1:1', label: '1:1' },
   { value: '16:9', label: '16:9' },
   { value: '4:3', label: '4:3' },
@@ -19,12 +19,12 @@ interface SecondaryToolbarProps {
 export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: SecondaryToolbarProps) => {
   const { currentTool, cropAspectRatio, brushSize, brushColor } = appStateStore.editorStore
 
-  // 裁剪工具栏
+  // Crop toolbar
   if (currentTool === 'crop') {
     return (
       <div className="flex h-12 items-center gap-2 border-b bg-white px-4">
         <div className="flex items-center gap-1">
-          <span className="mr-2 text-sm text-gray-600">裁剪比例:</span>
+          <span className="mr-2 text-sm text-gray-600">Aspect Ratio:</span>
           {aspectRatios.map((ratio) => (
             <Button
               key={ratio.value}
@@ -39,23 +39,23 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
         <div className="ml-auto flex gap-2">
           <Button variant="outline" size="sm" onClick={onCropCancel}>
             <X className="mr-1 h-4 w-4" />
-            取消
+            Cancel
           </Button>
           <Button size="sm" onClick={onCropConfirm}>
             <Check className="mr-1 h-4 w-4" />
-            确认
+            Confirm
           </Button>
         </div>
       </div>
     )
   }
 
-  // 画笔工具栏
+  // Brush toolbar
   if (currentTool === 'brush') {
     return (
       <div className="flex h-12 items-center gap-4 border-b bg-white px-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">画笔大小:</span>
+          <span className="text-sm text-gray-600">Brush Size:</span>
           <input
             type="range"
             min="1"
@@ -67,7 +67,7 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
           <span className="w-8 text-sm">{brushSize}px</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">颜色:</span>
+          <span className="text-sm text-gray-600">Color:</span>
           <input
             type="color"
             value={brushColor}
@@ -79,24 +79,24 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
     )
   }
 
-  // 矩形选框工具栏
+  // Marquee toolbar
   if (currentTool === 'marquee') {
     return (
       <div className="flex h-12 items-center gap-2 border-b bg-white px-4">
-        <span className="text-sm text-gray-600">矩形选框工具 - 拖拽鼠标创建选区</span>
+        <span className="text-sm text-gray-600">Marquee Tool - Drag to create a selection</span>
       </div>
     )
   }
 
-  // 移动工具栏
+  // Move toolbar
   if (currentTool === 'move') {
     return (
       <div className="flex h-12 items-center gap-2 border-b bg-white px-4">
-        <span className="text-sm text-gray-600">移动工具 - 拖拽画布移动，滚轮缩放</span>
+        <span className="text-sm text-gray-600">Move Tool - Drag to pan, scroll to zoom</span>
       </div>
     )
   }
 
-  // 默认空工具栏
+  // Default empty toolbar
   return <div className="h-12 border-b bg-white" />
 })
