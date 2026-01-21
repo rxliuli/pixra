@@ -1,0 +1,22 @@
+{
+  "id": "pixra.smart-crop",
+  "name": "Smart Crop",
+  "version": "0.0.1",
+  "description": "Automatically remove transparent edges and crop image to content bounds with optional padding",
+  "main": "main.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "smartCrop.crop",
+        "title": "Smart Crop"
+      }
+    ],
+    "menus": {
+      "tools": [
+        {
+          "command": "smartCrop.crop"
+        }
+      ]
+    }
+  }
+}

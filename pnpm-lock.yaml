@@ -200,6 +200,18 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
+  packages/smart-crop:
+    devDependencies:
+      '@pixra/plugin-cli':
+        specifier: workspace:*
+        version: link:../plugin-cli
+      '@pixra/plugin-sdk':
+        specifier: workspace:*
+        version: link:../plugin-sdk
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
 packages:
 
   '@babel/code-frame@7.28.6':
