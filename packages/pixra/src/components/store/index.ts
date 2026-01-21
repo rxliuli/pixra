@@ -302,6 +302,28 @@ class ProgressStore {
       this.state.onCancel()
     }
   }
+
+  // Methods for plugin progress API
+  show(options: { title: string; cancellable?: boolean }) {
+    this.state = {
+      title: options.title,
+      cancellable: options.cancellable ?? false,
+    }
+  }
+
+  update(value: { message?: string; percentage?: number }) {
+    if (this.state) {
+      this.state = {
+        ...this.state,
+        message: value.message,
+        percentage: value.percentage,
+      }
+    }
+  }
+
+  hide() {
+    this.state = null
+  }
 }
 
 class AppStateStore {

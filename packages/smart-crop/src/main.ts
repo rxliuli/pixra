@@ -145,10 +145,6 @@ async function smartCrop(): Promise<void> {
 
   // Update the image
   await pixra.workspace.updateActiveImage(croppedImage)
-
-  await pixra.window.showInformationMessage(
-    `Cropped from ${imageData.width}x${imageData.height} to ${croppedImage.width}x${croppedImage.height}`,
-  )
 }
 
 /**

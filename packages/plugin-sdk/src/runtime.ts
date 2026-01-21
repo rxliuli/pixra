@@ -56,6 +56,54 @@ export const window: Window = {
   showInformationMessage: createApiProxy('window.showInformationMessage'),
   showWarningMessage: createApiProxy('window.showWarningMessage'),
   showErrorMessage: createApiProxy('window.showErrorMessage'),
+  async withProgress(options, task) {
+    const progressId = Math.random().toString(36)
+
+    // Start progress
+    await new Promise<void>((resolve, reject) => {
+      const callId = Math.random().toString(36)
+
+      const handler = (event: MessageEvent) => {
+        if (event.data.callId === callId) {
+          self.removeEventListener('message', handler)
+          if (event.data.type === 'apiResult') {
+            resolve(event.data.result)
+          } else if (event.data.type === 'apiError') {
+            reject(new Error(event.data.error))
+          }
+        }
+      }
+
+      self.addEventListener('message', handler)
+
+      self.postMessage({
+        type: 'apiCall',
+        callId,
+        method: 'window.startProgress',
+        args: [progressId, options],
+      })
+    })
+
+    try {
+      const result = await task({
+        report(value) {
+          // Fire-and-forget progress report
+          self.postMessage({
+            type: 'progressReport',
+            progressId,
+            value,
+          })
+        },
+      })
+      return result
+    } finally {
+      // End progress
+      self.postMessage({
+        type: 'progressEnd',
+        progressId,
+      })
+    }
+  },
 }
 export const commands: Commands = {
   registerCommand(command: string, callback: (...args: any[]) => any) {
@@ -77,11 +125,79 @@ export const workspace = {
 }
 
 // Clean up dangerous globals
-delete (self as any).fetch
-delete (self as any).indexedDB
-delete (self as any).localStorage
-delete (self as any).sessionStorage
-delete (self as any).caches
+const dangerousGlobals: (keyof typeof globalThis)[] = [
+  'eval',
+  'Function',
+  'XMLHttpRequest',
+  'WebSocket',
+  'Worker',
+  'SharedWorker',
+  'indexedDB',
+  'localStorage',
+  'sessionStorage',
+  'caches',
+]
+
+for (const key of dangerousGlobals) {
+  try {
+    delete globalThis[key]
+  } catch {
+    // Ignore if not deletable
+  }
+}
+
+// Permissions configuration (will be set by host before activation)
+let hasFetchPermission = false
+let allowedHostPatterns: RegExp[] = []
+
+/**
+ * Convert URL pattern to RegExp
+ * Supports patterns like "https://example.com/*", "https://*.example.com/*"
+ */
+function urlPatternToRegex(pattern: string): RegExp {
+  // Escape special regex chars except * and ?
+  let regexStr = pattern
+    .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*')
+    .replace(/\?/g, '.')
+  return new RegExp(`^${regexStr}$`)
+}
+
+/**
+ * Check if URL is allowed by host_permissions
+ */
+function isUrlAllowed(url: string): boolean {
+  if (!hasFetchPermission) return false
+  // Always allow blob: and data: URLs (used internally by libraries)
+  if (url.startsWith('blob:') || url.startsWith('data:')) return true
+  if (allowedHostPatterns.length === 0) return false
+  return allowedHostPatterns.some((pattern) => pattern.test(url))
+}
+
+// Store original fetch
+const originalFetch = globalThis.fetch as typeof fetch
+
+// Replace fetch with restricted version
+globalThis.fetch = async function restrictedFetch(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  const url =
+    typeof input === 'string'
+      ? input
+      : input instanceof URL
+        ? input.href
+        : input.url
+
+  if (!isUrlAllowed(url)) {
+    throw new Error(
+      `Fetch blocked: URL "${url}" is not allowed. ` +
+        `Add the URL pattern to host_permissions in manifest.json and include "fetch" in permissions.`,
+    )
+  }
+
+  return originalFetch(input, init)
+}
 
 // Message handler
 globalThis.onmessage = async (event: MessageEvent) => {
@@ -91,9 +207,16 @@ globalThis.onmessage = async (event: MessageEvent) => {
     extensionContext.extensionId = context.extensionId
     extensionContext.extensionVersion = context.extensionVersion
 
+    // Setup permissions from context
+    if (context.permissions?.includes('fetch')) {
+      hasFetchPermission = true
+      allowedHostPatterns = (context.hostPermissions || []).map(
+        urlPatternToRegex,
+      )
+    }
+
     try {
-      const activateFn =
-        (globalThis as any).activate ?? (self as any).activate
+      const activateFn = (globalThis as any).activate ?? (self as any).activate
 
       if (typeof activateFn !== 'function') {
         throw new Error('Plugin must expose an activate(context) function')

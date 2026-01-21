@@ -52,27 +52,9 @@ function bundlePlugin(): Plugin {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), bundlePlugin()],
-  optimizeDeps: {
-    // rembg-webgpu bundles a worker entry that can confuse Vite's dep optimizer in dev.
-    exclude: ['rembg-webgpu'],
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-    },
-  },
-  build: {
-    rolldownOptions: {
-      output: {
-        advancedChunks: {
-          groups: [
-            {
-              name: 'huggingface-transformers',
-              test: /@huggingface\/transformers/,
-            },
-          ],
-        },
-      },
     },
   },
 })

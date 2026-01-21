@@ -11,7 +11,6 @@ import {
   editCut,
   editCopy,
   editPaste,
-  editRemoveBg,
   viewZoomIn,
   viewZoomOut,
   viewResetZoom,
@@ -60,9 +59,6 @@ export function registerBuiltinActions() {
     viewZoomIn(),
     viewZoomOut(),
     viewResetZoom(),
-
-    // Tools 菜单
-    editRemoveBg(),
 
     // Plugin 菜单
     pluginInstall(),

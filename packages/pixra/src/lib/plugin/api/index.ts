@@ -25,6 +25,7 @@ const apiHandlers: Record<string, ApiHandler> = {
   'window.showInformationMessage': windowApi.showInformationMessage,
   'window.showWarningMessage': windowApi.showWarningMessage,
   'window.showErrorMessage': windowApi.showErrorMessage,
+  'window.startProgress': windowApi.startProgress,
   'commands.registerCommand': commandsApi.registerCommand,
   'workspace.getActiveImage': workspaceApi.getActiveImage,
   'workspace.updateActiveImage': workspaceApi.updateActiveImage,

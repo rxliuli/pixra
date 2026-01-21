@@ -1,0 +1,24 @@
+{
+  "name": "@pixra-plugins/remove-bg",
+  "version": "0.0.1",
+  "description": "Remove background from images using AI",
+  "scripts": {
+    "build": "pixra build",
+    "zip": "pixra zip"
+  },
+  "keywords": [
+    "pixra-plugin",
+    "remove-background",
+    "ai"
+  ],
+  "author": "Pixra Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@pixra/plugin-cli": "workspace:*",
+    "@pixra/plugin-sdk": "workspace:*",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "rembg-webgpu": "^0.2.1"
+  }
+}

@@ -36,6 +36,17 @@ export interface Window {
    * Show an error message
    */
   showErrorMessage(message: string): Promise<void>
+
+  /**
+   * Show a progress dialog while executing a task
+   * @param options - Progress options
+   * @param task - The task to execute with progress reporting
+   * @returns The result of the task
+   */
+  withProgress<T>(
+    options: ProgressOptions,
+    task: (progress: Progress) => Promise<T>
+  ): Promise<T>
 }
 
 /** Commands API - command registration */
@@ -72,6 +83,20 @@ export interface Workspace {
    * @param data - The file content as ArrayBuffer
    */
   downloadFile(filename: string, data: ArrayBuffer): Promise<void>
+}
+
+/** Progress options */
+export interface ProgressOptions {
+  /** Title shown in the progress dialog */
+  title: string
+  /** Whether the operation can be cancelled */
+  cancellable?: boolean
+}
+
+/** Progress reporter */
+export interface Progress {
+  /** Report progress update */
+  report(value: { message?: string; percentage?: number }): void
 }
 
 // Type declarations - these will be provided by the runtime at runtime

@@ -17,6 +17,17 @@ export interface PluginManifest {
     commands?: CommandContribution[]
     menus?: MenuContributions
   }
+  /**
+   * Permissions required by the plugin (API access)
+   * e.g., ["fetch"] to enable network access
+   */
+  permissions?: 'fetch'[]
+  /**
+   * Host permissions - URL patterns the plugin is allowed to access
+   * Only effective when "fetch" is in permissions
+   * Uses URL pattern syntax (e.g., "https://huggingface.co/*", "https://*.githubusercontent.com/*")
+   */
+  host_permissions?: string[]
 }
 
 export interface CommandContribution {

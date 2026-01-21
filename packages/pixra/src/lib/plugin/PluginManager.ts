@@ -189,6 +189,8 @@ export class PluginManager {
       context: {
         extensionId: plugin.manifest.id,
         extensionVersion: plugin.manifest.version,
+        permissions: plugin.manifest.permissions,
+        hostPermissions: plugin.manifest.host_permissions,
       },
     })
 
@@ -325,6 +327,12 @@ export class PluginManager {
       case 'apiCall':
         this.handleApiCall(pluginId, message)
         break
+      case 'progressReport':
+        this.handleProgressReport(message)
+        break
+      case 'progressEnd':
+        this.handleProgressEnd(message)
+        break
       case 'log':
         console.log(`[Plugin ${pluginId}]`, ...message.args)
         break
@@ -332,6 +340,26 @@ export class PluginManager {
         // Handled by specific promise handlers
         break
     }
+  }
+
+  /**
+   * Handle progress report from plugin
+   */
+  private handleProgressReport(message: any): void {
+    const { progressId, value } = message
+    import('./api/window').then(({ reportProgress }) => {
+      reportProgress(progressId, value)
+    })
+  }
+
+  /**
+   * Handle progress end from plugin
+   */
+  private handleProgressEnd(message: any): void {
+    const { progressId } = message
+    import('./api/window').then(({ endProgress }) => {
+      endProgress(progressId)
+    })
   }
 
   /**

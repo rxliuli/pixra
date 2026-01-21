@@ -1,5 +1,7 @@
+import { fileSelector } from '@/lib/fileSelector'
 import type { BuiltinAction } from '../actions/types'
 import { pluginManager } from '@/lib/plugin'
+import { toast } from 'sonner'
 
 export function pluginInstall(): BuiltinAction {
   return {
@@ -9,37 +11,24 @@ export function pluginInstall(): BuiltinAction {
       group: 'plugin',
     },
     execute: async () => {
-      // Create file input
-      const input = document.createElement('input')
-      input.type = 'file'
-      input.accept = '.zip'
-
-      return new Promise<void>((resolve, reject) => {
-        input.onchange = async (e) => {
-          const file = (e.target as HTMLInputElement).files?.[0]
-          if (!file) {
-            resolve()
-            return
-          }
-
-          try {
-            await pluginManager.installFromZip(file)
-            alert(`Plugin installed successfully!`)
-            resolve()
-          } catch (error) {
-            const message =
-              error instanceof Error ? error.message : String(error)
-            alert(`Failed to install plugin: ${message}`)
-            reject(error)
-          }
-        }
-
-        input.oncancel = () => {
-          resolve()
-        }
-
-        input.click()
+      const files = await fileSelector({
+        accept: '.zip',
+        multiple: false,
       })
+      if (!files || files.length === 0) {
+        return
+      }
+      const file = files[0]
+      if (!file) {
+        return
+      }
+      try {
+        await pluginManager.installFromZip(file)
+        toast.info(`Plugin installed successfully!`)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error)
+        toast.error(`Failed to install plugin: ${message}`)
+      }
     },
   }
 }
