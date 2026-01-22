@@ -2,13 +2,10 @@ import { Toolbar } from './components/gui/Toolbar'
 import { Renderer } from './components/gui/Renderer'
 import { ToolPanel } from './components/gui/ToolPanel'
 import { SecondaryToolbar } from './components/gui/SecondaryToolbar'
-import { QuickPick } from './lib/window'
-import { ExportDialog } from './components/gui/ExportDialog'
-import { PluginStoreDialog } from './components/gui/PluginStoreDialog'
+import { QuickPick, DialogHost } from './lib/window'
 import { TabBar } from './components/gui/TabBar'
 import { WelcomePage } from './components/gui/WelcomePage'
 import { Toaster } from './components/ui/sonner'
-import { exportImageWithOptions } from './components/commands/file-export'
 import { registerBuiltinActions } from './components/actions'
 import { pluginManager } from './lib/plugin'
 import { observer } from 'mobx-react-lite'
@@ -58,19 +55,6 @@ const App = observer(() => {
     appStateStore.editorStore.exitCropMode()
   }
 
-  const handleExport = async (
-    options: Parameters<typeof exportImageWithOptions>[1],
-  ) => {
-    const { imageData, originalFileName } = appStateStore.sceneStore
-    if (!imageData) return
-
-    try {
-      await exportImageWithOptions(imageData, options, originalFileName)
-    } catch (error) {
-      console.error('Failed to export image:', error)
-    }
-  }
-
   return (
     <div className="flex h-screen flex-col overflow-hidden">
       <Toolbar />
@@ -90,29 +74,7 @@ const App = observer(() => {
         )}
       </div>
       <QuickPick />
-      <ExportDialog
-        open={appStateStore.exportDialogStore.isOpen}
-        onOpenChange={(open) => {
-          if (open) {
-            appStateStore.exportDialogStore.open()
-          } else {
-            appStateStore.exportDialogStore.close()
-          }
-        }}
-        originalWidth={appStateStore.sceneStore.imageData?.width || 0}
-        originalHeight={appStateStore.sceneStore.imageData?.height || 0}
-        onExport={handleExport}
-      />
-      <PluginStoreDialog
-        open={appStateStore.pluginStoreDialogStore.isOpen}
-        onOpenChange={(open) => {
-          if (open) {
-            appStateStore.pluginStoreDialogStore.open()
-          } else {
-            appStateStore.pluginStoreDialogStore.close()
-          }
-        }}
-      />
+      <DialogHost />
       <Toaster position="bottom-right" richColors closeButton />
     </div>
   )

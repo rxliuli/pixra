@@ -1,15 +1,22 @@
 import { toast } from 'sonner'
+import type { ComponentType } from 'react'
 import {
   quickPickStore,
   type QuickPickItem,
   type InputBoxOptions,
 } from './QuickPickStore'
+import {
+  dialogStore,
+  type DialogResult,
+  type ShowDialogOptions,
+} from './DialogStore'
 
 // Re-export types
-export type { QuickPickItem, InputBoxOptions }
+export type { QuickPickItem, InputBoxOptions, DialogResult, ShowDialogOptions }
 
-// Re-export component for mounting
+// Re-export components for mounting
 export { QuickPick } from './QuickPick'
+export { DialogHost } from './DialogHost'
 
 export interface ProgressOptions {
   title: string
@@ -115,5 +122,19 @@ export const ui = {
       toast.dismiss(toastId)
       throw error
     }
+  },
+
+  /**
+   * Shows a dialog with a custom component.
+   *
+   * @param Component The React component to render inside the dialog.
+   * @param options Options for the dialog display.
+   * @returns A promise that resolves to 'ok' or 'cancel'.
+   */
+  showDialog(
+    Component: ComponentType<any>,
+    options?: ShowDialogOptions,
+  ): Promise<DialogResult> {
+    return dialogStore.showDialog(Component, options)
   },
 }

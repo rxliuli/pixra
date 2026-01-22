@@ -1,5 +1,6 @@
 import type { BuiltinAction } from '../actions/types'
-import { appStateStore } from '../store'
+import { PluginStoreContent } from '../gui/PluginStoreContent'
+import { ui } from '@/lib/window'
 
 export function pluginStore(): BuiltinAction {
   return {
@@ -8,8 +9,12 @@ export function pluginStore(): BuiltinAction {
     menu: {
       group: 'plugin',
     },
-    execute: () => {
-      appStateStore.pluginStoreDialogStore.open()
+    execute: async () => {
+      await ui.showDialog(PluginStoreContent, {
+        title: 'Plugin Store',
+        footer: false,
+        className: 'sm:max-w-4xl h-[600px] flex flex-col',
+      })
     },
   }
 }
