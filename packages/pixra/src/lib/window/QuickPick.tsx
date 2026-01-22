@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { appStateStore } from '../store'
+import { quickPickStore } from './QuickPickStore'
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,7 +11,6 @@ import {
 import { useState } from 'react'
 
 export const QuickPick = observer(() => {
-  const { quickPickStore } = appStateStore
   const state = quickPickStore.currentState
   const [inputValue, setInputValue] = useState('')
   const [validationError, setValidationError] = useState<string | null>(null)
@@ -69,7 +68,7 @@ export const QuickPick = observer(() => {
   // InputBox mode
   if (state.type === 'inputbox' && state.inputBoxOptions) {
     const options = state.inputBoxOptions
-    
+
     const handleAccept = () => {
       // Validate input
       if (options.validateInput) {

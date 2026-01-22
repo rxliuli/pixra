@@ -3,28 +3,33 @@
  * Handles UI interactions like notifications, dialogs, etc.
  */
 
+/**
+ * Window API - Plugin wrapper layer
+ * Thin wrapper around core window API for plugin use
+ */
 import { toast } from 'sonner'
+import { ui } from '@/lib/window'
 import type { ApiContext } from './index'
 
 export async function showInformationMessage(
   _ctx: ApiContext,
   message: string,
 ): Promise<void> {
-  toast.info(message)
+  ui.showInformationMessage(message)
 }
 
 export async function showWarningMessage(
   _ctx: ApiContext,
   message: string,
 ): Promise<void> {
-  toast.warning(message)
+  ui.showWarningMessage(message)
 }
 
 export async function showErrorMessage(
   _ctx: ApiContext,
   message: string,
 ): Promise<void> {
-  toast.error(message)
+  ui.showErrorMessage(message)
 }
 
 /** Active progress sessions with toast IDs */

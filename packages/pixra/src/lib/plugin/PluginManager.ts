@@ -6,6 +6,7 @@ import esbuildWasmUrl from 'esbuild-wasm/esbuild.wasm?url'
 import sdkRuntimeCode from '@pixra/plugin-sdk/runtime?bundle'
 import { type Plugin } from 'esbuild-wasm'
 import { executeApiCall, type ApiContext } from './api'
+import { ui } from '../window'
 
 /**
  * Active plugin instance
@@ -26,7 +27,10 @@ export class PluginManager {
   private initialized = false
   private esbuildInitialized = false
   private registeredPluginCommands = new Map<string, string[]>() // pluginId -> command ids
-  private registeredPluginMenuItems = new Map<string, Array<{ groupId: string; commandId: string }>>() // pluginId -> menu items
+  private registeredPluginMenuItems = new Map<
+    string,
+    Array<{ groupId: string; commandId: string }>
+  >() // pluginId -> menu items
 
   /**
    * Initialize plugin system - load all installed plugins and register commands
@@ -61,9 +65,14 @@ export class PluginManager {
     const existingPlugin = await this.storage.loadPlugin(manifest.id)
     if (existingPlugin) {
       // Ask user if they want to update
-      const shouldUpdate = confirm(
-        `Plugin ${manifest.name} (${manifest.id}) is already installed (v${existingPlugin.manifest.version}).\n\n` +
-          `Do you want to update it to v${manifest.version}?`,
+      const shouldUpdate = await ui.showQuickPick(
+        [
+          { label: 'Update', value: true },
+          { label: 'Cancel', value: false },
+        ],
+        {
+          title: `Plugin "${manifest.name}" is already installed. Update to version ${manifest.version}?`,
+        },
       )
 
       if (!shouldUpdate) {
@@ -166,7 +175,9 @@ export class PluginManager {
       const timeoutMs = 5000
       const timeout = window.setTimeout(() => {
         worker.removeEventListener('message', handler)
-        reject(new Error(`Plugin ${pluginId} activation timed out (${timeoutMs}ms)`))
+        reject(
+          new Error(`Plugin ${pluginId} activation timed out (${timeoutMs}ms)`),
+        )
       }, timeoutMs)
 
       const handler = (event: MessageEvent) => {

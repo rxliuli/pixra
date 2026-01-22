@@ -1,6 +1,7 @@
 import type { BuiltinAction } from '../actions/types'
 import { appStateStore } from '../store'
 import { actionRegistry } from '../actions'
+import { ui } from '@/lib/window'
 
 export function fileClose(): BuiltinAction {
   return {
@@ -12,7 +13,7 @@ export function fileClose(): BuiltinAction {
       if (!doc) return
 
       if (doc.isDirty) {
-        const result = await appStateStore.quickPickStore.showQuickPick(
+        const result = await ui.showQuickPick(
           [
             { label: 'Save', value: 'save' },
             { label: "Don't Save", value: 'discard' },

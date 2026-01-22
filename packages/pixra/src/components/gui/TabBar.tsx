@@ -2,6 +2,7 @@ import { observer } from 'mobx-react-lite'
 import { appStateStore } from '../store'
 import { X } from 'lucide-react'
 import { actionRegistry } from '../actions'
+import { ui } from '@/lib/window'
 
 export const TabBar = observer(function TabBar() {
   const { documentStore } = appStateStore
@@ -18,7 +19,7 @@ export const TabBar = observer(function TabBar() {
     if (!doc) return
 
     if (doc.isDirty) {
-      const result = await appStateStore.quickPickStore.showQuickPick(
+      const result = await ui.showQuickPick(
         [
           { label: 'Save', value: 'save' },
           { label: "Don't Save", value: 'discard' },
