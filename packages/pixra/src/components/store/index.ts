@@ -228,6 +228,22 @@ class ExportDialogStore {
   }
 }
 
+class PluginStoreDialogStore {
+  isOpen = false
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+
+  open() {
+    this.isOpen = true
+  }
+
+  close() {
+    this.isOpen = false
+  }
+}
+
 class AppStateStore {
   readonly toolbarStore = new AppToolbarStore()
   readonly documentStore = new DocumentStore()
@@ -235,6 +251,7 @@ class AppStateStore {
   readonly editorStore = new EditorStore()
   readonly quickPickStore = new QuickPickStore()
   readonly exportDialogStore = new ExportDialogStore()
+  readonly pluginStoreDialogStore = new PluginStoreDialogStore()
 
   constructor() {
     this.sceneStore = new SceneStore(this.documentStore)

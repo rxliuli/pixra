@@ -1,14 +1,19 @@
 {
   "name": "@pixra/plugin-cli",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "CLI tool for building and packaging Pixra plugins",
   "type": "module",
   "bin": {
     "pixra": "./dist/cli.mjs"
   },
+  "author": "Pixra Team",
+  "license": "MIT",
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch"
@@ -19,12 +24,9 @@
     "cli",
     "build-tool"
   ],
-  "author": "Pixra Team",
-  "license": "MIT",
   "dependencies": {
     "archiver": "^7.0.1",
     "cac": "^6.7.14",
-    "chokidar": "^4.0.3",
     "esbuild": "^0.24.2",
     "picocolors": "^1.1.1"
   },

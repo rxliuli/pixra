@@ -5,7 +5,7 @@ export function helpAbout(): BuiltinAction {
     command: 'help.about',
     title: 'About',
     execute: () => {
-      alert('Pixra - Image Editor v0.1.0')
+      alert('Pixra - Image Editor v0.0.1')
     },
     menu: {
       group: 'help',

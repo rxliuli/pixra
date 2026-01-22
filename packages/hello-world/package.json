@@ -2,16 +2,25 @@
   "name": "@pixra/hello-world",
   "version": "0.0.1",
   "description": "A simple hello world plugin for Pixra",
+  "private": true,
   "scripts": {
+    "dev": "pixra dev",
     "build": "pixra build",
-    "zip": "pixra zip"
+    "zip": "pixra zip",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "pixra-plugin",
     "example"
   ],
   "author": "Pixra Team",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@pixra/plugin-cli": "workspace:*",
     "@pixra/plugin-sdk": "workspace:*",

@@ -23,3 +23,4 @@ export { helpShowCommands } from './help-show-commands'
 
 // Plugin commands
 export { pluginInstall } from './plugin-install'
+export { pluginStore } from './plugin-store'

@@ -130,7 +130,7 @@ const dangerousGlobals: (keyof typeof globalThis)[] = [
   'Function',
   'XMLHttpRequest',
   'WebSocket',
-  'Worker',
+  // 'Worker', // allow Workers
   'SharedWorker',
   'indexedDB',
   'localStorage',
@@ -192,7 +192,7 @@ globalThis.fetch = async function restrictedFetch(
   if (!isUrlAllowed(url)) {
     throw new Error(
       `Fetch blocked: URL "${url}" is not allowed. ` +
-        `Add the URL pattern to host_permissions in manifest.json and include "fetch" in permissions.`,
+        `Add the URL pattern to host_permissions in plugin.json and include "fetch" in permissions.`,
     )
   }
 

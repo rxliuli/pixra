@@ -28,9 +28,9 @@ export class PluginLoader {
     const zip = await JSZip.loadAsync(file);
     
     // Read manifest
-    const manifestFile = zip.file('manifest.json');
+    const manifestFile = zip.file('plugin.json');
     if (!manifestFile) {
-      throw new Error('manifest.json not found in plugin package');
+      throw new Error('plugin.json not found in plugin package');
     }
     
     const manifestText = await manifestFile.async('text');

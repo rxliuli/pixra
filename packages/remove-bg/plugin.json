@@ -1,9 +1,7 @@
 {
   "id": "pixra.remove-bg",
   "name": "Remove Background",
-  "version": "0.0.1",
   "description": "Remove background from images using AI (WebGPU/WASM)",
-  "main": "main.js",
   "contributes": {
     "commands": [
       {

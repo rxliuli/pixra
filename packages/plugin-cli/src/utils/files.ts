@@ -3,18 +3,13 @@ import path from 'path'
 
 export function findEntry(cwd: string = process.cwd()): string | null {
   const srcDir = path.join(cwd, 'src')
-  
+
   if (!fs.existsSync(srcDir)) {
     return null
   }
 
   // Check for common entry file names
-  const possibleEntries = [
-    'main.ts',
-    'main.js',
-    'index.ts',
-    'index.js',
-  ]
+  const possibleEntries = ['plugin.ts', 'plugin.js']
 
   for (const entry of possibleEntries) {
     const entryPath = path.join(srcDir, entry)
@@ -34,7 +29,7 @@ export function getAllSourceFiles(srcDir: string): string[] {
 
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name)
-      
+
       if (entry.isDirectory()) {
         walk(fullPath)
       } else if (entry.isFile() && /\.(ts|js)$/.test(entry.name)) {

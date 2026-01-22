@@ -84,17 +84,15 @@ async function removeBg(): Promise<void> {
 
       let blobUrl: string | undefined
       try {
-        // Remove background from an image
         blobUrl = URL.createObjectURL(blob)
         const result = await removeBackground(blobUrl)
-
         const response = await fetch(result.blobUrl)
         const resultBlob = await response.blob()
-        await pixra.workspace.updateActiveImage(
-          await blobToImageData(resultBlob),
-        )
+        const imageData = await blobToImageData(resultBlob)
+        await pixra.workspace.updateActiveImage(imageData)
       } catch (error) {
         const msg = error instanceof Error ? error.message : String(error)
+        console.error('Remove background error:', error)
         if (/Failed to fetch|NetworkError|fetch/i.test(msg)) {
           throw new Error(
             `Remove background failed: model/assets download blocked or unreachable. ` +

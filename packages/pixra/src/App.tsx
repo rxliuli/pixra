@@ -4,6 +4,7 @@ import { ToolPanel } from './components/gui/ToolPanel'
 import { SecondaryToolbar } from './components/gui/SecondaryToolbar'
 import { QuickPick } from './components/gui/QuickPick'
 import { ExportDialog } from './components/gui/ExportDialog'
+import { PluginStoreDialog } from './components/gui/PluginStoreDialog'
 import { TabBar } from './components/gui/TabBar'
 import { WelcomePage } from './components/gui/WelcomePage'
 import { Toaster } from './components/ui/sonner'
@@ -101,6 +102,16 @@ const App = observer(() => {
         originalWidth={appStateStore.sceneStore.imageData?.width || 0}
         originalHeight={appStateStore.sceneStore.imageData?.height || 0}
         onExport={handleExport}
+      />
+      <PluginStoreDialog
+        open={appStateStore.pluginStoreDialogStore.isOpen}
+        onOpenChange={(open) => {
+          if (open) {
+            appStateStore.pluginStoreDialogStore.open()
+          } else {
+            appStateStore.pluginStoreDialogStore.close()
+          }
+        }}
       />
       <Toaster position="bottom-right" richColors closeButton />
     </div>

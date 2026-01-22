@@ -17,6 +17,7 @@ import {
   helpAbout,
   helpShowCommands,
   pluginInstall,
+  pluginStore,
 } from '../commands'
 
 let initialized = false
@@ -61,6 +62,7 @@ export function registerBuiltinActions() {
     viewResetZoom(),
 
     // Plugin 菜单
+    pluginStore(),
     pluginInstall(),
 
     // Help 菜单

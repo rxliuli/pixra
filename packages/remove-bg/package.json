@@ -1,10 +1,12 @@
 {
   "name": "@pixra/remove-bg",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Remove background from images using AI",
   "scripts": {
+    "dev": "pixra dev",
     "build": "pixra build",
-    "zip": "pixra zip"
+    "zip": "pixra zip",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "pixra-plugin",
@@ -12,7 +14,13 @@
     "ai"
   ],
   "author": "Pixra Team",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@pixra/plugin-cli": "workspace:*",
     "@pixra/plugin-sdk": "workspace:*",

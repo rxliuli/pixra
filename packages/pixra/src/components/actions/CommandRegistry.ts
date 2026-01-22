@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx'
+import { toast } from 'sonner'
 import type { Command } from './types'
 
 /**
@@ -59,6 +60,11 @@ export class CommandRegistry {
       await command.execute()
     } catch (error) {
       console.error(`Error executing command ${commandId}:`, error)
+      const message = error instanceof Error ? error.message : String(error)
+      toast.error(
+        `Error executing command [${this.getCommand(commandId)?.title ?? commandId}]: ` +
+          message,
+      )
     }
   }
 

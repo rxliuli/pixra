@@ -1,32 +1,20 @@
-# Hello World Plugin
+# Hello World
 
-A simple example plugin for Pixra that demonstrates basic plugin functionality.
+A minimal Pixra plugin example demonstrating the plugin SDK basics.
 
-## Features
+## What it does
 
-- Registers a "Hello World" command
-- Shows an information message when executed
+Registers a single command that shows a greeting message. That's it.
 
-## Usage
+## For developers
 
-1. Install the plugin in Pixra
-2. Open the command palette (Help > Show All Commands)
-3. Search for "Hello World"
-4. Execute the command to see the greeting
+This plugin serves as a starting point for building your own Pixra plugins. It shows:
 
-## Development
+- How to define a plugin manifest (`plugin.json`)
+- How to implement `activate` and `deactivate` lifecycle hooks
+- How to register commands using the SDK
+- How to display messages to users
 
-This plugin serves as a template for creating Pixra plugins. Key files:
+## License
 
-- `manifest.json` - Plugin metadata and contributions
-- `src/main.js` - Plugin implementation
-- `package.json` - npm package configuration
-
-## Building
-
-```bash
-npm run build
-npm run package
-```
-
-This will create a `hello-world.zip` file that can be installed in Pixra.
+AGPL-3.0

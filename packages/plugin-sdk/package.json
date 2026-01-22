@@ -1,6 +1,6 @@
 {
   "name": "@pixra/plugin-sdk",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "SDK for developing Pixra plugins",
   "type": "module",
   "exports": {
@@ -11,9 +11,14 @@
       "default": "./src/runtime.ts"
     }
   },
+  "author": "Pixra Team",
+  "license": "MIT",
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsdown src/index.ts",
     "dev": "tsdown src/index.ts --watch"
@@ -23,8 +28,6 @@
     "plugin",
     "sdk"
   ],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "tsdown": "0.20.0-beta.3",
     "typescript": "^5.7.3"

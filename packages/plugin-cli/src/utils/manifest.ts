@@ -8,11 +8,21 @@ export interface PluginManifest {
   description?: string
   author?: string
   main: string
+  minAppVersion?: string
+  permissions?: string[]
+  host_permissions?: string[]
+  contributes?: {
+    commands?: Array<{
+      command: string
+      title: string
+    }>
+    menus?: Record<string, Array<{ command: string }>>
+  }
 }
 
 export function findManifest(cwd: string = process.cwd()): PluginManifest | null {
-  const manifestPath = path.join(cwd, 'manifest.json')
-  
+  const manifestPath = path.join(cwd, 'plugin.json')
+
   if (!fs.existsSync(manifestPath)) {
     return null
   }
@@ -20,7 +30,7 @@ export function findManifest(cwd: string = process.cwd()): PluginManifest | null
   try {
     const content = fs.readFileSync(manifestPath, 'utf-8')
     return JSON.parse(content) as PluginManifest
-  } catch (error) {
+  } catch {
     return null
   }
 }
@@ -30,8 +40,6 @@ export function validateManifest(manifest: PluginManifest): string[] {
 
   if (!manifest.id) errors.push('Missing required field: id')
   if (!manifest.name) errors.push('Missing required field: name')
-  if (!manifest.version) errors.push('Missing required field: version')
-  if (!manifest.main) errors.push('Missing required field: main')
 
   return errors
 }
