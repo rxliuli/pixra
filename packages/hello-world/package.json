@@ -1,5 +1,5 @@
 {
-  "name": "@pixra-plugins/hello-world",
+  "name": "@pixra/hello-world",
   "version": "0.0.1",
   "description": "A simple hello world plugin for Pixra",
   "scripts": {
