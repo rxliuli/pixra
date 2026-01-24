@@ -78,6 +78,13 @@ export class KeybindingRegistry {
           const keyToMatch = isMac && binding.mac ? binding.mac : binding.key
 
           if (this.matchesKeybinding(event, keyToMatch)) {
+            // 在可编辑区域时，不拦截系统级编辑快捷键
+            if (
+              this.isEditableElement(event.target) &&
+              this.isSystemEditKey(event)
+            ) {
+              return
+            }
             event.preventDefault()
             executeCommand(commandId)
             return
@@ -133,6 +140,30 @@ export class KeybindingRegistry {
 
   private handleKeyDown = (_event: KeyboardEvent) => {
     // Will be replaced in startListening
+  }
+
+  /**
+   * 检查目标元素是否是可编辑元素
+   */
+  private isEditableElement(target: EventTarget | null): boolean {
+    if (!target || !(target instanceof HTMLElement)) return false
+
+    const tagName = target.tagName
+    if (tagName === 'INPUT' || tagName === 'TEXTAREA') return true
+    if (target.isContentEditable) return true
+
+    return false
+  }
+
+  /**
+   * 检查是否是系统级编辑快捷键 (Ctrl/Cmd + C/V/X/A/Z)
+   */
+  private isSystemEditKey(event: KeyboardEvent): boolean {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    const hasModifier = isMac ? event.metaKey : event.ctrlKey
+    const systemKeys = ['c', 'v', 'x', 'a', 'z']
+
+    return hasModifier && systemKeys.includes(event.key.toLowerCase())
   }
 
   /**
