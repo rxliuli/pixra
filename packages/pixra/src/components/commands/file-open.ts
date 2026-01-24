@@ -12,17 +12,26 @@ const IMAGE_FILE_TYPES = [
   },
 ]
 
+interface FileWithHandle {
+  file: File
+  handle: FileSystemFileHandle | null
+}
+
 /**
- * 使用 File System Access API 打开文件
+ * 使用 File System Access API 打开文件（支持多选）
  */
-async function openWithFileSystemAccess(): Promise<{ file: File; handle: FileSystemFileHandle } | null> {
+async function openWithFileSystemAccess(): Promise<FileWithHandle[] | null> {
   try {
-    const [handle] = await window.showOpenFilePicker({
-      multiple: false,
+    const handles = await window.showOpenFilePicker({
+      multiple: true,
       types: IMAGE_FILE_TYPES,
     })
-    const file = await handle.getFile()
-    return { file, handle }
+    const results: FileWithHandle[] = []
+    for (const handle of handles) {
+      const file = await handle.getFile()
+      results.push({ file, handle })
+    }
+    return results.length > 0 ? results : null
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
       return null
@@ -32,14 +41,47 @@ async function openWithFileSystemAccess(): Promise<{ file: File; handle: FileSys
 }
 
 /**
- * 使用传统 file input 打开文件（回退方案）
+ * 使用传统 file input 打开文件（回退方案，支持多选）
  */
-async function openWithFileInput(): Promise<{ file: File; handle: null } | null> {
-  const files = await fileSelector({ accept: 'image/*' })
+async function openWithFileInput(): Promise<FileWithHandle[] | null> {
+  const files = await fileSelector({ accept: 'image/*', multiple: true })
   if (!files || files.length === 0) {
     return null
   }
-  return { file: files[0], handle: null }
+  return Array.from(files).map((file) => ({ file, handle: null }))
+}
+
+/**
+ * 打开文件列表
+ */
+export async function openFiles(files: FileWithHandle[]): Promise<void> {
+  for (const { file, handle } of files) {
+    const bitmap = await createImageBitmap(file)
+
+    // 获取文件名（不含扩展名）
+    const fileName = file.name.replace(/\.[^/.]+$/, '')
+
+    // 创建新文档
+    const docId = appStateStore.documentStore.createDocument(bitmap, fileName)
+
+    // 保存文件句柄以便后续保存
+    if (handle) {
+      setFileHandle(docId, handle)
+    }
+  }
+
+  // 等待下一帧，确保 canvas 尺寸已更新
+  await new Promise(requestAnimationFrame)
+
+  // 对最后一个打开的文档计算适配缩放
+  const activeDoc = appStateStore.documentStore.activeDocument
+  if (activeDoc?.imageData) {
+    const fitScale = appStateStore.sceneStore.calculateFitScale(
+      activeDoc.imageData.width,
+      activeDoc.imageData.height,
+    )
+    appStateStore.sceneStore.setScale(fitScale)
+  }
 }
 
 export function fileOpen(): BuiltinAction {
@@ -56,28 +98,7 @@ export function fileOpen(): BuiltinAction {
         return
       }
 
-      const { file, handle } = result
-      const bitmap = await createImageBitmap(file)
-
-      // 获取文件名（不含扩展名）
-      const fileName = file.name.replace(/\.[^/.]+$/, '')
-
-      // 创建新文档
-      const docId = appStateStore.documentStore.createDocument(bitmap, fileName)
-
-      // 保存文件句柄以便后续保存
-      if (handle) {
-        setFileHandle(docId, handle)
-      }
-
-      // 等待下一帧，确保 canvas 尺寸已更新
-      await new Promise(requestAnimationFrame)
-      // 计算适配缩放
-      const fitScale = appStateStore.sceneStore.calculateFitScale(
-        bitmap.width,
-        bitmap.height,
-      )
-      appStateStore.sceneStore.setScale(fitScale)
+      await openFiles(result)
     },
     keybinding: {
       key: 'ctrl+o',
