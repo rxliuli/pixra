@@ -60,24 +60,41 @@ function findContentBounds(
 }
 
 /**
- * Apply padding to bounds while keeping within image dimensions
+ * Apply padding and make the bounds square by centering content
  */
-function applyPadding(
+function applyPaddingAndSquare(
   bounds: ContentBounds,
   padding: number,
   imageWidth: number,
   imageHeight: number,
 ): ContentBounds {
-  const x = Math.max(0, bounds.x - padding)
-  const y = Math.max(0, bounds.y - padding)
-  const right = Math.min(imageWidth, bounds.x + bounds.width + padding)
-  const bottom = Math.min(imageHeight, bounds.y + bounds.height + padding)
+  // First apply padding to content bounds
+  const paddedWidth = bounds.width + padding * 2
+  const paddedHeight = bounds.height + padding * 2
+
+  // Use the larger dimension to create a square
+  const size = Math.max(paddedWidth, paddedHeight)
+
+  // Calculate the center of the original content
+  const centerX = bounds.x + bounds.width / 2
+  const centerY = bounds.y + bounds.height / 2
+
+  // Calculate new bounds centered on content
+  let x = Math.round(centerX - size / 2)
+  let y = Math.round(centerY - size / 2)
+
+  // Clamp to image boundaries
+  x = Math.max(0, Math.min(x, imageWidth - size))
+  y = Math.max(0, Math.min(y, imageHeight - size))
+
+  // If the square is larger than the image, clamp size
+  const finalSize = Math.min(size, imageWidth, imageHeight)
 
   return {
     x,
     y,
-    width: right - x,
-    height: bottom - y,
+    width: finalSize,
+    height: finalSize,
   }
 }
 
@@ -132,8 +149,8 @@ async function smartCrop(): Promise<void> {
     return
   }
 
-  // Apply padding
-  const paddedBounds = applyPadding(
+  // Apply padding and make square
+  const paddedBounds = applyPaddingAndSquare(
     bounds,
     DEFAULT_PADDING,
     imageData.width,
