@@ -35,6 +35,7 @@ export function fileExport(): BuiltinAction {
   return {
     command: 'file.export',
     title: 'Export',
+    enablement: 'hasActiveDocument',
     execute: async () => {
       const { imageData, originalFileName } = appStateStore.sceneStore
 

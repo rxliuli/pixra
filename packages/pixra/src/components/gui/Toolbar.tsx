@@ -35,7 +35,9 @@ function renderMenuItem(
 
   // 普通菜单项
   if (item.command) {
-    const command = actionRegistry.getCommandRegistry().getCommand(item.command)
+    const commandRegistry = actionRegistry.getCommandRegistry()
+    const command = commandRegistry.getCommand(item.command)
+    const isEnabled = commandRegistry.isCommandEnabled(item.command)
     const keybindings = actionRegistry
       .getKeybindingRegistry()
       .getKeybindings(item.command)
@@ -47,7 +49,7 @@ function renderMenuItem(
       <MenubarItem
         key={item.command}
         onClick={() => onExecute(item.command!)}
-        disabled={!command}
+        disabled={!command || !isEnabled}
       >
         {item.title || command?.title}
         {shortcut && <MenubarShortcut>{shortcut}</MenubarShortcut>}

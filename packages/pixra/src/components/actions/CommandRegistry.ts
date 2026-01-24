@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import { toast } from 'sonner'
 import type { Command } from './types'
+import { whenClauseParser, WhenClauseParser } from './WhenClauseParser'
 
 /**
  * 命令注册中心
@@ -8,8 +9,10 @@ import type { Command } from './types'
  */
 export class CommandRegistry {
   private commands = new Map<string, Command>()
+  private whenClauseParser: WhenClauseParser
 
-  constructor() {
+  constructor(parser?: WhenClauseParser) {
+    this.whenClauseParser = parser || whenClauseParser
     makeAutoObservable(this)
   }
 
@@ -56,6 +59,12 @@ export class CommandRegistry {
       return
     }
 
+    // 检查命令是否启用
+    if (!this.isCommandEnabled(commandId)) {
+      console.warn(`Command ${commandId} is disabled`)
+      return
+    }
+
     try {
       await command.execute()
     } catch (error) {
@@ -80,6 +89,16 @@ export class CommandRegistry {
    */
   hasCommand(commandId: string): boolean {
     return this.commands.has(commandId)
+  }
+
+  /**
+   * 检查命令是否启用
+   */
+  isCommandEnabled(commandId: string): boolean {
+    const command = this.commands.get(commandId)
+    if (!command) return false
+    if (!command.enablement) return true
+    return this.whenClauseParser.evaluate(command.enablement)
   }
 }
 

@@ -44,6 +44,7 @@ export function fileSave(): BuiltinAction {
   return {
     command: 'file.save',
     title: 'Save',
+    enablement: 'hasActiveDocument',
     execute: async () => {
       const doc = appStateStore.documentStore.activeDocument
       if (!doc || !doc.imageData) {

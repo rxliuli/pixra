@@ -6,7 +6,10 @@ import { QuickPick, DialogHost } from './lib/window'
 import { TabBar } from './components/gui/TabBar'
 import { WelcomePage } from './components/gui/WelcomePage'
 import { Toaster } from './components/ui/sonner'
-import { registerBuiltinActions } from './components/actions'
+import {
+  registerBuiltinActions,
+  setupContextKeySynchronizer,
+} from './components/actions'
 import { pluginManager } from './lib/plugin'
 import { observer } from 'mobx-react-lite'
 import { appStateStore } from './components/store'
@@ -18,9 +21,10 @@ const App = observer(() => {
   const hasDocuments = documentStore.hasDocuments
   const activeDocumentId = documentStore.activeDocumentId
 
-  // 初始化系统内置命令
+  // 初始化系统内置命令和上下文同步
   useMount(() => {
     registerBuiltinActions()
+    setupContextKeySynchronizer()
     // 初始化插件系统
     pluginManager.initialize()
   })

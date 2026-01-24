@@ -5,6 +5,7 @@ export function editRedo(): BuiltinAction {
   return {
     command: 'edit.redo',
     title: 'Redo',
+    enablement: 'canRedo',
     execute: () => {
       appStateStore.documentStore.redo()
     },

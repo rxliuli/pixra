@@ -7,6 +7,7 @@ export function fileClose(): BuiltinAction {
   return {
     command: 'file.close',
     title: 'Close',
+    enablement: 'hasActiveDocument',
     execute: async () => {
       const { documentStore } = appStateStore
       const doc = documentStore.activeDocument

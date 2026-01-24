@@ -5,6 +5,7 @@ export function editUndo(): BuiltinAction {
   return {
     command: 'edit.undo',
     title: 'Undo',
+    enablement: 'canUndo',
     execute: () => {
       appStateStore.documentStore.undo()
     },

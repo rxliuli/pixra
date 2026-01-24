@@ -38,6 +38,7 @@ export interface MenuGroup {
 export type BuiltinActionSingle = {
   command: string
   title: string
+  enablement?: string // 条件表达式，控制命令是否可用
   execute: () => void | Promise<void>
   keybinding?: Omit<Keybinding, 'commandId'>
   menu: {

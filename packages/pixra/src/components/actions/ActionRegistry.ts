@@ -60,6 +60,7 @@ export class ActionRegistry {
       this.commandRegistry.registerCommand({
         command: action.command,
         title: action.title,
+        enablement: action.enablement,
         execute: () => action.execute!(),
       })
       // 注册快捷键
