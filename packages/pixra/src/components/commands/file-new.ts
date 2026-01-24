@@ -13,8 +13,8 @@ export function fileNew(): BuiltinAction {
 
       const bitmap = await createBlankImageBitmap({ width, height, fillColor: '#ffffff' })
 
-      // 创建新文档
-      appStateStore.documentStore.createDocument(bitmap, 'Untitled')
+      // 创建新标签页
+      appStateStore.tabStore.createTab(bitmap, 'Untitled')
 
       // 等待下一帧，确保 canvas 尺寸已更新
       await new Promise(requestAnimationFrame)

@@ -7,7 +7,7 @@ export function editUndo(): BuiltinAction {
     title: 'Undo',
     enablement: 'canUndo',
     execute: () => {
-      appStateStore.documentStore.undo()
+      appStateStore.tabStore.undo()
     },
     keybinding: {
       key: 'ctrl+z',

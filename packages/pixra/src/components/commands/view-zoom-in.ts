@@ -5,7 +5,7 @@ export function viewZoomIn(): BuiltinAction {
   return {
     command: 'view.zoomIn',
     title: 'Zoom In',
-    enablement: 'hasActiveDocument',
+    enablement: 'hasActiveTab',
     execute: () => {
       const currentScale = appStateStore.sceneStore.scale
       const newScale = Math.min(currentScale * 1.2, 10) // 每次放大 20%，最大 1000%

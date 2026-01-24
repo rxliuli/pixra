@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx'
-import { DocumentStore } from './DocumentStore'
+import { TabStore } from './TabStore'
 
 export type ToolType = 'move' | 'marquee' | 'crop' | 'brush'
 export type CropAspectRatio = 'free' | '1:1' | '16:9' | '4:3' | '3:2'
@@ -54,38 +54,38 @@ class SceneStore {
   // 画布尺寸保持为全局属性（UI 层面）
   canvasWidth = 0
   canvasHeight = 0
-  #documentStore: DocumentStore
+  #tabStore: TabStore
 
-  constructor(documentStore: DocumentStore) {
-    this.#documentStore = documentStore
+  constructor(tabStore: TabStore) {
+    this.#tabStore = tabStore
     makeAutoObservable(this)
   }
 
-  // 代理到当前活动文档
+  // 代理到当前活动标签页
   get imageData(): ImageBitmap | null {
-    return this.#documentStore.activeDocument?.imageData ?? null
+    return this.#tabStore.activeTab?.imageData ?? null
   }
 
   get originalFileName(): string {
-    return this.#documentStore.activeDocument?.name ?? 'image'
+    return this.#tabStore.activeTab?.name ?? 'image'
   }
 
   get pan(): { x: number; y: number } {
-    return this.#documentStore.activeDocument?.viewState.pan ?? { x: 0, y: 0 }
+    return this.#tabStore.activeTab?.viewState.pan ?? { x: 0, y: 0 }
   }
 
   get scale(): number {
-    return this.#documentStore.activeDocument?.viewState.scale ?? 1
+    return this.#tabStore.activeTab?.viewState.scale ?? 1
   }
 
   setImageData(imageData: ImageBitmap | null, addToHistory = true) {
-    this.#documentStore.setImageData(imageData, addToHistory)
+    this.#tabStore.setImageData(imageData, addToHistory)
   }
 
   setOriginalFileName(fileName: string) {
-    // 移除扩展名并设置文档名称
+    // 移除扩展名并设置标签页名称
     const name = fileName.replace(/\.[^/.]+$/, '')
-    this.#documentStore.setDocumentName(name)
+    this.#tabStore.setTabName(name)
   }
 
   setCanvasSize(width: number, height: number) {
@@ -94,11 +94,11 @@ class SceneStore {
   }
 
   setPan(x: number, y: number) {
-    this.#documentStore.setPan(x, y)
+    this.#tabStore.setPan(x, y)
   }
 
   setScale(scale: number) {
-    this.#documentStore.setScale(scale)
+    this.#tabStore.setScale(scale)
   }
 
   // 计算适配屏幕的缩放比例
@@ -114,18 +114,18 @@ class SceneStore {
 
   // 重置视图
   resetView() {
-    this.#documentStore.resetView()
+    this.#tabStore.resetView()
   }
 }
 
 class AppStateStore {
   readonly toolbarStore = new AppToolbarStore()
-  readonly documentStore = new DocumentStore()
+  readonly tabStore = new TabStore()
   readonly sceneStore: SceneStore
   readonly editorStore = new EditorStore()
 
   constructor() {
-    this.sceneStore = new SceneStore(this.documentStore)
+    this.sceneStore = new SceneStore(this.tabStore)
     makeAutoObservable(this)
   }
 }

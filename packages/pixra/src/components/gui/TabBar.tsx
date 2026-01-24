@@ -5,27 +5,27 @@ import { actionRegistry } from '../actions'
 import { ui } from '@/lib/window'
 
 export const TabBar = observer(function TabBar() {
-  const { documentStore } = appStateStore
-  const documents = documentStore.documentList
-  const activeId = documentStore.activeDocumentId
+  const { tabStore } = appStateStore
+  const tabs = tabStore.tabList
+  const activeId = tabStore.activeTabId
 
-  if (!documentStore.hasDocuments) {
+  if (!tabStore.hasTabs) {
     return null
   }
 
-  const handleCloseTab = async (e: React.MouseEvent, docId: string) => {
+  const handleCloseTab = async (e: React.MouseEvent, tabId: string) => {
     e.stopPropagation()
-    const doc = documentStore.documents.get(docId)
-    if (!doc) return
+    const tab = tabStore.tabs.get(tabId)
+    if (!tab) return
 
-    if (doc.isDirty) {
+    if (tab.isDirty) {
       const result = await ui.showQuickPick(
         [
           { label: 'Save', value: 'save' },
           { label: "Don't Save", value: 'discard' },
           { label: 'Cancel', value: 'cancel' },
         ],
-        { title: `Save changes to "${doc.name}"?` }
+        { title: `Save changes to "${tab.name}"?` }
       )
 
       if (!result || result.value === 'cancel') return
@@ -34,31 +34,31 @@ export const TabBar = observer(function TabBar() {
       }
     }
 
-    documentStore.closeDocument(docId)
+    tabStore.closeTab(tabId)
   }
 
   return (
     <div className="flex h-9 bg-gray-100 border-b overflow-x-auto">
-      {documents.map((doc) => (
+      {tabs.map((tab) => (
         <div
-          key={doc.id}
-          onClick={() => documentStore.switchDocument(doc.id)}
+          key={tab.id}
+          onClick={() => tabStore.switchTab(tab.id)}
           className={`
             flex items-center gap-1 px-3 py-1.5 border-r cursor-pointer
             min-w-[120px] max-w-[200px] select-none
             ${
-              activeId === doc.id
+              activeId === tab.id
                 ? 'bg-white border-b-2 border-b-white'
                 : 'bg-gray-50 hover:bg-gray-100'
             }
           `}
         >
           <span className="truncate flex-1 text-sm">
-            {doc.isDirty && <span className="text-gray-500 mr-1">●</span>}
-            {doc.name || 'Untitled'}
+            {tab.isDirty && <span className="text-gray-500 mr-1">●</span>}
+            {tab.name || 'Untitled'}
           </span>
           <button
-            onClick={(e) => handleCloseTab(e, doc.id)}
+            onClick={(e) => handleCloseTab(e, tab.id)}
             className="p-0.5 hover:bg-gray-200 rounded opacity-60 hover:opacity-100"
           >
             <X size={14} />

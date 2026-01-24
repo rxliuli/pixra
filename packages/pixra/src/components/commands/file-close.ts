@@ -7,20 +7,20 @@ export function fileClose(): BuiltinAction {
   return {
     command: 'file.close',
     title: 'Close',
-    enablement: 'hasActiveDocument',
+    enablement: 'hasActiveTab',
     execute: async () => {
-      const { documentStore } = appStateStore
-      const doc = documentStore.activeDocument
-      if (!doc) return
+      const { tabStore } = appStateStore
+      const tab = tabStore.activeTab
+      if (!tab) return
 
-      if (doc.isDirty) {
+      if (tab.isDirty) {
         const result = await ui.showQuickPick(
           [
             { label: 'Save', value: 'save' },
             { label: "Don't Save", value: 'discard' },
             { label: 'Cancel', value: 'cancel' },
           ],
-          { title: `Save changes to "${doc.name}"?` },
+          { title: `Save changes to "${tab.name}"?` },
         )
 
         if (!result || result.value === 'cancel') return
@@ -29,7 +29,7 @@ export function fileClose(): BuiltinAction {
         }
       }
 
-      documentStore.closeDocument(doc.id)
+      tabStore.closeTab(tab.id)
     },
     keybinding: {
       key: 'ctrl+w',

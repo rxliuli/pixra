@@ -61,24 +61,24 @@ export async function openFiles(files: FileWithHandle[]): Promise<void> {
     // 获取文件名（不含扩展名）
     const fileName = file.name.replace(/\.[^/.]+$/, '')
 
-    // 创建新文档
-    const docId = appStateStore.documentStore.createDocument(bitmap, fileName)
+    // 创建新标签页
+    const tabId = appStateStore.tabStore.createTab(bitmap, fileName)
 
     // 保存文件句柄以便后续保存
     if (handle) {
-      setFileHandle(docId, handle)
+      setFileHandle(tabId, handle)
     }
   }
 
   // 等待下一帧，确保 canvas 尺寸已更新
   await new Promise(requestAnimationFrame)
 
-  // 对最后一个打开的文档计算适配缩放
-  const activeDoc = appStateStore.documentStore.activeDocument
-  if (activeDoc?.imageData) {
+  // 对最后一个打开的标签页计算适配缩放
+  const activeTab = appStateStore.tabStore.activeTab
+  if (activeTab?.imageData) {
     const fitScale = appStateStore.sceneStore.calculateFitScale(
-      activeDoc.imageData.width,
-      activeDoc.imageData.height,
+      activeTab.imageData.width,
+      activeTab.imageData.height,
     )
     appStateStore.sceneStore.setScale(fitScale)
   }

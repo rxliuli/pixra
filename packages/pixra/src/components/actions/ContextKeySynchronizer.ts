@@ -9,14 +9,14 @@ import { appStateStore } from '../store'
 export function setupContextKeySynchronizer(): () => void {
   const disposers: (() => void)[] = []
 
-  const { documentStore } = appStateStore
+  const { tabStore } = appStateStore
 
-  // 同步 hasActiveDocument
+  // 同步 hasActiveTab
   disposers.push(
     reaction(
-      () => documentStore.activeDocument !== null,
-      (hasActiveDocument) => {
-        contextKeyService.set('hasActiveDocument', hasActiveDocument)
+      () => tabStore.activeTab !== null,
+      (hasActiveTab) => {
+        contextKeyService.set('hasActiveTab', hasActiveTab)
       },
       { fireImmediately: true },
     ),
@@ -25,7 +25,7 @@ export function setupContextKeySynchronizer(): () => void {
   // 同步 canUndo
   disposers.push(
     reaction(
-      () => documentStore.canUndo,
+      () => tabStore.canUndo,
       (canUndo) => {
         contextKeyService.set('canUndo', canUndo)
       },
@@ -36,7 +36,7 @@ export function setupContextKeySynchronizer(): () => void {
   // 同步 canRedo
   disposers.push(
     reaction(
-      () => documentStore.canRedo,
+      () => tabStore.canRedo,
       (canRedo) => {
         contextKeyService.set('canRedo', canRedo)
       },
@@ -47,7 +47,7 @@ export function setupContextKeySynchronizer(): () => void {
   // 同步 hasUnsavedChanges
   disposers.push(
     reaction(
-      () => documentStore.activeDocument?.isDirty ?? false,
+      () => tabStore.activeTab?.isDirty ?? false,
       (hasUnsavedChanges) => {
         contextKeyService.set('hasUnsavedChanges', hasUnsavedChanges)
       },
@@ -55,12 +55,12 @@ export function setupContextKeySynchronizer(): () => void {
     ),
   )
 
-  // 同步 documentCount
+  // 同步 tabCount
   disposers.push(
     reaction(
-      () => documentStore.documents.size,
-      (documentCount) => {
-        contextKeyService.set('documentCount', documentCount)
+      () => tabStore.tabs.size,
+      (tabCount) => {
+        contextKeyService.set('tabCount', tabCount)
       },
       { fireImmediately: true },
     ),

@@ -5,10 +5,10 @@ import { contextKeyService, ContextKeyService } from './ContextKeyService'
  * 解析并求值 enablement 表达式
  *
  * 支持的语法：
- * - 布尔键: "hasActiveDocument"
- * - 否定: "!hasActiveDocument"
- * - 与: "hasActiveDocument && hasSelection"
- * - 或: "hasActiveDocument || hasSelection"
+ * - 布尔键: "hasActiveTab"
+ * - 否定: "!hasActiveTab"
+ * - 与: "hasActiveTab && hasSelection"
+ * - 或: "hasActiveTab || hasSelection"
  * - 相等: "editorMode == 'select'"
  * - 不等: "editorMode != 'select'"
  * - 括号: "(a && b) || c"

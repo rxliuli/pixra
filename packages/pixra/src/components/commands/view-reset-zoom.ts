@@ -5,7 +5,7 @@ export function viewResetZoom(): BuiltinAction {
   return {
     command: 'view.resetZoom',
     title: 'Reset Zoom',
-    enablement: 'hasActiveDocument',
+    enablement: 'hasActiveTab',
     execute: () => {
       const { sceneStore } = appStateStore
       const { imageData } = sceneStore

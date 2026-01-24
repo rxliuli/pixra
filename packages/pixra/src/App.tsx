@@ -17,9 +17,9 @@ import { useMount } from './lib/hooks/useMount'
 import { useEffect } from 'react'
 
 const App = observer(() => {
-  const { documentStore, editorStore } = appStateStore
-  const hasDocuments = documentStore.hasDocuments
-  const activeDocumentId = documentStore.activeDocumentId
+  const { tabStore, editorStore } = appStateStore
+  const hasTabs = tabStore.hasTabs
+  const activeTabId = tabStore.activeTabId
 
   // 初始化系统内置命令和上下文同步
   useMount(() => {
@@ -29,17 +29,17 @@ const App = observer(() => {
     pluginManager.initialize()
   })
 
-  // 切换文档时退出裁剪模式
+  // 切换标签页时退出裁剪模式
   useEffect(() => {
     if (editorStore.isCropMode) {
       editorStore.exitCropMode()
     }
-  }, [activeDocumentId])
+  }, [activeTabId])
 
-  // 页面关闭前警告未保存的文档
+  // 页面关闭前警告未保存的标签页
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      const hasDirty = documentStore.documentList.some((doc) => doc.isDirty)
+      const hasDirty = tabStore.tabList.some((tab) => tab.isDirty)
       if (hasDirty) {
         e.preventDefault()
         e.returnValue = ''
@@ -48,7 +48,7 @@ const App = observer(() => {
 
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [documentStore.documentList])
+  }, [tabStore.tabList])
 
   const handleCropConfirm = () => {
     // 这个回调会传递给 Renderer
@@ -63,16 +63,16 @@ const App = observer(() => {
     <div className="flex h-screen flex-col overflow-hidden">
       <Toolbar />
       <TabBar />
-      {hasDocuments && (
+      {hasTabs && (
         <SecondaryToolbar
           onCropConfirm={handleCropConfirm}
           onCropCancel={handleCropCancel}
         />
       )}
       <div className="flex flex-1 overflow-hidden">
-        {hasDocuments && <ToolPanel />}
-        {hasDocuments ? (
-          <Renderer key={documentStore.activeDocumentId} className="flex-1" />
+        {hasTabs && <ToolPanel />}
+        {hasTabs ? (
+          <Renderer key={tabStore.activeTabId} className="flex-1" />
         ) : (
           <WelcomePage />
         )}

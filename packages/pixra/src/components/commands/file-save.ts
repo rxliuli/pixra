@@ -44,26 +44,26 @@ export function fileSave(): BuiltinAction {
   return {
     command: 'file.save',
     title: 'Save',
-    enablement: 'hasActiveDocument',
+    enablement: 'hasActiveTab',
     execute: async () => {
-      const doc = appStateStore.documentStore.activeDocument
-      if (!doc || !doc.imageData) {
-        console.warn('No document or image to save')
+      const tab = appStateStore.tabStore.activeTab
+      if (!tab || !tab.imageData) {
+        console.warn('No tab or image to save')
         return
       }
 
       try {
-        const existingHandle = getFileHandle(doc.id)
-        const suggestedName = `${doc.name || 'image'}.png`
+        const existingHandle = getFileHandle(tab.id)
+        const suggestedName = `${tab.name || 'image'}.png`
 
-        const blob = await imageBitmapToBlob(doc.imageData, { mimeType: 'image/png' })
+        const blob = await imageBitmapToBlob(tab.imageData, { mimeType: 'image/png' })
         const handle = await saveToFileSystem(blob, suggestedName, existingHandle)
 
         // 保存文件句柄以便后续保存
-        setFileHandle(doc.id, handle)
+        setFileHandle(tab.id, handle)
 
-        // 标记文档为已保存
-        appStateStore.documentStore.markClean()
+        // 标记标签页为已保存
+        appStateStore.tabStore.markClean()
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
           // 用户取消了保存对话框
