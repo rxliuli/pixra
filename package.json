@@ -2,6 +2,7 @@
   "name": "@pixra/root",
   "private": true,
   "scripts": {
+    "init": "pnpm -r run init",
     "build": "pnpm -r run build"
   },
   "packageManager": "pnpm@10.26.2",
