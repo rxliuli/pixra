@@ -245,6 +245,7 @@ export class PluginManager {
       commandRegistry.registerCommand({
         command: cmd.command,
         title: cmd.title,
+        enablement: cmd.enablement,
         execute: async () => {
           // Activate plugin if not active
           if (!this.activePlugins.has(manifest.id)) {

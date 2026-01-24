@@ -6,7 +6,8 @@
     "commands": [
       {
         "command": "removeBg.remove",
-        "title": "Remove Background"
+        "title": "Remove Background",
+        "enablement": "hasActiveTab"
       }
     ],
     "menus": {

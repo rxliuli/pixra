@@ -35,6 +35,8 @@ export interface CommandContribution {
   command: string
   /** Display title */
   title: string
+  /** When clause for command enablement */
+  enablement?: string
 }
 
 /**

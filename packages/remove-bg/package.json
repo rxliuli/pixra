@@ -1,6 +1,6 @@
 {
   "name": "@pixra/remove-bg",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Remove background from images using AI",
   "scripts": {
     "dev": "pixra dev",

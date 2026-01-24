@@ -6,7 +6,8 @@
     "commands": [
       {
         "command": "chromeIcons.export",
-        "title": "Export Chrome Icons"
+        "title": "Export Chrome Icons",
+        "enablement": "hasActiveTab"
       }
     ],
     "menus": {
