@@ -5,8 +5,5 @@
     "init": "pnpm -r run init",
     "build": "pnpm -r run build"
   },
-  "packageManager": "pnpm@10.26.2",
-  "dependencies": {
-    "tailwindcss-github-markdown": "^0.1.2"
-  }
+  "packageManager": "pnpm@10.26.2"
 }
