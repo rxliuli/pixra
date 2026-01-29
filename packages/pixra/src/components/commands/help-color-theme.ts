@@ -2,7 +2,7 @@ import { ui } from '@/lib/window'
 import type { BuiltinAction } from '../actions/types'
 import { appStateStore } from '../store'
 
-export function helpToggleDarkMode(): BuiltinAction {
+export function helpColorTheme(): BuiltinAction {
   return {
     command: 'help.color-theme',
     title: 'Color Theme',

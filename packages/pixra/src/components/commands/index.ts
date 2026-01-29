@@ -18,9 +18,10 @@ export { viewResetZoom } from './view-reset-zoom'
 
 // Help commands
 export { helpAbout } from './help-about'
+export { helpDocs } from './help-docs'
 export { helpShowCommands } from './help-show-commands'
 export { helpSourceCode } from './help-source-code'
-export { helpToggleDarkMode } from './help-color-theme'
+export { helpColorTheme } from './help-color-theme'
 
 // Plugin commands
 export { pluginInstall } from './plugin-install'

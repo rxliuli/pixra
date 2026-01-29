@@ -14,11 +14,12 @@ import {
   viewZoomOut,
   viewResetZoom,
   helpAbout,
+  helpDocs,
   helpShowCommands,
   helpSourceCode,
-  helpToggleDarkMode,
   pluginInstall,
   pluginStore,
+  helpColorTheme,
 } from '../commands'
 
 let initialized = false
@@ -66,10 +67,11 @@ export function registerBuiltinActions() {
     pluginInstall(),
 
     // Help 菜单
-    helpAbout(),
     helpShowCommands(),
+    helpColorTheme(),
+    helpDocs(),
     helpSourceCode(),
-    helpToggleDarkMode(),
+    helpAbout(),
   ])
 
   // 3. 手动添加分隔符
