@@ -48,6 +48,18 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/icon-crop:
+    devDependencies:
+      '@pixra/plugin-cli':
+        specifier: workspace:*
+        version: link:../plugin-cli
+      '@pixra/plugin-sdk':
+        specifier: workspace:*
+        version: link:../plugin-sdk
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/pixra:
     dependencies:
       '@pixra/plugin-sdk':
@@ -208,18 +220,6 @@ importers:
       rembg-webgpu:
         specifier: ^0.2.1
         version: 0.2.1(@huggingface/transformers@3.8.1)
-    devDependencies:
-      '@pixra/plugin-cli':
-        specifier: workspace:*
-        version: link:../plugin-cli
-      '@pixra/plugin-sdk':
-        specifier: workspace:*
-        version: link:../plugin-sdk
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-
-  packages/smart-crop:
     devDependencies:
       '@pixra/plugin-cli':
         specifier: workspace:*
