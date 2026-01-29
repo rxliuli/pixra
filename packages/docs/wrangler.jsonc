@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "@pixra/docs",
+	"name": "pixra-docs",
   "compatibility_date": "2026-01-29",
   "compatibility_flags": [
     "nodejs_compat",
