@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { Suspense } from 'react'
 
 export const DialogHost = observer(() => {
   const state = dialogStore.currentState
@@ -32,11 +33,15 @@ export const DialogHost = observer(() => {
         {(title || description) && (
           <DialogHeader>
             {title && <DialogTitle>{title}</DialogTitle>}
-            {description && <DialogDescription>{description}</DialogDescription>}
+            {description && (
+              <DialogDescription>{description}</DialogDescription>
+            )}
           </DialogHeader>
         )}
 
-        <Component {...props} />
+        <Suspense>
+          <Component {...props} />
+        </Suspense>
 
         {footer && (
           <DialogFooter>

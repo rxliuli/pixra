@@ -1,5 +1,5 @@
+import { lazy } from 'react'
 import type { BuiltinAction } from '../actions/types'
-import { PluginStoreContent } from '../gui/PluginStoreContent'
 import { ui } from '@/lib/window'
 
 export function pluginStore(): BuiltinAction {
@@ -10,7 +10,12 @@ export function pluginStore(): BuiltinAction {
       group: 'plugin',
     },
     execute: async () => {
-      await ui.showDialog(PluginStoreContent, {
+      const LazyPluginStoreContent = lazy(() =>
+        import('../gui/PluginStoreContent').then((mod) => ({
+          default: mod.PluginStoreContent,
+        })),
+      )
+      await ui.showDialog(LazyPluginStoreContent, {
         title: 'Plugin Store',
         footer: false,
         className: 'sm:max-w-4xl h-[600px] flex flex-col',

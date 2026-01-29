@@ -52,13 +52,7 @@ function bundlePlugin(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    bundlePlugin(),
-    cloudflare(),
-    // analyzer(),
-  ],
+  plugins: [react(), tailwindcss(), bundlePlugin(), cloudflare()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

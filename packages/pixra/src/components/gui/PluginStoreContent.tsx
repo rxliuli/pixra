@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, lazy, Suspense } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import Markdown from 'react-markdown'
 import { Button } from '@/components/ui/button'
+
 import {
   fetchPlugins,
   fetchReadme,
@@ -11,7 +11,15 @@ import {
 } from '@/lib/plugin/PluginStoreService'
 import { pluginManager } from '@/lib/plugin'
 import { toast } from 'sonner'
-import { SearchIcon, DownloadIcon, CheckIcon, Loader2Icon, Trash2Icon } from 'lucide-react'
+import {
+  SearchIcon,
+  DownloadIcon,
+  CheckIcon,
+  Loader2Icon,
+  Trash2Icon,
+} from 'lucide-react'
+
+const Markdown = lazy(() => import('react-markdown'))
 
 export function PluginStoreContent() {
   const queryClient = useQueryClient()
@@ -172,9 +180,7 @@ export function PluginStoreContent() {
             {/* Plugin header */}
             <div className="p-4 border-b flex items-start justify-between">
               <div>
-                <h3 className="text-lg font-semibold">
-                  {selectedPlugin.name}
-                </h3>
+                <h3 className="text-lg font-semibold">{selectedPlugin.name}</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   {selectedPlugin.description}
                 </p>
@@ -221,9 +227,17 @@ export function PluginStoreContent() {
             {/* README content */}
             <div className="flex-1 overflow-y-auto p-4">
               {readme ? (
-                <div className="prose prose-sm max-w-none dark:prose-invert [&>h1]:hidden">
-                  <Markdown>{readme}</Markdown>
-                </div>
+                <Suspense
+                  fallback={
+                    <div className="flex items-center justify-center h-32">
+                      <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
+                    </div>
+                  }
+                >
+                  <div className="prose prose-sm max-w-none dark:prose-invert [&>h1]:hidden">
+                    <Markdown>{readme}</Markdown>
+                  </div>
+                </Suspense>
               ) : (
                 <div className="text-muted-foreground text-sm">
                   No README available

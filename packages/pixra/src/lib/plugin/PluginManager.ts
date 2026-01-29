@@ -2,9 +2,8 @@ import type { PluginManifest } from '@pixra/plugin-sdk'
 import { PluginLoader, type InstalledPlugin } from './PluginLoader'
 import { PluginStorage } from './PluginStorage'
 import { commandRegistry, menuRegistry } from '../../components/actions'
-import esbuildWasmUrl from 'esbuild-wasm/esbuild.wasm?url'
 import sdkRuntimeCode from '@pixra/plugin-sdk/runtime?bundle'
-import { type Plugin } from 'esbuild-wasm'
+import type { Plugin } from 'esbuild-wasm'
 import { executeApiCall, type ApiContext } from './api'
 import { ui } from '../window'
 import { endProgress, reportProgress } from './api/window'
@@ -436,10 +435,11 @@ export class PluginManager {
     entryPoint: string,
     code: string,
   ): Promise<string> {
-    const esbuild = await import('esbuild-wasm')
-
     // Initialize esbuild (only once)
+    const esbuild = await import('esbuild-wasm')
     if (!this.esbuildInitialized) {
+      const esbuildWasmUrl = (await import('esbuild-wasm/esbuild.wasm?url'))
+        .default
       await esbuild.initialize({
         wasmURL: esbuildWasmUrl,
       })

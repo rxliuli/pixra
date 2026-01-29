@@ -1,9 +1,10 @@
 import type { BuiltinAction } from '../actions/types'
 import { appStateStore } from '../store'
-import { ExportOptionsContent, type ExportOptions } from '../gui/ExportOptionsContent'
+import type { ExportOptions } from '../gui/ExportOptionsContent'
 import { imageBitmapToBlob } from '@/lib/imageBitmap'
 import { fileSave } from '@/lib/fileSave'
 import { ui } from '@/lib/window'
+import { lazy } from 'react'
 
 /**
  * 将 ImageBitmap 转换为 Blob 并下载（支持尺寸调整）
@@ -52,7 +53,12 @@ export function fileExport(): BuiltinAction {
         maintainAspectRatio: true,
       }
 
-      const result = await ui.showDialog(ExportOptionsContent, {
+      const LazyExportOptionsContent = lazy(() =>
+        import('../gui/ExportOptionsContent').then((mod) => ({
+          default: mod.ExportOptionsContent,
+        })),
+      )
+      const result = await ui.showDialog(LazyExportOptionsContent, {
         title: 'Export Image',
         description: 'Configure export options for your image',
         footer: true,

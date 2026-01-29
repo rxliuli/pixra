@@ -1,3 +1,5 @@
+import { get, set } from 'idb-keyval'
+
 const HISTORY_KEY = 'pixra.commandPalette.history.v1'
 const MAX_HISTORY = 100
 
@@ -9,11 +11,9 @@ function isIndexedDbAvailable(): boolean {
 
 function normalizeHistory(value: unknown): string[] {
   if (!Array.isArray(value)) return []
-  return value.filter((v): v is string => typeof v === 'string').slice(0, MAX_HISTORY)
-}
-
-async function getIdb() {
-  return await import('idb-keyval')
+  return value
+    .filter((v): v is string => typeof v === 'string')
+    .slice(0, MAX_HISTORY)
 }
 
 export async function getCommandSelectionHistory(): Promise<string[]> {
@@ -22,7 +22,6 @@ export async function getCommandSelectionHistory(): Promise<string[]> {
   }
 
   try {
-    const { get } = await getIdb()
     return normalizeHistory(await get(HISTORY_KEY))
   } catch {
     return memoryFallback
@@ -41,17 +40,15 @@ export async function recordCommandSelection(commandId: string): Promise<void> {
   }
 
   try {
-    const { set } = await getIdb()
     await set(HISTORY_KEY, next)
   } catch {
     memoryFallback = next
   }
 }
 
-export function sortByCommandSelectionHistory<T extends { command: string; title: string }>(
-  commands: T[],
-  history: string[],
-): T[] {
+export function sortByCommandSelectionHistory<
+  T extends { command: string; title: string },
+>(commands: T[], history: string[]): T[] {
   const scoreById = new Map<string, number>()
 
   // Most recent first: give higher weight to recent picks.
