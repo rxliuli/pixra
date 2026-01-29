@@ -5,7 +5,6 @@ import path from 'path'
 import * as esbuild from 'esbuild'
 import fs from 'fs/promises'
 import { cloudflare } from '@cloudflare/vite-plugin'
-import { analyzer } from 'vite-bundle-analyzer'
 
 /**
  * Vite plugin to bundle TypeScript files as strings
