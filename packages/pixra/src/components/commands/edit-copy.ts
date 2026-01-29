@@ -1,4 +1,3 @@
-import { ui } from '@/lib/window'
 import type { BuiltinAction } from '../actions/types'
 import { appStateStore } from '../store'
 import { imageBitmapToBlob } from '@/lib/imageBitmap'
