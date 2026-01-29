@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import { quickPickStore } from './QuickPickStore'
+import { quickPickStore, type QuickPickItem } from './QuickPickStore'
 import {
   CommandDialog,
   CommandEmpty,
@@ -8,7 +8,23 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useCommandState } from 'cmdk'
+
+// Helper component to watch cmdk value changes using useCommandState hook
+function ValueWatcher({
+  onValueChange,
+}: {
+  onValueChange: (value: string) => void
+}) {
+  const value = useCommandState((state) => state.value)
+  useEffect(() => {
+    if (value) {
+      onValueChange(value)
+    }
+  }, [value, onValueChange])
+  return null
+}
 
 export const QuickPick = observer(() => {
   const state = quickPickStore.currentState
@@ -21,6 +37,34 @@ export const QuickPick = observer(() => {
 
   // QuickPick mode
   if (state.type === 'quickpick' && state.items) {
+    // Build a map from cmdk value string to QuickPickItem for onDidSelectItem lookup
+    // Note: cmdk lowercases values internally for comparison
+    const valueToItemMap = new Map<string, QuickPickItem>(
+      state.items.map((item, index) => [
+        `${index}:${item.label}`.toLowerCase(),
+        item,
+      ]),
+    )
+
+    const handleValueChange = (value: string) => {
+      if (state.onDidSelectItem) {
+        const item = valueToItemMap.get(value.toLowerCase())
+        if (item) {
+          state.onDidSelectItem(item)
+        }
+      }
+    }
+
+    // Calculate defaultValue from activeItem
+    // Use findIndex with label comparison since activeItem may be a different object reference
+    const activeIndex = state.activeItem
+      ? state.items.findIndex((item) => item.label === state.activeItem?.label)
+      : -1
+    const defaultValue =
+      activeIndex >= 0 && state.activeItem
+        ? `${activeIndex}:${state.activeItem.label}`
+        : undefined
+
     return (
       <CommandDialog
         open={quickPickStore.isOpen}
@@ -29,7 +73,9 @@ export const QuickPick = observer(() => {
             quickPickStore.cancel()
           }
         }}
+        defaultValue={defaultValue}
       >
+        <ValueWatcher onValueChange={handleValueChange} />
         <CommandInput
           placeholder={state.placeholder || 'Type to search...'}
         />
@@ -39,7 +85,8 @@ export const QuickPick = observer(() => {
             {state.items.map((item, index) => (
               <CommandItem
                 key={`${item.label}-${index}`}
-                value={`${item.label} ${item.description || ''} ${item.detail || ''}`}
+                value={`${index}:${item.label}`}
+                keywords={[item.description || '', item.detail || '']}
                 onSelect={() => quickPickStore.accept(item)}
               >
                 <div className="flex flex-col w-full">
@@ -103,7 +150,9 @@ export const QuickPick = observer(() => {
             <h3 className="text-sm font-medium mb-2">{options.title}</h3>
           )}
           {options.prompt && (
-            <p className="text-xs text-muted-foreground mb-3">{options.prompt}</p>
+            <p className="text-xs text-muted-foreground mb-3">
+              {options.prompt}
+            </p>
           )}
           <input
             type="text"

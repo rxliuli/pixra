@@ -7,22 +7,30 @@ export function helpColorTheme(): BuiltinAction {
     command: 'help.color-theme',
     title: 'Color Theme',
     execute: async () => {
-      const selection = await ui.showQuickPick(
-        [
-          { label: 'System', value: 'system' },
-          { label: 'Light', value: 'light' },
-          { label: 'Dark', value: 'dark' },
-        ],
-        {
-          title: 'Select Color Theme',
-          placeholder: 'Choose a color theme for the application',
+      const initialValue = appStateStore.settingsStore.colorTheme
+      const items = [
+        { label: 'System', value: 'system' },
+        { label: 'Light', value: 'light' },
+        { label: 'Dark', value: 'dark' },
+      ] as const
+      const activeItem = items.find((it) => it.value === initialValue)
+      const selection = await ui.showQuickPick([...items], {
+        title: 'Select Color Theme',
+        placeholder: 'Choose a color theme for the application',
+        activeItem,
+        onDidSelectItem: (item) => {
+          appStateStore.settingsStore.toggle(
+            item.value as 'system' | 'light' | 'dark',
+          )
         },
-      )
-      if (selection?.value) {
-        appStateStore.settingsStore.toggle(
-          selection.value as 'system' | 'light' | 'dark',
-        )
+      })
+      if (!selection?.value) {
+        appStateStore.settingsStore.toggle(initialValue)
+        return
       }
+      appStateStore.settingsStore.toggle(
+        selection.value as 'system' | 'light' | 'dark',
+      )
     },
     menu: {
       group: 'help',

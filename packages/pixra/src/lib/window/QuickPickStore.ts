@@ -7,6 +7,21 @@ export interface QuickPickItem<T = any> {
   value?: T
 }
 
+export interface QuickPickOptions<T = any> {
+  title?: string
+  placeholder?: string
+  /**
+   * The item that should be initially selected/highlighted.
+   * Useful for setting a default selection based on current state.
+   */
+  activeItem?: QuickPickItem<T>
+  /**
+   * Called when the user highlights (focuses) a different item in the list.
+   * Useful for implementing preview functionality.
+   */
+  onDidSelectItem?: (item: QuickPickItem<T>) => void
+}
+
 export interface InputBoxOptions {
   title?: string
   placeholder?: string
@@ -23,6 +38,8 @@ interface QuickPickState<T = any> {
   items?: QuickPickItem<T>[]
   title?: string
   placeholder?: string
+  activeItem?: QuickPickItem<T>
+  onDidSelectItem?: (item: QuickPickItem<T>) => void
   // InputBox options
   inputBoxOptions?: InputBoxOptions
   // Promise resolvers
@@ -47,7 +64,7 @@ export class QuickPickStore {
 
   showQuickPick<T = any>(
     items: QuickPickItem<T>[],
-    options?: { title?: string; placeholder?: string },
+    options?: QuickPickOptions<T>,
   ): Promise<QuickPickItem<T> | undefined> {
     return new Promise((resolve, reject) => {
       this.state = {
@@ -55,6 +72,8 @@ export class QuickPickStore {
         items,
         title: options?.title,
         placeholder: options?.placeholder,
+        activeItem: options?.activeItem,
+        onDidSelectItem: options?.onDidSelectItem,
         resolve,
         reject,
       }

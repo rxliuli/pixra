@@ -22,7 +22,6 @@ You can also create a new blank image via **File > New**.
 
 ### Copy/Paste
 
-- **Cut**: `Ctrl+X` / `Cmd+X`
 - **Copy**: `Ctrl+C` / `Cmd+C`
 - **Paste**: `Ctrl+V` / `Cmd+V`
 
