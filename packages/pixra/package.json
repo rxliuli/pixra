@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "author": "Pixra Team",
   "license": "AGPL-3.0-only",

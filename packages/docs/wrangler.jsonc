@@ -8,13 +8,7 @@
     "binding": "ASSETS",
     "directory": "./dist",
   },
-  "routes": [
-    {
-      "pattern": "pixra.rxliuli.com/docs/*",
-      "zone_name": "rxliuli.com",
-    },
-  ],
-  "observability": {
+    "observability": {
     "enabled": true,
   },
 }

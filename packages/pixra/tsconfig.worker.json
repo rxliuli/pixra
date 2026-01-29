@@ -1,0 +1,17 @@
+{
+  "include": [
+    "./src/worker.ts",
+    "./worker-configuration.d.ts"
+  ],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "lib": [
+      "ESNext"
+    ],
+    "types": [],
+  }
+}
