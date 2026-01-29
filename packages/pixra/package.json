@@ -28,6 +28,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "comlink": "^4.4.2",
+    "es-toolkit": "^1.44.0",
     "esbuild-wasm": "^0.27.2",
     "idb-keyval": "^6.2.2",
     "jszip": "^3.10.1",

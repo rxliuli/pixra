@@ -1,26 +1,21 @@
 import { get, set } from 'idb-keyval'
+import { uniq } from 'es-toolkit'
 
 const HISTORY_KEY = 'pixra.commandPalette.history.v1'
 const MAX_HISTORY = 100
 
 let memoryFallback: string[] = []
 
-function isIndexedDbAvailable(): boolean {
-  return typeof indexedDB !== 'undefined' && indexedDB !== null
-}
-
 function normalizeHistory(value: unknown): string[] {
-  if (!Array.isArray(value)) return []
+  if (!Array.isArray(value)) {
+    return []
+  }
   return value
     .filter((v): v is string => typeof v === 'string')
     .slice(0, MAX_HISTORY)
 }
 
 export async function getCommandSelectionHistory(): Promise<string[]> {
-  if (!isIndexedDbAvailable()) {
-    return memoryFallback
-  }
-
   try {
     return normalizeHistory(await get(HISTORY_KEY))
   } catch {
@@ -32,12 +27,7 @@ export async function recordCommandSelection(commandId: string): Promise<void> {
   if (!commandId) return
 
   const history = await getCommandSelectionHistory()
-  const next = [commandId, ...history].slice(0, MAX_HISTORY)
-
-  if (!isIndexedDbAvailable()) {
-    memoryFallback = next
-    return
-  }
+  const next = uniq([commandId, ...history]).slice(0, MAX_HISTORY)
 
   try {
     await set(HISTORY_KEY, next)
