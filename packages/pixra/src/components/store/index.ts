@@ -141,12 +141,13 @@ class SceneStore {
 
   // 计算适配屏幕的缩放比例
   calculateFitScale(imgWidth: number, imgHeight: number): number {
-    if (this.canvasWidth === 0 || this.canvasHeight === 0) {
-      return 1
-    }
+    // 如果 canvas 尺寸还没设置，使用窗口尺寸作为回退
+    const canvasWidth = this.canvasWidth || window.innerWidth
+    const canvasHeight = this.canvasHeight || (window.innerHeight - 120)
+
     const padding = 40 // 留边距
-    const scaleX = (this.canvasWidth - padding * 2) / imgWidth
-    const scaleY = (this.canvasHeight - padding * 2) / imgHeight
+    const scaleX = (canvasWidth - padding * 2) / imgWidth
+    const scaleY = (canvasHeight - padding * 2) / imgHeight
     return Math.min(scaleX, scaleY, 1) // 不超过 100%
   }
 

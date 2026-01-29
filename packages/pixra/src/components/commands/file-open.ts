@@ -55,32 +55,28 @@ async function openWithFileInput(): Promise<FileWithHandle[] | null> {
  * 打开文件列表
  */
 export async function openFiles(files: FileWithHandle[]): Promise<void> {
-  for (const { file, handle } of files) {
+  for (let i = 0; i < files.length; i++) {
+    const { file, handle } = files[i]
     const bitmap = await createImageBitmap(file)
 
     // 获取文件名（不含扩展名）
     const fileName = file.name.replace(/\.[^/.]+$/, '')
 
-    // 创建新标签页
-    const tabId = appStateStore.tabStore.createTab(bitmap, fileName)
+    // 只激活最后一个标签页，避免闪烁
+    const isLast = i === files.length - 1
+    const tabId = appStateStore.tabStore.createTab(bitmap, fileName, isLast)
+
+    // 为每个标签页计算适配缩放
+    const fitScale = appStateStore.sceneStore.calculateFitScale(
+      bitmap.width,
+      bitmap.height,
+    )
+    appStateStore.tabStore.setTabViewState(tabId, { scale: fitScale })
 
     // 保存文件句柄以便后续保存
     if (handle) {
       setFileHandle(tabId, handle)
     }
-  }
-
-  // 等待下一帧，确保 canvas 尺寸已更新
-  await new Promise(requestAnimationFrame)
-
-  // 对最后一个打开的标签页计算适配缩放
-  const activeTab = appStateStore.tabStore.activeTab
-  if (activeTab?.imageData) {
-    const fitScale = appStateStore.sceneStore.calculateFitScale(
-      activeTab.imageData.width,
-      activeTab.imageData.height,
-    )
-    appStateStore.sceneStore.setScale(fitScale)
   }
 }
 

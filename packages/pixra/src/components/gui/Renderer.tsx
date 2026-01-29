@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 import { appStateStore } from '../store'
-import { commandRegistry } from '../actions'
 import { useEffectOnce } from '@/lib/hooks/useEffectOnce'
 
 interface Point {
@@ -812,21 +811,6 @@ export const Renderer = observer((props: { className?: string }) => {
 
   return (
     <div className={props.className + ' relative overflow-hidden'}>
-      {!imageData && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <button
-              onClick={() => commandRegistry.executeCommand('file.open')}
-              className="cursor-pointer rounded-lg border-2 border-dashed border-border bg-background px-6 py-8 hover:border-muted-foreground"
-            >
-              <p className="text-muted-foreground">点击上传图片</p>
-              <p className="mt-2 text-sm text-muted-foreground/70">
-                支持 JPG, PNG, GIF 格式
-              </p>
-            </button>
-          </div>
-        </div>
-      )}
       <canvas
         ref={canvasRef}
         onMouseDown={handleMouseDown}

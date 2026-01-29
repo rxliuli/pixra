@@ -64,7 +64,7 @@ export class TabStore {
   }
 
   // 创建标签页
-  createTab(imageData?: ImageBitmap | null, name?: string): string {
+  createTab(imageData?: ImageBitmap | null, name?: string, activate = true): string {
     const id = generateId()
     const tab: EditorTab = {
       id,
@@ -86,8 +86,22 @@ export class TabStore {
     }
 
     this.tabs.set(id, tab)
-    this.activeTabId = id
+    if (activate) {
+      this.activeTabId = id
+    }
     return id
+  }
+
+  // 设置标签页的视图状态
+  setTabViewState(tabId: string, viewState: Partial<EditorTab['viewState']>): void {
+    const tab = this.tabs.get(tabId)
+    if (!tab) return
+    if (viewState.pan !== undefined) {
+      tab.viewState.pan = viewState.pan
+    }
+    if (viewState.scale !== undefined) {
+      tab.viewState.scale = viewState.scale
+    }
   }
 
   // 关闭标签页
