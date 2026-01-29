@@ -13,10 +13,13 @@
   "author": "Pixra Team",
   "license": "AGPL-3.0-only",
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/starlight": "^0.37.4",
     "astro": "^5.6.1",
     "sharp": "^0.34.2"
   },
-  "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"
+  "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6",
+  "devDependencies": {
+    "@astrojs/cloudflare": "^12.6.12",
+    "wrangler": "^4.61.0"
+  }
 }
