@@ -52,5 +52,5 @@ Press `Ctrl+Shift+P` / `Cmd+Shift+P` to open the command palette. This gives you
 
 ## Next Steps
 
-- [Using Plugins](/guides/using-plugins/) - Learn how to install and use plugins
-- [Plugin Development](/plugins/getting-started/) - Build your own plugins
+- [Using Plugins](/docs/guides/using-plugins/) - Learn how to install and use plugins
+- [Plugin Development](/docs/plugins/getting-started/) - Build your own plugins

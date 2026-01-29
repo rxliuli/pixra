@@ -121,6 +121,6 @@ This creates a `.zip` file ready for distribution.
 
 ## Next Steps
 
-- [API Reference](/plugins/api-reference/) - Complete API documentation
-- [CLI Reference](/plugins/cli-reference/) - CLI commands and options
-- [Publishing Plugins](/plugins/publishing/) - Share your plugin with others
+- [API Reference](/docs/plugins/api-reference/) - Complete API documentation
+- [CLI Reference](/docs/plugins/cli-reference/) - CLI commands and options
+- [Publishing Plugins](/docs/plugins/publishing/) - Share your plugin with others
