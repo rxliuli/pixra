@@ -1,5 +1,5 @@
 env:
-  DIRECTORY: packages/smart-crop
+  DIRECTORY: packages/icon-crop
 
 name: Build and Release
 
@@ -7,7 +7,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'packages/smart-crop/package.json'
+      - 'packages/icon-crop/package.json'
 
   workflow_dispatch:
 
