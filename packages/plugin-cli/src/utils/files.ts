@@ -9,7 +9,7 @@ export function findEntry(cwd: string = process.cwd()): string | null {
   }
 
   // Check for common entry file names
-  const possibleEntries = ['plugin.ts', 'plugin.js']
+  const possibleEntries = ['plugin.ts', 'plugin']
 
   for (const entry of possibleEntries) {
     const entryPath = path.join(srcDir, entry)

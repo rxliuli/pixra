@@ -1,0 +1,36 @@
+---
+title: Pixra Documentation
+description: A web-based image editor with powerful plugin support.
+template: splash
+hero:
+  tagline: A web-based image editor with powerful plugin support
+  image:
+    file: ../../assets/logo.png
+  actions:
+    - text: Get Started
+      link: /guides/getting-started/
+      icon: right-arrow
+    - text: Plugin Development
+      link: /plugins/getting-started/
+      icon: puzzle
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Features
+
+<CardGrid stagger>
+  <Card title="Web-Based Editor" icon="laptop">
+    No installation required. Edit images directly in your browser with a modern, intuitive interface.
+  </Card>
+  <Card title="Plugin System" icon="puzzle">
+    Extend functionality with plugins. Remove backgrounds, smart crop, export icons, and more.
+  </Card>
+  <Card title="Plugin Development" icon="setting">
+    Build your own plugins with our TypeScript SDK. Full API access to manipulate images.
+  </Card>
+  <Card title="Open Source" icon="github">
+    Fully open source. Contribute, customize, or learn from the codebase.
+  </Card>
+</CardGrid>

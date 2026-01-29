@@ -5,7 +5,7 @@ CLI tool for building and packaging Pixra plugins.
 ## Installation
 
 ```bash
-pnpm add -D @pixra/plugin-cli
+pnpm i -D @pixra/plugin-cli
 ```
 
 ## Usage

@@ -1,16 +1,14 @@
 import esbuild from 'esbuild'
 import fs from 'fs'
 import path from 'path'
-import { logger } from '../utils/logger.js'
-import { findManifest, validateManifest, PluginManifest } from '../utils/manifest.js'
-import { findEntry } from '../utils/files.js'
-import { inlineWorkerPlugin } from '../utils/esbuild-plugins.js'
+import { logger } from '../utils/logger'
+import { findManifest, validateManifest, PluginManifest } from '../utils/manifest'
+import { findEntry } from '../utils/files'
+import { inlineWorkerPlugin } from '../utils/esbuild-plugins'
 
-const PLUGIN_ENTRY = 'plugin.js'
+const PLUGIN_ENTRY = 'plugin'
 
-interface BuildOptions {
-  outDir: string
-}
+const OUT_DIR = 'dist'
 
 interface PackageJson {
   version?: string
@@ -28,7 +26,7 @@ function readPackageJson(cwd: string): PackageJson | null {
   }
 }
 
-export async function build(options: BuildOptions) {
+export async function build() {
   const cwd = process.cwd()
 
   // Validate manifest
@@ -48,7 +46,7 @@ export async function build(options: BuildOptions) {
   // Find entry file
   const entryFile = findEntry(cwd)
   if (!entryFile) {
-    logger.error('No entry file found. Expected src/main.ts or src/main.js')
+    logger.error('No entry file found. Expected src/main.ts or src/main')
     process.exit(1)
   }
 
@@ -64,7 +62,7 @@ export async function build(options: BuildOptions) {
   logger.info(`Entry: ${path.relative(cwd, entryFile)}`)
 
   // Create output directory
-  const outDir = path.join(cwd, options.outDir)
+  const outDir = path.join(cwd, OUT_DIR)
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true })
   }

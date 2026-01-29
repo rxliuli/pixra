@@ -4,28 +4,32 @@ import { cac } from 'cac'
 import { build } from './commands/build'
 import { packagePlugin } from './commands/zip'
 import { dev } from './commands/dev'
+import { init } from './commands/init'
 
 const cli = cac('pixra-plugin')
 
 cli
   .command('build', 'Build the plugin')
-  .option('--outDir <dir>', 'Output directory', { default: 'dist' })
-  .action(async (options) => {
-    await build(options)
+  .action(async () => {
+    await build()
   })
 
 cli
   .command('zip', 'Package the plugin into a ZIP file')
-  .option('--outDir <dir>', 'Output directory for built files', { default: 'dist' })
-  .action(async (options) => {
-    await packagePlugin(options)
+  .action(async () => {
+    await packagePlugin()
   })
 
 cli
   .command('dev', 'Build and watch for changes')
-  .option('--outDir <dir>', 'Output directory', { default: 'dist' })
-  .action(async (options) => {
-    await dev(options)
+  .action(async () => {
+    await dev()
+  })
+
+cli
+  .command('init <directory>', 'Create a new plugin from template')
+  .action(async (dirName: string) => {
+    await init({ dirName })
   })
 
 cli.help()

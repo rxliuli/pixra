@@ -7,11 +7,8 @@ import { findManifest, validateManifest, PluginManifest } from '../utils/manifes
 import { findEntry } from '../utils/files'
 import { inlineWorkerPlugin } from '../utils/esbuild-plugins'
 
-const PLUGIN_ENTRY = 'plugin.js'
-
-interface DevOptions {
-  outDir: string
-}
+const PLUGIN_ENTRY = 'plugin'
+const OUT_DIR = 'dist'
 
 interface PackageJson {
   version?: string
@@ -69,7 +66,7 @@ async function createZip(
   })
 }
 
-export async function dev(options: DevOptions) {
+export async function dev() {
   const cwd = process.cwd()
 
   // Validate manifest
@@ -89,7 +86,7 @@ export async function dev(options: DevOptions) {
   // Find entry file
   const entryFile = findEntry(cwd)
   if (!entryFile) {
-    logger.error('No entry file found. Expected src/plugin.ts or src/plugin.js')
+    logger.error('No entry file found. Expected src/plugin.ts or src/plugin')
     process.exit(1)
   }
 
@@ -101,7 +98,7 @@ export async function dev(options: DevOptions) {
   }
   const version = pkg.version
 
-  const outDir = path.join(cwd, options.outDir)
+  const outDir = path.join(cwd, OUT_DIR)
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true })
   }

@@ -1,15 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 import archiver from 'archiver'
-import { logger } from '../utils/logger.js'
-import { findManifest } from '../utils/manifest.js'
-import { build } from './build.js'
+import { logger } from '../utils/logger'
+import { findManifest } from '../utils/manifest'
+import { build } from './build'
 
-const PLUGIN_ENTRY = 'plugin.js'
-
-interface PackageOptions {
-  outDir: string
-}
+const PLUGIN_ENTRY = 'plugin'
+const OUT_DIR = 'dist'
 
 interface PackageJson {
   version?: string
@@ -27,12 +24,12 @@ function readPackageJson(cwd: string): PackageJson | null {
   }
 }
 
-export async function packagePlugin(options: PackageOptions) {
+export async function packagePlugin() {
   const cwd = process.cwd()
 
   // Build first
   logger.info('Building plugin...')
-  await build(options)
+  await build()
 
   // Get manifest
   const manifest = findManifest(cwd)
@@ -72,7 +69,7 @@ export async function packagePlugin(options: PackageOptions) {
 
     archive.pipe(output)
 
-    const outDir = path.join(cwd, options.outDir)
+    const outDir = path.join(cwd, OUT_DIR)
 
     // Add manifest from dist (already has updated version)
     const distManifestPath = path.join(outDir, 'plugin.json')

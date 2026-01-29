@@ -46,7 +46,7 @@ export class PluginLoader {
       if (zipEntry.dir) continue;
       
       // Text files (js, json, etc.)
-      if (path.endsWith('.js') || path.endsWith('.json') || path.endsWith('.md')) {
+      if (path.endsWith('') || path.endsWith('.json') || path.endsWith('.md')) {
         files[path] = await zipEntry.async('text');
       } else {
         // Binary files (images, etc.)
