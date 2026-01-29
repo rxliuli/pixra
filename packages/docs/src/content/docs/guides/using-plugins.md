@@ -3,7 +3,7 @@ title: Using Plugins
 description: Learn how to install and manage Pixra plugins.
 ---
 
-Plugins extend Pixra's functionality with additional features like background removal, smart cropping, and more.
+Plugins extend Pixra's functionality with additional features like background removal, icon cropping, and more.
 
 ## Installing Plugins
 

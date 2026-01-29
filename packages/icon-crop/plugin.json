@@ -5,15 +5,15 @@
   "contributes": {
     "commands": [
       {
-        "command": "smartCrop.crop",
-        "title": "Smart Crop",
+        "command": "icon-crop.crop",
+        "title": "Icon Crop",
         "enablement": "hasActiveTab"
       }
     ],
     "menus": {
       "tools": [
         {
-          "command": "smartCrop.crop"
+          "command": "icon-crop.crop"
         }
       ]
     }

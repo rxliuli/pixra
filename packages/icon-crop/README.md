@@ -1,4 +1,4 @@
-# Smart Crop
+# Icon Crop
 
 A Pixra plugin that trims transparent edges from images.
 
@@ -11,7 +11,7 @@ A small padding (2px) is preserved around the content to prevent edge clipping.
 ## Usage
 
 1. Open an image with transparent edges in Pixra
-2. Run "Smart Crop" from the Tools menu
+2. Run "Icon Crop" from the Tools menu
 3. The image is cropped to its content bounds
 
 ## Notes

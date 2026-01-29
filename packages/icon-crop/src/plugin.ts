@@ -1,5 +1,5 @@
 /**
- * Smart Crop Plugin for Pixra
+ * Icon Crop Plugin for Pixra
  *
  * Automatically detects and removes transparent edges from images,
  * cropping to the content bounds with optional padding.
@@ -117,9 +117,9 @@ function cropImageData(imageData: ImageData, bounds: ContentBounds): ImageData {
 }
 
 /**
- * Smart crop the current image
+ * Icon crop the current image
  */
-async function smartCrop(): Promise<void> {
+async function iconCrop(): Promise<void> {
   // Get current image
   const imageData = await pixra.workspace.getActiveImage()
   if (!imageData) {
@@ -168,7 +168,7 @@ async function smartCrop(): Promise<void> {
  * Plugin activation
  */
 export function activate(context: pixra.ExtensionContext) {
-  const disposable = pixra.commands.registerCommand('smartCrop.crop', smartCrop)
+  const disposable = pixra.commands.registerCommand('smartCrop.crop', iconCrop)
   context.subscriptions.push(disposable)
 }
 
