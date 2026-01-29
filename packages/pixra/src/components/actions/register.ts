@@ -16,6 +16,7 @@ import {
   viewResetZoom,
   helpAbout,
   helpShowCommands,
+  helpSourceCode,
   pluginInstall,
   pluginStore,
 } from '../commands'
@@ -68,6 +69,7 @@ export function registerBuiltinActions() {
     // Help 菜单
     helpAbout(),
     helpShowCommands(),
+    helpSourceCode(),
   ])
 
   // 3. 手动添加分隔符

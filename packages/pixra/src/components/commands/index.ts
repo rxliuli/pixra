@@ -20,6 +20,7 @@ export { viewResetZoom } from './view-reset-zoom'
 // Help commands
 export { helpAbout } from './help-about'
 export { helpShowCommands } from './help-show-commands'
+export { helpSourceCode } from './help-source-code'
 
 // Plugin commands
 export { pluginInstall } from './plugin-install'
