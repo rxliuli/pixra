@@ -17,6 +17,7 @@ import {
   helpAbout,
   helpShowCommands,
   helpSourceCode,
+  helpToggleDarkMode,
   pluginInstall,
   pluginStore,
 } from '../commands'
@@ -70,6 +71,7 @@ export function registerBuiltinActions() {
     helpAbout(),
     helpShowCommands(),
     helpSourceCode(),
+    helpToggleDarkMode(),
   ])
 
   // 3. 手动添加分隔符

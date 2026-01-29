@@ -1,3 +1,4 @@
+import { ui } from '@/lib/window'
 import type { BuiltinAction } from '../actions/types'
 
 export function helpAbout(): BuiltinAction {
@@ -5,11 +6,10 @@ export function helpAbout(): BuiltinAction {
     command: 'help.about',
     title: 'About',
     execute: () => {
-      alert('Pixra - Image Editor v0.0.1')
+      ui.showInformationMessage('Pixra - Image Editor v0.0.1')
     },
     menu: {
       group: 'help',
-      order: 0,
     },
   }
 }

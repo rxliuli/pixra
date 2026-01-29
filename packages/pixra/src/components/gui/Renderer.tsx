@@ -55,6 +55,7 @@ export const Renderer = observer((props: { className?: string }) => {
   const { currentTool, brushSize, brushColor, isCropMode, cropAspectRatio } =
     appStateStore.editorStore
   const { imageData, pan, scale } = appStateStore.sceneStore
+  const { colorTheme } = appStateStore.settingsStore
 
   // 绘制棋盘格图案（用于显示透明区域）
   const drawCheckerboard = (
@@ -93,8 +94,9 @@ export const Renderer = observer((props: { className?: string }) => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // 清空画布
-    ctx.fillStyle = '#f0f0f0'
+    // 清空画布（使用主题颜色）
+    const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim()
+    ctx.fillStyle = bgColor || '#f0f0f0'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     // 绘制图片（考虑平移和缩放）
@@ -434,6 +436,7 @@ export const Renderer = observer((props: { className?: string }) => {
     scale,
     cropRect,
     isCropMode,
+    colorTheme,
   ])
 
   const getCanvasPoint = (e: React.MouseEvent<HTMLCanvasElement>): Point => {
@@ -814,10 +817,10 @@ export const Renderer = observer((props: { className?: string }) => {
           <div className="text-center">
             <button
               onClick={() => commandRegistry.executeCommand('file.open')}
-              className="cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-white px-6 py-8 hover:border-gray-400"
+              className="cursor-pointer rounded-lg border-2 border-dashed border-border bg-background px-6 py-8 hover:border-muted-foreground"
             >
-              <p className="text-gray-600">点击上传图片</p>
-              <p className="mt-2 text-sm text-gray-400">
+              <p className="text-muted-foreground">点击上传图片</p>
+              <p className="mt-2 text-sm text-muted-foreground/70">
                 支持 JPG, PNG, GIF 格式
               </p>
             </button>

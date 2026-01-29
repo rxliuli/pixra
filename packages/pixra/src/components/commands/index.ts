@@ -21,6 +21,7 @@ export { viewResetZoom } from './view-reset-zoom'
 export { helpAbout } from './help-about'
 export { helpShowCommands } from './help-show-commands'
 export { helpSourceCode } from './help-source-code'
+export { helpToggleDarkMode } from './help-color-theme'
 
 // Plugin commands
 export { pluginInstall } from './plugin-install'

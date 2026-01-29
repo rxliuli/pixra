@@ -15,6 +15,7 @@ import { observer } from 'mobx-react-lite'
 import { appStateStore } from './components/store'
 import { useMount } from './lib/hooks/useMount'
 import { useEffect } from 'react'
+import { useEffectOnce } from './lib/hooks/useEffectOnce'
 
 const App = observer(() => {
   const { tabStore, editorStore } = appStateStore
@@ -37,7 +38,7 @@ const App = observer(() => {
   }, [activeTabId])
 
   // 页面关闭前警告未保存的标签页
-  useEffect(() => {
+  useEffectOnce(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       const hasDirty = tabStore.tabList.some((tab) => tab.isDirty)
       if (hasDirty) {
@@ -48,7 +49,7 @@ const App = observer(() => {
 
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [tabStore.tabList])
+  })
 
   const handleCropConfirm = () => {
     // 这个回调会传递给 Renderer

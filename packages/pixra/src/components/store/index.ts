@@ -10,6 +10,44 @@ class AppToolbarStore {
   }
 }
 
+export type ColorTheme = 'system' | 'light' | 'dark'
+
+class SettingsStore {
+  colorTheme: ColorTheme = 'system'
+  #mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+  constructor() {
+    makeAutoObservable(this)
+    // 从 localStorage 读取保存的设置
+    const saved = localStorage.getItem('pixra-color-theme') as ColorTheme | null
+    if (saved !== null) {
+      this.colorTheme = saved
+    }
+    // 监听系统主题变化
+    this.#mediaQuery.addEventListener('change', () => this.applyTheme())
+    // 初始化时应用主题
+    this.applyTheme()
+  }
+
+  toggle(theme: ColorTheme) {
+    this.colorTheme = theme
+    localStorage.setItem('pixra-color-theme', theme)
+    this.applyTheme()
+  }
+
+  private applyTheme() {
+    const isDark =
+      this.colorTheme === 'dark' ||
+      (this.colorTheme === 'system' && this.#mediaQuery.matches)
+
+    if (isDark) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+}
+
 class EditorStore {
   currentTool: ToolType = 'move'
   brushSize = 5
@@ -123,6 +161,7 @@ class AppStateStore {
   readonly tabStore = new TabStore()
   readonly sceneStore: SceneStore
   readonly editorStore = new EditorStore()
+  readonly settingsStore = new SettingsStore()
 
   constructor() {
     this.sceneStore = new SceneStore(this.tabStore)

@@ -22,9 +22,9 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
   // Crop toolbar
   if (currentTool === 'crop') {
     return (
-      <div className="flex h-12 items-center gap-2 border-b bg-white px-4">
+      <div className="flex h-12 items-center gap-2 border-b border-border bg-background px-4">
         <div className="flex items-center gap-1">
-          <span className="mr-2 text-sm text-gray-600">Aspect Ratio:</span>
+          <span className="mr-2 text-sm text-muted-foreground">Aspect Ratio:</span>
           {aspectRatios.map((ratio) => (
             <Button
               key={ratio.value}
@@ -53,9 +53,9 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
   // Brush toolbar
   if (currentTool === 'brush') {
     return (
-      <div className="flex h-12 items-center gap-4 border-b bg-white px-4">
+      <div className="flex h-12 items-center gap-4 border-b border-border bg-background px-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">Brush Size:</span>
+          <span className="text-sm text-muted-foreground">Brush Size:</span>
           <input
             type="range"
             min="1"
@@ -64,15 +64,15 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
             onChange={(e) => appStateStore.editorStore.setBrushSize(Number(e.target.value))}
             className="w-32"
           />
-          <span className="w-8 text-sm">{brushSize}px</span>
+          <span className="w-8 text-sm text-foreground">{brushSize}px</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">Color:</span>
+          <span className="text-sm text-muted-foreground">Color:</span>
           <input
             type="color"
             value={brushColor}
             onChange={(e) => appStateStore.editorStore.setBrushColor(e.target.value)}
-            className="h-8 w-16 cursor-pointer rounded border"
+            className="h-8 w-16 cursor-pointer rounded border border-border"
           />
         </div>
       </div>
@@ -82,8 +82,8 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
   // Marquee toolbar
   if (currentTool === 'marquee') {
     return (
-      <div className="flex h-12 items-center gap-2 border-b bg-white px-4">
-        <span className="text-sm text-gray-600">Marquee Tool - Drag to create a selection</span>
+      <div className="flex h-12 items-center gap-2 border-b border-border bg-background px-4">
+        <span className="text-sm text-muted-foreground">Marquee Tool - Drag to create a selection</span>
       </div>
     )
   }
@@ -91,12 +91,12 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
   // Move toolbar
   if (currentTool === 'move') {
     return (
-      <div className="flex h-12 items-center gap-2 border-b bg-white px-4">
-        <span className="text-sm text-gray-600">Move Tool - Drag to pan, scroll to zoom</span>
+      <div className="flex h-12 items-center gap-2 border-b border-border bg-background px-4">
+        <span className="text-sm text-muted-foreground">Move Tool - Drag to pan, scroll to zoom</span>
       </div>
     )
   }
 
   // Default empty toolbar
-  return <div className="h-12 border-b bg-white" />
+  return <div className="h-12 border-b border-border bg-background" />
 })

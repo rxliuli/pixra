@@ -18,7 +18,7 @@ export const ToolPanel = observer(() => {
   }
 
   return (
-    <div className="flex w-16 flex-col gap-2 border-r bg-gray-50 p-2">
+    <div className="flex w-16 flex-col gap-2 border-r border-border bg-secondary p-2">
       {tools.map((tool) => {
         const Icon = tool.icon
         return (

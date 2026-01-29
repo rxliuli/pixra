@@ -34,16 +34,16 @@ export const WelcomePage = observer(function WelcomePage() {
 
   return (
     <div
-      className={`flex-1 flex items-center justify-center bg-gray-50 transition-colors ${
-        isDragging ? 'bg-blue-50 border-2 border-dashed border-blue-400' : ''
+      className={`flex-1 flex items-center justify-center bg-secondary transition-colors ${
+        isDragging ? 'bg-accent border-2 border-dashed border-primary' : ''
       }`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-700 mb-2">Pixra</h1>
-        <p className="text-gray-500 mb-8">Image Editor</p>
+        <h1 className="text-4xl font-bold text-foreground mb-2">Pixra</h1>
+        <p className="text-muted-foreground mb-8">Image Editor</p>
 
         <div className="space-y-3 w-64 mx-auto">
           <button
@@ -54,13 +54,13 @@ export const WelcomePage = observer(function WelcomePage() {
           </button>
           <button
             onClick={() => actionRegistry.executeCommand('file.new')}
-            className="block w-full px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+            className="block w-full px-6 py-3 border border-border text-foreground rounded-lg hover:bg-accent transition-colors"
           >
             New Document
           </button>
         </div>
 
-        <div className="mt-8 text-sm text-gray-400">
+        <div className="mt-8 text-sm text-muted-foreground">
           <p>Drag & drop images here to open</p>
           <p className="mt-1">Ctrl+O to open, Ctrl+N for new</p>
         </div>

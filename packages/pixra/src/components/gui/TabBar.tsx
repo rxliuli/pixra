@@ -38,28 +38,28 @@ export const TabBar = observer(function TabBar() {
   }
 
   return (
-    <div className="flex h-9 bg-gray-100 border-b overflow-x-auto">
+    <div className="flex h-9 bg-muted border-b border-border overflow-x-auto">
       {tabs.map((tab) => (
         <div
           key={tab.id}
           onClick={() => tabStore.switchTab(tab.id)}
           className={`
-            flex items-center gap-1 px-3 py-1.5 border-r cursor-pointer
-            min-w-[120px] max-w-[200px] select-none
+            flex items-center gap-1 px-3 py-1.5 border-r border-border cursor-pointer
+            min-w-[120px] max-w-[200px] select-none text-foreground
             ${
               activeId === tab.id
-                ? 'bg-white border-b-2 border-b-white'
-                : 'bg-gray-50 hover:bg-gray-100'
+                ? 'bg-background border-b-2 border-b-background'
+                : 'bg-secondary hover:bg-muted'
             }
           `}
         >
           <span className="truncate flex-1 text-sm">
-            {tab.isDirty && <span className="text-gray-500 mr-1">●</span>}
+            {tab.isDirty && <span className="text-muted-foreground mr-1">●</span>}
             {tab.name || 'Untitled'}
           </span>
           <button
             onClick={(e) => handleCloseTab(e, tab.id)}
-            className="p-0.5 hover:bg-gray-200 rounded opacity-60 hover:opacity-100"
+            className="p-0.5 hover:bg-accent rounded opacity-60 hover:opacity-100"
           >
             <X size={14} />
           </button>
