@@ -1,16 +1,20 @@
 {
-	"main": "dist/_worker.js/index.js",
-	"name": "pixra-docs",
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "main": "dist/_worker.js/index.js",
+  "name": "pixra-docs",
   "compatibility_date": "2026-01-29",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist",
+  },
+  "routes": [
+    {
+      "pattern": "pixra.rxliuli.com/docs/*",
+      "zone_name": "pixra.rxliuli.com",
+    },
   ],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./dist"
-	},
-	"observability": {
-    "enabled": true
-  }
+  "observability": {
+    "enabled": true,
+  },
 }
