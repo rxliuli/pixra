@@ -168,7 +168,7 @@ async function iconCrop(): Promise<void> {
  * Plugin activation
  */
 export function activate(context: pixra.ExtensionContext) {
-  const disposable = pixra.commands.registerCommand('smartCrop.crop', iconCrop)
+  const disposable = pixra.commands.registerCommand('icon-crop.crop', iconCrop)
   context.subscriptions.push(disposable)
 }
 

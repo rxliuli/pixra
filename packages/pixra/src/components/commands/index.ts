@@ -8,7 +8,6 @@ export { fileExport } from './file-export'
 // Edit commands
 export { editUndo } from './edit-undo'
 export { editRedo } from './edit-redo'
-export { editCut } from './edit-cut'
 export { editCopy } from './edit-copy'
 export { editPaste } from './edit-paste'
 

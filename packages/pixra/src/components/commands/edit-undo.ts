@@ -15,7 +15,6 @@ export function editUndo(): BuiltinAction {
     },
     menu: {
       group: 'edit',
-      order: 0,
     },
   }
 }

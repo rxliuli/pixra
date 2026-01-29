@@ -78,7 +78,6 @@ export function fileSave(): BuiltinAction {
     },
     menu: {
       group: 'file',
-      order: 2,
     },
   }
 }

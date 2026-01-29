@@ -15,7 +15,6 @@ export function editRedo(): BuiltinAction {
     },
     menu: {
       group: 'edit',
-      order: 1,
     },
   }
 }

@@ -31,7 +31,6 @@ export function fileNew(): BuiltinAction {
     },
     menu: {
       group: 'file',
-      order: 0,
     },
   }
 }

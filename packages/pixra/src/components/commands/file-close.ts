@@ -37,7 +37,6 @@ export function fileClose(): BuiltinAction {
     },
     menu: {
       group: 'file',
-      order: 5,
     },
   }
 }

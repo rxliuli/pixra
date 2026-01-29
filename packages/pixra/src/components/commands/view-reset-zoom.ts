@@ -22,7 +22,6 @@ export function viewResetZoom(): BuiltinAction {
     },
     menu: {
       group: 'view',
-      order: 2,
     },
   }
 }

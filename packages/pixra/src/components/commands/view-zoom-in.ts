@@ -17,7 +17,6 @@ export function viewZoomIn(): BuiltinAction {
     },
     menu: {
       group: 'view',
-      order: 0,
     },
   }
 }

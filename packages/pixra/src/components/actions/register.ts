@@ -8,7 +8,6 @@ import {
   fileExport,
   editUndo,
   editRedo,
-  editCut,
   editCopy,
   editPaste,
   viewZoomIn,
@@ -54,7 +53,6 @@ export function registerBuiltinActions() {
     // Edit 菜单
     editUndo(),
     editRedo(),
-    editCut(),
     editCopy(),
     editPaste(),
 
