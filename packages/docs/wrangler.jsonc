@@ -11,7 +11,7 @@
   "routes": [
     {
       "pattern": "pixra.rxliuli.com/docs/*",
-      "zone_name": "pixra.rxliuli.com",
+      "zone_name": "rxliuli.com",
     },
   ],
   "observability": {
