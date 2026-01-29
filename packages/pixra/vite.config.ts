@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 import * as esbuild from 'esbuild'
 import fs from 'fs/promises'
+import { cloudflare } from '@cloudflare/vite-plugin'
+import { analyzer } from 'vite-bundle-analyzer'
 
 /**
  * Vite plugin to bundle TypeScript files as strings
@@ -51,7 +53,13 @@ function bundlePlugin(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), bundlePlugin()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    bundlePlugin(),
+    cloudflare(),
+    // analyzer(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

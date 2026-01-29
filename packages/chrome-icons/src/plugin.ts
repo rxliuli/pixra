@@ -7,7 +7,6 @@
  */
 
 import * as pixra from '@pixra/plugin-sdk'
-import JSZip from 'jszip'
 
 const ICON_SIZES = [16, 32, 48, 96, 128] as const
 
@@ -34,6 +33,7 @@ async function exportChromeIcons(): Promise<void> {
   }
 
   // Create ZIP file
+  const JSZip = (await import('jszip')).default
   const zip = new JSZip()
 
   // Generate icons for each size

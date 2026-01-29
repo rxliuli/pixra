@@ -7,6 +7,7 @@ import sdkRuntimeCode from '@pixra/plugin-sdk/runtime?bundle'
 import { type Plugin } from 'esbuild-wasm'
 import { executeApiCall, type ApiContext } from './api'
 import { ui } from '../window'
+import { endProgress, reportProgress } from './api/window'
 
 /**
  * Active plugin instance
@@ -371,9 +372,7 @@ export class PluginManager {
    */
   private handleProgressReport(message: any): void {
     const { progressId, value } = message
-    import('./api/window').then(({ reportProgress }) => {
-      reportProgress(progressId, value)
-    })
+    reportProgress(progressId, value)
   }
 
   /**
@@ -381,9 +380,7 @@ export class PluginManager {
    */
   private handleProgressEnd(message: any): void {
     const { progressId } = message
-    import('./api/window').then(({ endProgress }) => {
-      endProgress(progressId)
-    })
+    endProgress(progressId)
   }
 
   /**
