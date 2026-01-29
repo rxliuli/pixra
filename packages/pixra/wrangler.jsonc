@@ -1,16 +1,5 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "pixra",
-  "main": "src/worker.ts",
   "compatibility_date": "2025-04-03",
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist"
-  },
-  "services": [
-    {
-      "binding": "DOCS",
-      "service": "pixra-docs"
-    }
-  ]
 }
