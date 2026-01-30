@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react-lite'
 import { appStateStore, type ToolType } from '../store'
-import { Crop, MousePointer2, Paintbrush, Square } from 'lucide-react'
+import { Brush, Crop, MousePointer2, SquareDashed } from 'lucide-react'
 import { Button } from '../ui/button'
 
 const tools: { id: ToolType; icon: React.ComponentType<any>; label: string }[] =
   [
     { id: 'move', icon: MousePointer2, label: 'Move' },
-    { id: 'marquee', icon: Square, label: 'Marquee' },
+    { id: 'marquee', icon: SquareDashed, label: 'Marquee' },
     { id: 'crop', icon: Crop, label: 'Crop' },
-    { id: 'brush', icon: Paintbrush, label: 'Brush' },
+    { id: 'brush', icon: Brush, label: 'Brush' },
   ]
 
 export const ToolPanel = observer(() => {
