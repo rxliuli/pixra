@@ -1,6 +1,6 @@
 {
   "name": "@pixra/plugin-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "CLI tool for building and packaging Pixra plugins",
   "type": "module",
   "bin": {
