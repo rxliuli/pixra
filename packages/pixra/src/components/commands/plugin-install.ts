@@ -23,8 +23,10 @@ export function pluginInstall(): BuiltinAction {
         return
       }
       try {
-        await pluginManager.installFromZip(file)
-        toast.info(`Plugin installed successfully!`)
+        const installed = await pluginManager.installFromZip(file)
+        if (installed) {
+          toast.info(`Plugin installed successfully!`)
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         toast.error(`Failed to install plugin: ${message}`)

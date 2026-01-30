@@ -6,6 +6,7 @@
 import { fileSave } from '@/lib/fileSave'
 import { appStateStore } from '../../../components/store'
 import type { ApiContext } from './index'
+import { toJS } from 'mobx'
 
 /**
  * Convert ImageBitmap to ImageData
@@ -59,4 +60,30 @@ export async function downloadFile(
   data: ArrayBuffer,
 ): Promise<void> {
   fileSave(new Blob([data]), filename)
+}
+
+/**
+ * Selection rectangle interface
+ */
+export interface SelectionRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+/**
+ * Get the current selection (relative to the original image coordinates)
+ */
+export async function getSelection(
+  _ctx: ApiContext,
+): Promise<SelectionRect | null> {
+  return toJS(appStateStore.editorStore.selection)
+}
+
+/**
+ * Clear the current selection
+ */
+export async function clearSelection(_ctx: ApiContext): Promise<void> {
+  appStateStore.editorStore.clearSelection()
 }

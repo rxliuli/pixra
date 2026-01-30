@@ -57,7 +57,7 @@ export class PluginManager {
   /**
    * Install plugin from ZIP file
    */
-  async installFromZip(file: File): Promise<void> {
+  async installFromZip(file: File): Promise<boolean> {
     // Load plugin
     const { manifest, files } = await this.loader.loadFromZip(file)
 
@@ -76,7 +76,7 @@ export class PluginManager {
       )
 
       if (!shouldUpdate) {
-        return
+        return false
       }
 
       // Deactivate if running
@@ -100,6 +100,7 @@ export class PluginManager {
 
     // Register commands (lazy activation)
     this.registerPluginCommands(manifest)
+    return true
   }
 
   /**

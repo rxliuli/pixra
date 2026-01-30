@@ -627,6 +627,27 @@ export const Renderer = observer((props: { className?: string }) => {
       // 不立即清空 currentStroke，等待 applyBrushStrokeToImage 完成后再清空
     }
 
+    // 矩形选框工具 - 将选区坐标转换为图像坐标并存储到全局 store
+    if (currentTool === 'marquee' && currentSelection) {
+      const imgRect = getImageRect()
+      if (imgRect && currentSelection.width > 0 && currentSelection.height > 0) {
+        // 将画布坐标转换为图像坐标
+        const imageSelection = {
+          x: Math.max(0, (currentSelection.x - imgRect.x) / scale),
+          y: Math.max(0, (currentSelection.y - imgRect.y) / scale),
+          width: currentSelection.width / scale,
+          height: currentSelection.height / scale,
+        }
+        // 限制选区不超出图像边界
+        imageSelection.width = Math.min(imageSelection.width, imageData!.width - imageSelection.x)
+        imageSelection.height = Math.min(imageSelection.height, imageData!.height - imageSelection.y)
+
+        if (imageSelection.width > 0 && imageSelection.height > 0) {
+          appStateStore.editorStore.setSelection(imageSelection)
+        }
+      }
+    }
+
     setIsDrawing(false)
     setStartPoint(null)
     setIsPanning(false)

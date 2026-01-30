@@ -122,6 +122,8 @@ export const workspace = {
   getActiveImage: createApiProxy('workspace.getActiveImage'),
   updateActiveImage: createApiProxy('workspace.updateActiveImage'),
   downloadFile: createApiProxy('workspace.downloadFile'),
+  getSelection: createApiProxy('workspace.getSelection'),
+  clearSelection: createApiProxy('workspace.clearSelection'),
 }
 
 // Clean up dangerous globals

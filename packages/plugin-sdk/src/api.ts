@@ -65,6 +65,14 @@ export interface Commands {
   executeCommand(command: string, ...args: any[]): Promise<any>
 }
 
+/** Selection rectangle */
+export interface SelectionRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 /** Workspace API - workspace interactions */
 export interface Workspace {
   /**
@@ -83,6 +91,17 @@ export interface Workspace {
    * @param data - The file content as ArrayBuffer
    */
   downloadFile(filename: string, data: ArrayBuffer): Promise<void>
+
+  /**
+   * Get the current selection (relative to original image coordinates)
+   * @returns The selection rectangle or null if no selection
+   */
+  getSelection(): Promise<SelectionRect | null>
+
+  /**
+   * Clear the current selection
+   */
+  clearSelection(): Promise<void>
 }
 
 /** Progress options */

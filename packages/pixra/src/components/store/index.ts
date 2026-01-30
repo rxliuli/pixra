@@ -4,6 +4,13 @@ import { TabStore } from './TabStore'
 export type ToolType = 'move' | 'marquee' | 'crop' | 'brush'
 export type CropAspectRatio = 'free' | '1:1' | '16:9' | '4:3' | '3:2'
 
+export interface SelectionRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 class AppToolbarStore {
   constructor() {
     makeAutoObservable(this)
@@ -57,6 +64,9 @@ class EditorStore {
   isCropMode = false
   cropAspectRatio: CropAspectRatio = 'free'
 
+  // 选区状态（相对于原始图像的坐标）
+  selection: SelectionRect | null = null
+
   constructor() {
     makeAutoObservable(this)
   }
@@ -85,6 +95,14 @@ class EditorStore {
   exitCropMode() {
     this.isCropMode = false
     this.currentTool = 'move'
+  }
+
+  setSelection(selection: SelectionRect | null) {
+    this.selection = selection
+  }
+
+  clearSelection() {
+    this.selection = null
   }
 }
 

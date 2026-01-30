@@ -30,6 +30,8 @@ const apiHandlers: Record<string, ApiHandler> = {
   'workspace.getActiveImage': workspaceApi.getActiveImage,
   'workspace.updateActiveImage': workspaceApi.updateActiveImage,
   'workspace.downloadFile': workspaceApi.downloadFile,
+  'workspace.getSelection': workspaceApi.getSelection,
+  'workspace.clearSelection': workspaceApi.clearSelection,
 }
 
 /**

@@ -14,6 +14,8 @@ export type {
   Window,
   Commands,
   Workspace,
+  SelectionRect,
+  Progress,
 } from './api'
 
 export type { PluginManifest, CommandContribution } from './manifest'

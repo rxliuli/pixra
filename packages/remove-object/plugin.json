@@ -1,0 +1,30 @@
+{
+  "id": "pixra.remove-object",
+  "name": "Remove Object",
+  "description": "Remove objects from images using AI inpainting (LaMa model)",
+  "contributes": {
+    "commands": [
+      {
+        "command": "removeObject.remove",
+        "title": "Remove Object",
+        "enablement": "hasActiveTab"
+      }
+    ],
+    "menus": {
+      "tools": [
+        {
+          "command": "removeObject.remove"
+        }
+      ]
+    }
+  },
+  "permissions": [
+    "fetch"
+  ],
+  "host_permissions": [
+    "https://huggingface.co/*",
+    "https://cdn-lfs.hf.co/*",
+    "https://cdn-lfs-us-1.hf.co/*",
+    "https://cdn.jsdelivr.net/*"
+  ]
+}

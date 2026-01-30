@@ -1,0 +1,34 @@
+{
+  "name": "@pixra/remove-object",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Remove objects from images using AI inpainting",
+  "scripts": {
+    "dev": "pixra dev",
+    "build": "pixra build",
+    "zip": "pixra zip",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "pixra-plugin",
+    "remove-object",
+    "inpainting",
+    "ai"
+  ],
+  "author": "Pixra Team",
+  "license": "AGPL-3.0-only",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@pixra/plugin-cli": "workspace:*",
+    "@pixra/plugin-sdk": "workspace:*",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "onnxruntime-web": "^1.21.0"
+  }
+}

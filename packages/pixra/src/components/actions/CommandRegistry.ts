@@ -104,3 +104,7 @@ export class CommandRegistry {
 
 // 导出单例
 export const commandRegistry = new CommandRegistry()
+
+if (import.meta.env.DEV) {
+  Reflect.set(globalThis, 'commandRegistry', commandRegistry)
+}
