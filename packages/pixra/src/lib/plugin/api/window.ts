@@ -9,7 +9,28 @@
  */
 import { toast } from 'sonner'
 import { ui } from '@/lib/window'
+import { fileSave } from '@/lib/fileSave'
 import type { ApiContext } from './index'
+
+/**
+ * Options for saving a file
+ */
+export interface SaveFileOptions {
+  /** Suggested filename for the saved file */
+  filename: string
+  /** File content as ArrayBuffer */
+  data: ArrayBuffer
+}
+
+/**
+ * Save a file to the user's device
+ */
+export async function saveFile(
+  _ctx: ApiContext,
+  options: SaveFileOptions,
+): Promise<void> {
+  fileSave(new Blob([options.data]), options.filename)
+}
 
 export async function showInformationMessage(
   _ctx: ApiContext,

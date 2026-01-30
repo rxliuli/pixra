@@ -1,3 +1,4 @@
+import { ui } from '@/lib/window'
 import type { BuiltinAction } from '../actions/types'
 import { appStateStore } from '../store'
 import { imageBitmapToBlob } from '@/lib/imageBitmap'
@@ -22,8 +23,10 @@ export function editCopy(): BuiltinAction {
             'image/png': blob,
           }),
         ])
+        ui.showInformationMessage('Image copied to clipboard.')
       } catch (error) {
         console.error('Failed to copy image to clipboard:', error)
+        ui.showErrorMessage('Failed to copy image to clipboard.')
       }
     },
     keybinding: {

@@ -3,7 +3,6 @@
  * Handles image data access and manipulation
  */
 
-import { fileSave } from '@/lib/fileSave'
 import { appStateStore } from '../../../components/store'
 import type { ApiContext } from './index'
 import { toJS } from 'mobx'
@@ -49,17 +48,6 @@ export async function updateActiveImage(
 ): Promise<void> {
   const bitmap = await imageDataToImageBitmap(imageData)
   appStateStore.sceneStore.setImageData(bitmap)
-}
-
-/**
- * Download a file to the user's device
- */
-export async function downloadFile(
-  _ctx: ApiContext,
-  filename: string,
-  data: ArrayBuffer,
-): Promise<void> {
-  fileSave(new Blob([data]), filename)
 }
 
 /**

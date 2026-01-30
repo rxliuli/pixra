@@ -52,7 +52,7 @@ function renderMenuItem(
         disabled={!command || !isEnabled}
       >
         {item.title || command?.title}
-        {shortcut && <MenubarShortcut>{shortcut}</MenubarShortcut>}
+        {shortcut && <MenubarShortcut>{shortcut.toUpperCase()}</MenubarShortcut>}
       </MenubarItem>
     )
   }

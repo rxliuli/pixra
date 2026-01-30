@@ -51,7 +51,7 @@ export const Renderer = observer((props: { className?: string }) => {
   // 保存裁剪框相对于图片的比例位置（范围 0-1），避免缩放时重置
   const [cropRectRatio, setCropRectRatio] = useState<SelectionRect | null>(null)
 
-  const { currentTool, brushSize, brushColor, isCropMode, cropAspectRatio } =
+  const { currentTool, brushSize, brushColor, isCropMode, cropAspectRatio, selection } =
     appStateStore.editorStore
   const { imageData, pan, scale } = appStateStore.sceneStore
   const { colorTheme } = appStateStore.settingsStore
@@ -231,6 +231,13 @@ export const Renderer = observer((props: { className?: string }) => {
       setCropRectRatio(null)
     }
   }, [isCropMode, imageData])
+
+  // 当 store 中的选区被清除时，同步清除本地选区状态
+  useEffect(() => {
+    if (selection === null) {
+      setCurrentSelection(null)
+    }
+  }, [selection])
 
   // 根据比例位置和当前缩放/平移计算实际裁剪框
   useEffect(() => {

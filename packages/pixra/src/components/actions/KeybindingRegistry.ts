@@ -85,6 +85,10 @@ export class KeybindingRegistry {
             ) {
               return
             }
+            // 当有文本选中时，不拦截复制快捷键
+            if (this.hasTextSelection() && this.isCopyKey(event)) {
+              return
+            }
             event.preventDefault()
             executeCommand(commandId)
             return
@@ -164,6 +168,23 @@ export class KeybindingRegistry {
     const systemKeys = ['c', 'v', 'x', 'a', 'z']
 
     return hasModifier && systemKeys.includes(event.key.toLowerCase())
+  }
+
+  /**
+   * 检查是否是复制快捷键 (Ctrl/Cmd + C)
+   */
+  private isCopyKey(event: KeyboardEvent): boolean {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    const hasModifier = isMac ? event.metaKey : event.ctrlKey
+    return hasModifier && event.key.toLowerCase() === 'c'
+  }
+
+  /**
+   * 检查是否有文本被选中
+   */
+  private hasTextSelection(): boolean {
+    const selection = window.getSelection()
+    return selection !== null && selection.toString().length > 0
   }
 
   /**

@@ -47,7 +47,7 @@ async function exportChromeIcons(): Promise<void> {
   const zipBlob = await zip.generateAsync({ type: 'arraybuffer' })
 
   // Download
-  await pixra.workspace.downloadFile('chrome-icons.zip', zipBlob)
+  await pixra.window.saveFile({ filename: 'chrome-icons.zip', data: zipBlob })
 
   await pixra.window.showInformationMessage(
     `Exported ${ICON_SIZES.length} icons: ${ICON_SIZES.join(', ')}px`,

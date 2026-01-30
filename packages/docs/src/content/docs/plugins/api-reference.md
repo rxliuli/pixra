@@ -124,6 +124,32 @@ const result = await window.withProgress(
 )
 ```
 
+### saveFile
+
+Save a file to the user's device.
+
+```typescript
+window.saveFile(options: SaveFileOptions): Promise<void>
+
+interface SaveFileOptions {
+  /** Suggested filename for the saved file */
+  filename: string
+  /** File content as ArrayBuffer */
+  data: ArrayBuffer
+}
+```
+
+**Example:**
+
+```typescript
+// Save a text file
+const text = 'Hello, World!'
+const encoder = new TextEncoder()
+const data = encoder.encode(text).buffer
+
+await window.saveFile({ filename: 'hello.txt', data })
+```
+
 ## commands
 
 Command registration and execution APIs.
@@ -220,25 +246,6 @@ for (let i = 0; i < data.length; i += 4) {
 }
 
 await workspace.updateActiveImage(imageData)
-```
-
-### downloadFile
-
-Download a file to the user's device.
-
-```typescript
-workspace.downloadFile(filename: string, data: ArrayBuffer): Promise<void>
-```
-
-**Example:**
-
-```typescript
-// Create a text file
-const text = 'Hello, World!'
-const encoder = new TextEncoder()
-const data = encoder.encode(text).buffer
-
-await workspace.downloadFile('hello.txt', data)
 ```
 
 ## Disposable

@@ -20,6 +20,14 @@ export interface Disposable {
   dispose(): void
 }
 
+/** Options for saving a file */
+export interface SaveFileOptions {
+  /** Suggested filename for the saved file */
+  filename: string
+  /** File content as ArrayBuffer */
+  data: ArrayBuffer
+}
+
 /** Window API - UI interactions */
 export interface Window {
   /**
@@ -47,6 +55,12 @@ export interface Window {
     options: ProgressOptions,
     task: (progress: Progress) => Promise<T>
   ): Promise<T>
+
+  /**
+   * Save a file to the user's device
+   * @param options - Save file options
+   */
+  saveFile(options: SaveFileOptions): Promise<void>
 }
 
 /** Commands API - command registration */
@@ -84,13 +98,6 @@ export interface Workspace {
    * Update the active image
    */
   updateActiveImage(imageData: ImageData): Promise<void>
-
-  /**
-   * Download a file to the user's device
-   * @param filename - The suggested filename for download
-   * @param data - The file content as ArrayBuffer
-   */
-  downloadFile(filename: string, data: ArrayBuffer): Promise<void>
 
   /**
    * Get the current selection (relative to original image coordinates)

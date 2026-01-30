@@ -29,7 +29,7 @@ const apiHandlers: Record<string, ApiHandler> = {
   'commands.registerCommand': commandsApi.registerCommand,
   'workspace.getActiveImage': workspaceApi.getActiveImage,
   'workspace.updateActiveImage': workspaceApi.updateActiveImage,
-  'workspace.downloadFile': workspaceApi.downloadFile,
+  'window.saveFile': windowApi.saveFile,
   'workspace.getSelection': workspaceApi.getSelection,
   'workspace.clearSelection': workspaceApi.clearSelection,
 }

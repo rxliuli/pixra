@@ -56,6 +56,7 @@ export const window: Window = {
   showInformationMessage: createApiProxy('window.showInformationMessage'),
   showWarningMessage: createApiProxy('window.showWarningMessage'),
   showErrorMessage: createApiProxy('window.showErrorMessage'),
+  saveFile: createApiProxy('window.saveFile'),
   async withProgress(options, task) {
     const progressId = Math.random().toString(36)
 
@@ -121,7 +122,6 @@ export const commands: Commands = {
 export const workspace = {
   getActiveImage: createApiProxy('workspace.getActiveImage'),
   updateActiveImage: createApiProxy('workspace.updateActiveImage'),
-  downloadFile: createApiProxy('workspace.downloadFile'),
   getSelection: createApiProxy('workspace.getSelection'),
   clearSelection: createApiProxy('workspace.clearSelection'),
 }

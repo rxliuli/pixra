@@ -78,6 +78,10 @@ class EditorStore {
     } else {
       this.isCropMode = false
     }
+    // 切换到非 marquee 工具时清除选区
+    if (tool !== 'marquee') {
+      this.selection = null
+    }
   }
 
   setBrushSize(size: number) {
