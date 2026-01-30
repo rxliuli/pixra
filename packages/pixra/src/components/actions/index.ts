@@ -1,4 +1,3 @@
-// 导出所有 API
 export { ActionRegistry, actionRegistry } from './ActionRegistry'
 export { CommandRegistry, commandRegistry } from './CommandRegistry'
 export { MenuRegistry, menuRegistry } from './MenuRegistry'

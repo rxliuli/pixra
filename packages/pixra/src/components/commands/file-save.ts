@@ -14,9 +14,6 @@ const IMAGE_FILE_TYPES: FilePickerAcceptType[] = [
   },
 ]
 
-/**
- * 使用 File System Access API 保存文件
- */
 async function saveToFileSystem(
   blob: Blob,
   suggestedName: string,
@@ -59,14 +56,11 @@ export function fileSave(): BuiltinAction {
         const blob = await imageBitmapToBlob(tab.imageData, { mimeType: 'image/png' })
         const handle = await saveToFileSystem(blob, suggestedName, existingHandle)
 
-        // 保存文件句柄以便后续保存
         setFileHandle(tab.id, handle)
 
-        // 标记标签页为已保存
         appStateStore.tabStore.markClean()
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
-          // 用户取消了保存对话框
           return
         }
         console.error('Failed to save file:', error)

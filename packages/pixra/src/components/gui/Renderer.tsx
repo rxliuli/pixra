@@ -41,14 +41,14 @@ export const Renderer = observer((props: { className?: string }) => {
     useState<SelectionRect | null>(null)
   const [currentStroke, setCurrentStroke] = useState<BrushStroke | null>(null)
   const [isPanning, setIsPanning] = useState(false)
-  // 空格键临时拖拽状态
+  // Space key temporary drag state
   const [isSpacePressed, setIsSpacePressed] = useState(false)
   const [isSpacePanning, setIsSpacePanning] = useState(false)
 
-  // 裁剪模式状态
+  // Crop mode state
   const [cropRect, setCropRect] = useState<SelectionRect | null>(null)
   const [dragHandle, setDragHandle] = useState<DragHandle>(null)
-  // 保存裁剪框相对于图片的比例位置（范围 0-1），避免缩放时重置
+  // Store crop rect position relative to image as ratio (0-1 range), to avoid reset on zoom
   const [cropRectRatio, setCropRectRatio] = useState<SelectionRect | null>(null)
 
   const { currentTool, brushSize, brushColor, isCropMode, cropAspectRatio, selection } =
@@ -56,7 +56,7 @@ export const Renderer = observer((props: { className?: string }) => {
   const { imageData, pan, scale } = appStateStore.sceneStore
   const { colorTheme } = appStateStore.settingsStore
 
-  // 绘制棋盘格图案（用于显示透明区域）
+  // Draw checkerboard pattern (for displaying transparent areas)
   const drawCheckerboard = (
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -85,7 +85,7 @@ export const Renderer = observer((props: { className?: string }) => {
     ctx.restore()
   }
 
-  // 绘制画布
+  // Draw canvas
   const redrawCanvas = () => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -93,30 +93,30 @@ export const Renderer = observer((props: { className?: string }) => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // 清空画布（使用主题颜色）
+    // Clear canvas (using theme color)
     const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary').trim()
     ctx.fillStyle = bgColor || '#f0f0f0'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // 绘制图片（考虑平移和缩放）
+    // Draw image (considering pan and zoom)
     if (imageData) {
       const imgWidth = imageData.width * scale
       const imgHeight = imageData.height * scale
       const imgX = (canvas.width - imgWidth) / 2 + pan.x
       const imgY = (canvas.height - imgHeight) / 2 + pan.y
 
-      // 先在图片区域绘制棋盘格背景（用于显示透明区域）
+      // Draw checkerboard background in image area first (for displaying transparent areas)
       drawCheckerboard(ctx, imgX, imgY, imgWidth, imgHeight)
 
-      // 设置高质量图像平滑，避免缩小时出现锯齿
+      // Set high quality image smoothing to avoid aliasing when scaling down
       ctx.imageSmoothingEnabled = true
       ctx.imageSmoothingQuality = 'high'
 
       ctx.drawImage(imageData, imgX, imgY, imgWidth, imgHeight)
 
-      // 绘制当前正在进行的笔触（临时预览）
+      // Draw current stroke in progress (temporary preview)
       if (currentStroke && currentStroke.points.length > 0) {
-        // 裁剪绘制区域到图像范围内
+        // Clip drawing area to image bounds
         ctx.save()
         ctx.beginPath()
         ctx.rect(imgX, imgY, imgWidth, imgHeight)
@@ -135,7 +135,7 @@ export const Renderer = observer((props: { className?: string }) => {
       }
     }
 
-    // 绘制矩形选框
+    // Draw rectangle selection
     if (currentSelection && currentTool === 'marquee') {
       ctx.strokeStyle = '#0066ff'
       ctx.lineWidth = 1
@@ -149,27 +149,27 @@ export const Renderer = observer((props: { className?: string }) => {
       ctx.setLineDash([])
     }
 
-    // 绘制裁剪框
+    // Draw crop box
     if (cropRect && isCropMode) {
-      // 使用路径绘制遮罩，排除裁剪区域
-      // 绘制四个矩形区域作为遮罩（裁剪框外的部分）
+      // Use path to draw mask, excluding crop area
+      // Draw four rectangle areas as mask (parts outside crop box)
       ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
 
-      // 上方区域
+      // Top area
       ctx.fillRect(0, 0, canvas.width, cropRect.y)
-      // 下方区域
+      // Bottom area
       ctx.fillRect(0, cropRect.y + cropRect.height, canvas.width, canvas.height - cropRect.y - cropRect.height)
-      // 左侧区域（中间高度）
+      // Left area (middle height)
       ctx.fillRect(0, cropRect.y, cropRect.x, cropRect.height)
-      // 右侧区域（中间高度）
+      // Right area (middle height)
       ctx.fillRect(cropRect.x + cropRect.width, cropRect.y, canvas.width - cropRect.x - cropRect.width, cropRect.height)
 
-      // 绘制调整手柄
+      // Draw resize handles
       drawCropHandles(ctx, cropRect)
     }
   }
 
-  // 阻止浏览器/系统的缩放手势
+  // Prevent browser/system zoom gestures
   useEffectOnce(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -184,7 +184,7 @@ export const Renderer = observer((props: { className?: string }) => {
     return () => canvas.removeEventListener('wheel', handleNativeWheel)
   })
 
-  // 初始化画布
+  // Initialize canvas
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -195,7 +195,7 @@ export const Renderer = observer((props: { className?: string }) => {
         canvas.width = parent.clientWidth
         canvas.height = parent.clientHeight
         appStateStore.sceneStore.setCanvasSize(canvas.width, canvas.height)
-        // 直接调用 redrawCanvas，因为它现在可以访问最新的状态
+        // Call redrawCanvas directly since it can access the latest state
         requestAnimationFrame(() => {
           redrawCanvas()
         })
@@ -216,10 +216,10 @@ export const Renderer = observer((props: { className?: string }) => {
     currentTool,
   ])
 
-  // 进入裁剪模式时，初始化裁剪框（只在首次进入时）
+  // Initialize crop box when entering crop mode (only on first entry)
   useEffect(() => {
     if (isCropMode && imageData && !cropRectRatio) {
-      // 初始裁剪框为整个图片（相对比例都是 0-1）
+      // Initial crop box covers the entire image (relative ratio is 0-1)
       setCropRectRatio({
         x: 0,
         y: 0,
@@ -232,26 +232,26 @@ export const Renderer = observer((props: { className?: string }) => {
     }
   }, [isCropMode, imageData])
 
-  // 当 store 中的选区被清除时，同步清除本地选区状态
+  // Sync local selection state when store selection is cleared
   useEffect(() => {
     if (selection === null) {
       setCurrentSelection(null)
     }
   }, [selection])
 
-  // 根据比例位置和当前缩放/平移计算实际裁剪框
+  // Calculate actual crop box based on ratio position and current zoom/pan
   useEffect(() => {
     if (isCropMode && imageData && cropRectRatio) {
       const canvas = canvasRef.current
       if (!canvas) return
 
-      // 计算图片在画布上的位置（考虑平移和缩放）
+      // Calculate image position on canvas (considering pan and zoom)
       const imgWidth = imageData.width * scale
       const imgHeight = imageData.height * scale
       const imgX = (canvas.width - imgWidth) / 2 + pan.x
       const imgY = (canvas.height - imgHeight) / 2 + pan.y
 
-      // 根据比例计算裁剪框的实际位置和大小
+      // Calculate crop box actual position and size based on ratio
       setCropRect({
         x: imgX + cropRectRatio.x * imgWidth,
         y: imgY + cropRectRatio.y * imgHeight,
@@ -261,28 +261,28 @@ export const Renderer = observer((props: { className?: string }) => {
     }
   }, [isCropMode, imageData, scale, pan.x, pan.y, cropRectRatio])
 
-  // 裁剪比例变化时，更新裁剪框
+  // Update crop box when aspect ratio changes
   useEffect(() => {
     if (isCropMode && cropRect && cropRectRatio && cropAspectRatio !== 'free') {
       const ratio = getAspectRatioValue(cropAspectRatio)
       const newRect = { ...cropRect }
 
-      // 计算基于宽度和基于高度的两种可能尺寸
+      // Calculate two possible sizes based on width and height
       const widthBasedHeight = newRect.width / ratio
       const heightBasedWidth = newRect.height * ratio
 
-      // 选择较小的尺寸，确保裁剪框不会超出原有区域
+      // Choose the smaller size to ensure crop box doesn't exceed original area
       if (widthBasedHeight <= newRect.height) {
-        // 基于宽度计算高度
+        // Calculate height based on width
         newRect.height = widthBasedHeight
       } else {
-        // 基于高度计算宽度
+        // Calculate width based on height
         newRect.width = heightBasedWidth
       }
 
       setCropRect(newRect)
 
-      // 更新比例位置
+      // Update ratio position
       const imgRect = getImageRect()
       if (imgRect) {
         setCropRectRatio({
@@ -295,7 +295,7 @@ export const Renderer = observer((props: { className?: string }) => {
     }
   }, [cropAspectRatio])
 
-  // 监听裁剪确认事件
+  // Listen for crop confirm event
   useEffect(() => {
     const handleCropConfirm = () => {
       if (cropRect) {
@@ -307,10 +307,10 @@ export const Renderer = observer((props: { className?: string }) => {
     return () => window.removeEventListener('crop-confirm', handleCropConfirm)
   }, [cropRect])
 
-  // 监听空格键实现临时拖拽功能
+  // Listen for space key to enable temporary drag functionality
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // 防止在输入框中触发
+      // Prevent triggering in input fields
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement
@@ -318,7 +318,7 @@ export const Renderer = observer((props: { className?: string }) => {
         return
       }
 
-      // 按下空格键
+      // Space key pressed
       if (e.code === 'Space' && !isSpacePressed) {
         e.preventDefault()
         setIsSpacePressed(true)
@@ -326,7 +326,7 @@ export const Renderer = observer((props: { className?: string }) => {
     }
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      // 松开空格键
+      // Space key released
       if (e.code === 'Space') {
         e.preventDefault()
         setIsSpacePressed(false)
@@ -343,7 +343,7 @@ export const Renderer = observer((props: { className?: string }) => {
     }
   }, [isSpacePressed])
 
-  // 获取图片在画布上的位置和尺寸
+  // Get image position and size on canvas
   const getImageRect = (): SelectionRect | null => {
     const canvas = canvasRef.current
     if (!canvas || !imageData) return null
@@ -356,7 +356,7 @@ export const Renderer = observer((props: { className?: string }) => {
     return { x: imgX, y: imgY, width: imgWidth, height: imgHeight }
   }
 
-  // 绘制裁剪框调整手柄
+  // Draw crop box resize handles
   const drawCropHandles = (
     ctx: CanvasRenderingContext2D,
     rect: SelectionRect,
@@ -393,7 +393,7 @@ export const Renderer = observer((props: { className?: string }) => {
     })
   }
 
-  // 检测是否点击在裁剪框手柄上
+  // Detect if click is on crop box handle
   const getHandleAtPoint = (point: Point, rect: SelectionRect): DragHandle => {
     const handleSize = 8
     const threshold = handleSize
@@ -418,7 +418,7 @@ export const Renderer = observer((props: { className?: string }) => {
       }
     }
 
-    // 检测是否在裁剪框内部（用于移动）
+    // Check if inside crop box (for moving)
     if (
       point.x >= rect.x &&
       point.x <= rect.x + rect.width &&
@@ -431,7 +431,7 @@ export const Renderer = observer((props: { className?: string }) => {
     return null
   }
 
-  // 每次相关状态变化时重绘
+  // Redraw on every relevant state change
   useEffect(() => {
     redrawCanvas()
   }, [
@@ -461,26 +461,26 @@ export const Renderer = observer((props: { className?: string }) => {
     setIsDrawing(true)
     setStartPoint(point)
 
-    // 空格键临时拖拽优先级最高
+    // Space key temporary drag has highest priority
     if (isSpacePressed) {
       setIsSpacePanning(true)
       return
     }
 
-    // 裁剪模式
+    // Crop mode
     if (isCropMode && cropRect) {
       const handle = getHandleAtPoint(point, cropRect)
       setDragHandle(handle)
       return
     }
 
-    // 移动工具
+    // Move tool
     if (currentTool === 'move') {
       setIsPanning(true)
       return
     }
 
-    // 画笔工具
+    // Brush tool
     if (currentTool === 'brush') {
       setCurrentStroke({
         points: [point],
@@ -490,7 +490,7 @@ export const Renderer = observer((props: { className?: string }) => {
       return
     }
 
-    // 矩形选框工具
+    // Marquee tool
     if (currentTool === 'marquee') {
       setCurrentSelection({
         x: point.x,
@@ -506,7 +506,7 @@ export const Renderer = observer((props: { className?: string }) => {
 
     const point = getCanvasPoint(e)
 
-    // 空格键临时拖拽优先级最高
+    // Space key temporary drag has highest priority
     if (isSpacePanning) {
       const dx = point.x - startPoint.x
       const dy = point.y - startPoint.y
@@ -515,7 +515,7 @@ export const Renderer = observer((props: { className?: string }) => {
       return
     }
 
-    // 裁剪模式 - 调整裁剪框
+    // Crop mode - adjust crop box
     if (isCropMode && cropRect && dragHandle) {
       const newRect = { ...cropRect }
       const dx = point.x - startPoint.x
@@ -562,23 +562,23 @@ export const Renderer = observer((props: { className?: string }) => {
           break
       }
 
-      // 应用纵横比约束
+      // Apply aspect ratio constraint
       if (cropAspectRatio !== 'free') {
         const ratio = getAspectRatioValue(cropAspectRatio)
         if (dragHandle === 'move') {
-          // 移动时保持原比例
+          // Keep original ratio when moving
         } else {
-          // 调整大小时应用比例
+          // Apply ratio when resizing
           newRect.height = newRect.width / ratio
         }
       }
 
-      // 确保裁剪框不小于最小尺寸
+      // Ensure crop box is not smaller than minimum size
       if (newRect.width > 20 && newRect.height > 20) {
         setCropRect(newRect)
         setStartPoint(point)
 
-        // 更新比例位置
+        // Update ratio position
         const imgRect = getImageRect()
         if (imgRect) {
           setCropRectRatio({
@@ -592,7 +592,7 @@ export const Renderer = observer((props: { className?: string }) => {
       return
     }
 
-    // 移动工具 - 平移画布
+    // Move tool - pan canvas
     if (isPanning) {
       const dx = point.x - startPoint.x
       const dy = point.y - startPoint.y
@@ -601,7 +601,7 @@ export const Renderer = observer((props: { className?: string }) => {
       return
     }
 
-    // 画笔工具
+    // Brush tool
     if (currentTool === 'brush' && currentStroke) {
       setCurrentStroke({
         ...currentStroke,
@@ -610,7 +610,7 @@ export const Renderer = observer((props: { className?: string }) => {
       return
     }
 
-    // 矩形选框工具
+    // Marquee tool
     if (currentTool === 'marquee') {
       setCurrentSelection({
         x: Math.min(startPoint.x, point.x),
@@ -624,28 +624,28 @@ export const Renderer = observer((props: { className?: string }) => {
   const handleMouseUp = () => {
     if (!isDrawing) return
 
-    // 画笔工具 - 将笔触应用到图像上
+    // Brush tool - apply stroke to image
     if (
       currentTool === 'brush' &&
       currentStroke &&
       currentStroke.points.length > 0
     ) {
       applyBrushStrokeToImage(currentStroke)
-      // 不立即清空 currentStroke，等待 applyBrushStrokeToImage 完成后再清空
+      // Don't clear currentStroke immediately, wait for applyBrushStrokeToImage to complete
     }
 
-    // 矩形选框工具 - 将选区坐标转换为图像坐标并存储到全局 store
+    // Marquee tool - convert selection coordinates to image coordinates and store in global store
     if (currentTool === 'marquee' && currentSelection) {
       const imgRect = getImageRect()
       if (imgRect && currentSelection.width > 0 && currentSelection.height > 0) {
-        // 将画布坐标转换为图像坐标
+        // Convert canvas coordinates to image coordinates
         const imageSelection = {
           x: Math.max(0, (currentSelection.x - imgRect.x) / scale),
           y: Math.max(0, (currentSelection.y - imgRect.y) / scale),
           width: currentSelection.width / scale,
           height: currentSelection.height / scale,
         }
-        // 限制选区不超出图像边界
+        // Limit selection to not exceed image bounds
         imageSelection.width = Math.min(imageSelection.width, imageData!.width - imageSelection.x)
         imageSelection.height = Math.min(imageSelection.height, imageData!.height - imageSelection.y)
 
@@ -662,7 +662,7 @@ export const Renderer = observer((props: { className?: string }) => {
     setDragHandle(null)
   }
 
-  // 将画笔笔触应用到图像上
+  // Apply brush stroke to image
   const applyBrushStrokeToImage = (stroke: BrushStroke) => {
     const canvas = canvasRef.current
     if (!canvas || !imageData) return
@@ -670,19 +670,19 @@ export const Renderer = observer((props: { className?: string }) => {
     const imgRect = getImageRect()
     if (!imgRect) return
 
-    // 创建临时画布，将笔触绘制到图像上
+    // Create temporary canvas to draw stroke onto image
     const tempCanvas = document.createElement('canvas')
     tempCanvas.width = imageData.width
     tempCanvas.height = imageData.height
     const tempCtx = tempCanvas.getContext('2d')
     if (!tempCtx) return
 
-    // 先绘制原图
+    // Draw original image first
     tempCtx.drawImage(imageData, 0, 0)
 
-    // 将画布坐标转换为图像坐标并绘制笔触
+    // Convert canvas coordinates to image coordinates and draw stroke
     tempCtx.strokeStyle = stroke.color
-    tempCtx.lineWidth = stroke.size / scale // 考虑缩放比例
+    tempCtx.lineWidth = stroke.size / scale // Consider zoom ratio
     tempCtx.lineCap = 'round'
     tempCtx.lineJoin = 'round'
     tempCtx.beginPath()
@@ -699,19 +699,19 @@ export const Renderer = observer((props: { className?: string }) => {
     })
     tempCtx.stroke()
 
-    // 将结果转换为新的 ImageBitmap
+    // Convert result to new ImageBitmap
     tempCanvas.toBlob((blob) => {
       if (blob) {
         createImageBitmap(blob).then((newImageData) => {
           appStateStore.sceneStore.setImageData(newImageData)
-          // 图像更新完成后清空笔触，避免闪烁
+          // Clear stroke after image update to avoid flicker
           setCurrentStroke(null)
         })
       }
     })
   }
 
-  // 获取纵横比数值
+  // Get aspect ratio value
   const getAspectRatioValue = (ratio: typeof cropAspectRatio): number => {
     switch (ratio) {
       case '1:1':
@@ -731,24 +731,24 @@ export const Renderer = observer((props: { className?: string }) => {
     const canvas = canvasRef.current
     if (!canvas || !imageData) return
 
-    // 计算图片在画布上的位置
+    // Calculate image position on canvas
     const imgRect = getImageRect()
     if (!imgRect) return
 
-    // 计算裁剪区域相对于原图的位置（考虑缩放）
+    // Calculate crop area position relative to original image (considering zoom)
     const cropX = (selection.x - imgRect.x) / scale
     const cropY = (selection.y - imgRect.y) / scale
     const cropWidth = selection.width / scale
     const cropHeight = selection.height / scale
 
-    // 创建临时画布进行裁剪
+    // Create temporary canvas for cropping
     const tempCanvas = document.createElement('canvas')
     tempCanvas.width = cropWidth
     tempCanvas.height = cropHeight
     const tempCtx = tempCanvas.getContext('2d')
     if (!tempCtx) return
 
-    // 绘制裁剪后的图片
+    // Draw cropped image
     tempCtx.drawImage(
       imageData,
       cropX,
@@ -761,19 +761,19 @@ export const Renderer = observer((props: { className?: string }) => {
       cropHeight,
     )
 
-    // 将裁剪结果转换为 ImageBitmap
+    // Convert crop result to ImageBitmap
     tempCanvas.toBlob((blob) => {
       if (blob) {
         createImageBitmap(blob).then((newImageData) => {
           appStateStore.sceneStore.setImageData(newImageData)
-          // 不重置缩放和平移，保持当前视图
+          // Don't reset zoom and pan, keep current view
           appStateStore.editorStore.exitCropMode()
         })
       }
     })
   }
 
-  // 鼠标滚轮缩放
+  // Mouse wheel zoom
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
     e.preventDefault()
     e.stopPropagation()
@@ -786,26 +786,26 @@ export const Renderer = observer((props: { className?: string }) => {
     const delta = e.deltaY > 0 ? 0.95 : 1.05
     const newScale = Math.max(0.1, Math.min(5, scale * delta))
     
-    // 获取鼠标在 canvas 上的位置
+    // Get mouse position on canvas
     const rect = canvas.getBoundingClientRect()
     const mouseX = e.clientX - rect.left
     const mouseY = e.clientY - rect.top
     
-    // 计算图片当前的位置和大小
+    // Calculate current image position and size
     const imgWidth = imageData.width * scale
     const imgHeight = imageData.height * scale
     const imgX = (canvas.width - imgWidth) / 2 + pan.x
     const imgY = (canvas.height - imgHeight) / 2 + pan.y
     
-    // 鼠标相对于图片的位置（0-1范围）
+    // Mouse position relative to image (0-1 range)
     const relX = (mouseX - imgX) / imgWidth
     const relY = (mouseY - imgY) / imgHeight
     
-    // 新的图片尺寸
+    // New image dimensions
     const newImgWidth = imageData.width * newScale
     const newImgHeight = imageData.height * newScale
     
-    // 计算新的 pan 值，使鼠标位置保持不变
+    // Calculate new pan value to keep mouse position unchanged
     // mouseX = newImgX + relX * newImgWidth
     // mouseX = (canvas.width - newImgWidth) / 2 + newPanX + relX * newImgWidth
     const newPanX = mouseX - (canvas.width - newImgWidth) / 2 - relX * newImgWidth
@@ -815,9 +815,9 @@ export const Renderer = observer((props: { className?: string }) => {
     appStateStore.sceneStore.setScale(newScale)
   }
 
-  // 获取鼠标指针样式
+  // Get mouse cursor style
   const getCursorStyle = (): string => {
-    // 空格键拖拽模式
+    // Space key drag mode
     if (isSpacePressed) {
       return isSpacePanning ? 'grabbing' : 'grab'
     }

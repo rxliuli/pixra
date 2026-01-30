@@ -47,7 +47,6 @@ async function removeBg(): Promise<void> {
   await pixra.window.withProgress(
     { title: 'Removing Background', cancellable: false },
     async (progress) => {
-      // 将 ImageData 转换为 ArrayBuffer
       const blob = await imageDataToBlob(imageData)
 
       // Optional: Check device capabilities before initialization

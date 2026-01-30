@@ -25,14 +25,11 @@ class SettingsStore {
 
   constructor() {
     makeAutoObservable(this)
-    // 从 localStorage 读取保存的设置
     const saved = localStorage.getItem('pixra-color-theme') as ColorTheme | null
     if (saved !== null) {
       this.colorTheme = saved
     }
-    // 监听系统主题变化
     this.#mediaQuery.addEventListener('change', () => this.applyTheme())
-    // 初始化时应用主题
     this.applyTheme()
   }
 
@@ -60,11 +57,9 @@ class EditorStore {
   brushSize = 5
   brushColor = '#000000'
 
-  // 裁剪模式相关状态
   isCropMode = false
   cropAspectRatio: CropAspectRatio = 'free'
 
-  // 选区状态（相对于原始图像的坐标）
   selection: SelectionRect | null = null
 
   constructor() {
@@ -78,7 +73,6 @@ class EditorStore {
     } else {
       this.isCropMode = false
     }
-    // 切换到非 marquee 工具时清除选区
     if (tool !== 'marquee') {
       this.selection = null
     }
@@ -111,7 +105,6 @@ class EditorStore {
 }
 
 class SceneStore {
-  // 画布尺寸保持为全局属性（UI 层面）
   canvasWidth = 0
   canvasHeight = 0
   #tabStore: TabStore
@@ -121,7 +114,6 @@ class SceneStore {
     makeAutoObservable(this)
   }
 
-  // 代理到当前活动标签页
   get imageData(): ImageBitmap | null {
     return this.#tabStore.activeTab?.imageData ?? null
   }
@@ -143,7 +135,6 @@ class SceneStore {
   }
 
   setOriginalFileName(fileName: string) {
-    // 移除扩展名并设置标签页名称
     const name = fileName.replace(/\.[^/.]+$/, '')
     this.#tabStore.setTabName(name)
   }
@@ -161,19 +152,16 @@ class SceneStore {
     this.#tabStore.setScale(scale)
   }
 
-  // 计算适配屏幕的缩放比例
   calculateFitScale(imgWidth: number, imgHeight: number): number {
-    // 如果 canvas 尺寸还没设置，使用窗口尺寸作为回退
     const canvasWidth = this.canvasWidth || window.innerWidth
     const canvasHeight = this.canvasHeight || (window.innerHeight - 120)
 
-    const padding = 40 // 留边距
+    const padding = 40
     const scaleX = (canvasWidth - padding * 2) / imgWidth
     const scaleY = (canvasHeight - padding * 2) / imgHeight
-    return Math.min(scaleX, scaleY, 1) // 不超过 100%
+    return Math.min(scaleX, scaleY, 1)
   }
 
-  // 重置视图
   resetView() {
     this.#tabStore.resetView()
   }

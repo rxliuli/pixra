@@ -4,8 +4,8 @@ import type { Command } from './types'
 import { whenClauseParser, WhenClauseParser } from './WhenClauseParser'
 
 /**
- * 命令注册中心
- * 负责管理所有可执行命令
+ * Command Registry
+ * Manages all executable commands
  */
 export class CommandRegistry {
   private commands = new Map<string, Command>()
@@ -16,9 +16,6 @@ export class CommandRegistry {
     makeAutoObservable(this)
   }
 
-  /**
-   * 注册一个命令
-   */
   registerCommand(command: Command): void {
     if (this.commands.has(command.command)) {
       console.warn(
@@ -28,30 +25,18 @@ export class CommandRegistry {
     this.commands.set(command.command, command)
   }
 
-  /**
-   * 批量注册命令
-   */
   registerCommands(commands: Command[]): void {
     commands.forEach((cmd) => this.registerCommand(cmd))
   }
 
-  /**
-   * 注销命令
-   */
   unregisterCommand(commandId: string): void {
     this.commands.delete(commandId)
   }
 
-  /**
-   * 获取命令
-   */
   getCommand(commandId: string): Command | undefined {
     return this.commands.get(commandId)
   }
 
-  /**
-   * 执行命令
-   */
   async executeCommand(commandId: string): Promise<void> {
     const command = this.commands.get(commandId)
     if (!command) {
@@ -59,7 +44,6 @@ export class CommandRegistry {
       return
     }
 
-    // 检查命令是否启用
     if (!this.isCommandEnabled(commandId)) {
       console.warn(`Command ${commandId} is disabled`)
       return
@@ -77,23 +61,14 @@ export class CommandRegistry {
     }
   }
 
-  /**
-   * 获取所有命令
-   */
   getAllCommands(): Command[] {
     return Array.from(this.commands.values())
   }
 
-  /**
-   * 检查命令是否存在
-   */
   hasCommand(commandId: string): boolean {
     return this.commands.has(commandId)
   }
 
-  /**
-   * 检查命令是否启用
-   */
   isCommandEnabled(commandId: string): boolean {
     const command = this.commands.get(commandId)
     if (!command) return false
@@ -102,7 +77,6 @@ export class CommandRegistry {
   }
 }
 
-// 导出单例
 export const commandRegistry = new CommandRegistry()
 
 if (import.meta.env.DEV) {

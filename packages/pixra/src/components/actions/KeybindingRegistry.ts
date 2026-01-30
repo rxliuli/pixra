@@ -2,8 +2,8 @@ import { makeAutoObservable } from 'mobx'
 import type { Keybinding } from './types'
 
 /**
- * 快捷键注册中心
- * 负责管理快捷键绑定和事件处理
+ * Keybinding Registry
+ * Manages keybinding registration and event handling
  */
 export class KeybindingRegistry {
   private keybindings = new Map<string, Keybinding[]>()
@@ -13,31 +13,20 @@ export class KeybindingRegistry {
     makeAutoObservable(this)
   }
 
-  /**
-   * 注册快捷键
-   */
   registerKeybinding(keybinding: Keybinding): void {
     const bindings = this.keybindings.get(keybinding.commandId) || []
     bindings.push(keybinding)
     this.keybindings.set(keybinding.commandId, bindings)
   }
 
-  /**
-   * 批量注册快捷键
-   */
   registerKeybindings(keybindings: Keybinding[]): void {
     keybindings.forEach((kb) => this.registerKeybinding(kb))
   }
 
-  /**
-   * 注销快捷键
-   */
   unregisterKeybinding(commandId: string, key?: string): void {
     if (!key) {
-      // 移除命令的所有快捷键
       this.keybindings.delete(commandId)
     } else {
-      // 移除特定快捷键
       const bindings = this.keybindings.get(commandId)
       if (bindings) {
         const filtered = bindings.filter((kb) => kb.key !== key)
@@ -50,23 +39,14 @@ export class KeybindingRegistry {
     }
   }
 
-  /**
-   * 获取命令的快捷键
-   */
   getKeybindings(commandId: string): Keybinding[] {
     return this.keybindings.get(commandId) || []
   }
 
-  /**
-   * 获取所有快捷键
-   */
   getAllKeybindings(): Keybinding[] {
     return Array.from(this.keybindings.values()).flat()
   }
 
-  /**
-   * 开始监听键盘事件
-   */
   startListening(executeCommand: (commandId: string) => void): void {
     if (this.isListening) return
 
@@ -78,14 +58,14 @@ export class KeybindingRegistry {
           const keyToMatch = isMac && binding.mac ? binding.mac : binding.key
 
           if (this.matchesKeybinding(event, keyToMatch)) {
-            // 在可编辑区域时，不拦截系统级编辑快捷键
+            // Don't intercept system edit keys in editable elements
             if (
               this.isEditableElement(event.target) &&
               this.isSystemEditKey(event)
             ) {
               return
             }
-            // 当有文本选中时，不拦截复制快捷键
+            // Don't intercept copy shortcut when text is selected
             if (this.hasTextSelection() && this.isCopyKey(event)) {
               return
             }
@@ -101,9 +81,6 @@ export class KeybindingRegistry {
     this.isListening = true
   }
 
-  /**
-   * 停止监听键盘事件
-   */
   stopListening(): void {
     if (!this.isListening) return
 
@@ -111,26 +88,21 @@ export class KeybindingRegistry {
     this.isListening = false
   }
 
-  /**
-   * 检查事件是否匹配快捷键
-   */
   private matchesKeybinding(event: KeyboardEvent, keyPattern: string): boolean {
     const parts = keyPattern.toLowerCase().split('+')
     const key = parts[parts.length - 1]
     const modifiers = parts.slice(0, -1)
 
-    // 检查按键
     if (event.key.toLowerCase() !== key) {
       return false
     }
 
-    // 检查修饰键
     const hasCtrl = modifiers.includes('ctrl') || modifiers.includes('⌘')
     const hasAlt = modifiers.includes('alt') || modifiers.includes('⌥')
     const hasShift = modifiers.includes('shift') || modifiers.includes('⇧')
     const hasMeta = modifiers.includes('meta') || modifiers.includes('cmd')
 
-    // 在 Mac 上，cmd 和 ctrl 都映射到 metaKey
+    // On Mac, cmd and ctrl both map to metaKey
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
     const expectsCtrlOrMeta = hasCtrl || hasMeta
     const hasCtrlOrMeta = isMac ? event.metaKey : event.ctrlKey
@@ -146,9 +118,6 @@ export class KeybindingRegistry {
     // Will be replaced in startListening
   }
 
-  /**
-   * 检查目标元素是否是可编辑元素
-   */
   private isEditableElement(target: EventTarget | null): boolean {
     if (!target || !(target instanceof HTMLElement)) return false
 
@@ -159,9 +128,6 @@ export class KeybindingRegistry {
     return false
   }
 
-  /**
-   * 检查是否是系统级编辑快捷键 (Ctrl/Cmd + C/V/X/A/Z)
-   */
   private isSystemEditKey(event: KeyboardEvent): boolean {
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
     const hasModifier = isMac ? event.metaKey : event.ctrlKey
@@ -170,31 +136,21 @@ export class KeybindingRegistry {
     return hasModifier && systemKeys.includes(event.key.toLowerCase())
   }
 
-  /**
-   * 检查是否是复制快捷键 (Ctrl/Cmd + C)
-   */
   private isCopyKey(event: KeyboardEvent): boolean {
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
     const hasModifier = isMac ? event.metaKey : event.ctrlKey
     return hasModifier && event.key.toLowerCase() === 'c'
   }
 
-  /**
-   * 检查是否有文本被选中
-   */
   private hasTextSelection(): boolean {
     const selection = window.getSelection()
     return selection !== null && selection.toString().length > 0
   }
 
-  /**
-   * 格式化快捷键显示
-   */
   formatKeybinding(keybinding: Keybinding): string {
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
     const key = isMac && keybinding.mac ? keybinding.mac : keybinding.key
 
-    // 转换为显示格式
     return key
       .replace('ctrl', isMac ? '⌃' : 'Ctrl')
       .replace('cmd', '⌘')
@@ -205,5 +161,4 @@ export class KeybindingRegistry {
   }
 }
 
-// 导出单例
 export const keybindingRegistry = new KeybindingRegistry()

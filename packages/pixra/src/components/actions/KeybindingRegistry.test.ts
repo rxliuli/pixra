@@ -13,8 +13,8 @@ describe('KeybindingRegistry', () => {
     registry.stopListening()
   })
 
-  describe('注册和获取', () => {
-    it('应该能注册单个快捷键', () => {
+  describe('registration and retrieval', () => {
+    it('should register a single keybinding', () => {
       const keybinding: Keybinding = {
         commandId: 'test.command',
         key: 'ctrl+s',
@@ -27,7 +27,7 @@ describe('KeybindingRegistry', () => {
       expect(bindings[0]).toEqual(keybinding)
     })
 
-    it('应该能为同一命令注册多个快捷键', () => {
+    it('should register multiple keybindings for the same command', () => {
       const keybinding1: Keybinding = {
         commandId: 'test.command',
         key: 'ctrl+s',
@@ -45,7 +45,7 @@ describe('KeybindingRegistry', () => {
       expect(bindings).toHaveLength(2)
     })
 
-    it('应该能批量注册快捷键', () => {
+    it('should batch register keybindings', () => {
       const keybindings: Keybinding[] = [
         { commandId: 'command1', key: 'ctrl+a' },
         { commandId: 'command2', key: 'ctrl+b' },
@@ -59,7 +59,7 @@ describe('KeybindingRegistry', () => {
       expect(registry.getKeybindings('command3')).toHaveLength(1)
     })
 
-    it('应该能获取所有快捷键', () => {
+    it('should get all keybindings', () => {
       const keybindings: Keybinding[] = [
         { commandId: 'command1', key: 'ctrl+a' },
         { commandId: 'command2', key: 'ctrl+b' },
@@ -72,14 +72,14 @@ describe('KeybindingRegistry', () => {
       expect(allBindings).toHaveLength(3)
     })
 
-    it('获取不存在的命令应该返回空数组', () => {
+    it('should return empty array for non-existent command', () => {
       const bindings = registry.getKeybindings('nonexistent')
       expect(bindings).toEqual([])
     })
   })
 
-  describe('注销快捷键', () => {
-    it('应该能注销命令的所有快捷键', () => {
+  describe('unregister keybindings', () => {
+    it('should unregister all keybindings for a command', () => {
       const keybindings: Keybinding[] = [
         { commandId: 'test.command', key: 'ctrl+s' },
         { commandId: 'test.command', key: 'ctrl+shift+s' },
@@ -91,7 +91,7 @@ describe('KeybindingRegistry', () => {
       expect(registry.getKeybindings('test.command')).toEqual([])
     })
 
-    it('应该能注销特定快捷键', () => {
+    it('should unregister a specific keybinding', () => {
       const keybindings: Keybinding[] = [
         { commandId: 'test.command', key: 'ctrl+s' },
         { commandId: 'test.command', key: 'ctrl+shift+s' },
@@ -105,7 +105,7 @@ describe('KeybindingRegistry', () => {
       expect(bindings[0].key).toBe('ctrl+shift+s')
     })
 
-    it('注销最后一个快捷键应该移除整个命令', () => {
+    it('should remove entire command when unregistering last keybinding', () => {
       const keybinding: Keybinding = {
         commandId: 'test.command',
         key: 'ctrl+s',
@@ -117,7 +117,7 @@ describe('KeybindingRegistry', () => {
       expect(registry.getKeybindings('test.command')).toEqual([])
     })
 
-    it('注销不存在的快捷键不应该报错', () => {
+    it('should not throw when unregistering non-existent keybinding', () => {
       expect(() => {
         registry.unregisterKeybinding('nonexistent')
         registry.unregisterKeybinding('nonexistent', 'ctrl+x')
@@ -125,12 +125,11 @@ describe('KeybindingRegistry', () => {
     })
   })
 
-  describe('键盘事件监听', () => {
+  describe('keyboard event listening', () => {
     let originalPlatform: string
 
     beforeEach(() => {
       originalPlatform = navigator.platform
-      // 设置为非 Mac 平台以测试 Windows/Linux 行为
       Object.defineProperty(navigator, 'platform', {
         value: 'Win32',
         writable: true,
@@ -146,7 +145,7 @@ describe('KeybindingRegistry', () => {
       })
     })
 
-    it('应该能触发匹配的快捷键', () => {
+    it('should trigger matching keybinding', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -166,7 +165,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).toHaveBeenCalledWith('test.command')
     })
 
-    it('应该匹配 shift 修饰键', () => {
+    it('should match shift modifier', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -187,7 +186,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).toHaveBeenCalledWith('test.command')
     })
 
-    it('应该匹配 alt 修饰键', () => {
+    it('should match alt modifier', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -207,7 +206,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).toHaveBeenCalledWith('test.command')
     })
 
-    it('应该匹配多个修饰键组合', () => {
+    it('should match multiple modifier combination', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -229,7 +228,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).toHaveBeenCalledWith('test.command')
     })
 
-    it('修饰键不匹配时不应该触发', () => {
+    it('should not trigger when modifiers do not match', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -239,14 +238,14 @@ describe('KeybindingRegistry', () => {
       registry.registerKeybinding(keybinding)
       registry.startListening(executeCommand)
 
-      // 只按 s，没有 ctrl
+      // Only s without ctrl
       const event1 = new KeyboardEvent('keydown', {
         key: 's',
         bubbles: true,
       })
       window.dispatchEvent(event1)
 
-      // ctrl+shift+s，多了 shift
+      // ctrl+shift+s with extra shift
       const event2 = new KeyboardEvent('keydown', {
         key: 's',
         ctrlKey: true,
@@ -258,7 +257,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).not.toHaveBeenCalled()
     })
 
-    it('按键不匹配时不应该触发', () => {
+    it('should not trigger when key does not match', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -278,7 +277,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).not.toHaveBeenCalled()
     })
 
-    it('应该阻止匹配事件的默认行为', () => {
+    it('should prevent default for matching events', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -301,7 +300,7 @@ describe('KeybindingRegistry', () => {
       expect(preventDefaultSpy).toHaveBeenCalled()
     })
 
-    it('应该能停止监听', () => {
+    it('should stop listening', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -322,7 +321,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).not.toHaveBeenCalled()
     })
 
-    it('重复调用 startListening 不应该重复添加监听器', () => {
+    it('should not add duplicate listeners when calling startListening multiple times', () => {
       const executeCommand = vi.fn()
       const keybinding: Keybinding = {
         commandId: 'test.command',
@@ -341,12 +340,11 @@ describe('KeybindingRegistry', () => {
       })
       window.dispatchEvent(event)
 
-      // 应该只调用一次
       expect(executeCommand).toHaveBeenCalledTimes(1)
     })
   })
 
-  describe('Mac 平台特定行为', () => {
+  describe('Mac platform specific behavior', () => {
     let originalPlatform: string
 
     beforeEach(() => {
@@ -361,7 +359,7 @@ describe('KeybindingRegistry', () => {
       })
     })
 
-    it('在 Mac 上应该使用 mac 键绑定', () => {
+    it('should use mac keybinding on Mac', () => {
       Object.defineProperty(navigator, 'platform', {
         value: 'MacIntel',
         writable: true,
@@ -378,7 +376,6 @@ describe('KeybindingRegistry', () => {
       registry.registerKeybinding(keybinding)
       registry.startListening(executeCommand)
 
-      // 在 Mac 上使用 metaKey 代替 ctrlKey
       const event = new KeyboardEvent('keydown', {
         key: 's',
         metaKey: true,
@@ -389,7 +386,7 @@ describe('KeybindingRegistry', () => {
       expect(executeCommand).toHaveBeenCalledWith('test.command')
     })
 
-    it('在 Mac 上 cmd+shift+p 应该能正确触发', () => {
+    it('should correctly trigger cmd+shift+p on Mac', () => {
       Object.defineProperty(navigator, 'platform', {
         value: 'MacIntel',
         writable: true,
@@ -418,8 +415,8 @@ describe('KeybindingRegistry', () => {
     })
   })
 
-  describe('格式化快捷键显示', () => {
-    it('应该格式化 Windows/Linux 快捷键', () => {
+  describe('format keybinding display', () => {
+    it('should format Windows/Linux keybinding', () => {
       Object.defineProperty(navigator, 'platform', {
         value: 'Win32',
         writable: true,
@@ -436,7 +433,7 @@ describe('KeybindingRegistry', () => {
       expect(formatted).toContain('Shift')
     })
 
-    it('应该格式化 Mac 快捷键', () => {
+    it('should format Mac keybinding', () => {
       Object.defineProperty(navigator, 'platform', {
         value: 'MacIntel',
         writable: true,

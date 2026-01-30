@@ -1,7 +1,3 @@
-/**
- * ImageBitmap 转换工具函数
- */
-
 export interface ImageBitmapToBlobOptions {
   mimeType?: 'image/png' | 'image/jpeg'
   quality?: number
@@ -9,9 +5,6 @@ export interface ImageBitmapToBlobOptions {
   height?: number
 }
 
-/**
- * 将 ImageBitmap 转换为 Blob
- */
 export async function imageBitmapToBlob(
   imageData: ImageBitmap,
   options: ImageBitmapToBlobOptions = {},
@@ -23,7 +16,6 @@ export async function imageBitmapToBlob(
     height = imageData.height,
   } = options
 
-  // 优先使用 OffscreenCanvas（支持 Worker 环境）
   if (typeof OffscreenCanvas !== 'undefined') {
     const canvas = new OffscreenCanvas(width, height)
     const ctx = canvas.getContext('2d')
@@ -34,7 +26,6 @@ export async function imageBitmapToBlob(
     return canvas.convertToBlob({ type: mimeType, quality })
   }
 
-  // 回退到 HTMLCanvasElement
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
@@ -59,9 +50,6 @@ export async function imageBitmapToBlob(
   })
 }
 
-/**
- * 将 ImageBitmap 转换为 ArrayBuffer
- */
 export async function imageBitmapToArrayBuffer(
   imageData: ImageBitmap,
 ): Promise<ArrayBuffer> {
@@ -75,15 +63,11 @@ export interface CreateBlankImageOptions {
   fillColor?: string
 }
 
-/**
- * 创建空白图片的 ImageBitmap
- */
 export async function createBlankImageBitmap(
   options: CreateBlankImageOptions,
 ): Promise<ImageBitmap> {
   const { width, height, fillColor = '#ffffff' } = options
 
-  // 优先使用 OffscreenCanvas
   if (typeof OffscreenCanvas !== 'undefined') {
     const canvas = new OffscreenCanvas(width, height)
     const ctx = canvas.getContext('2d')
@@ -96,7 +80,6 @@ export async function createBlankImageBitmap(
     return createImageBitmap(blob)
   }
 
-  // 回退到 HTMLCanvasElement
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height

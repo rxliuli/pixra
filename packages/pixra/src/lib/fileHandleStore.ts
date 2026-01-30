@@ -1,9 +1,9 @@
 /**
- * 存储文档的 FileSystemFileHandle
- * 用于在打开文件时保存句柄，以便后续保存时可以直接覆盖原文件
+ * Store FileSystemFileHandle for documents
+ * Used to save handles when opening files for direct overwrite on subsequent saves
  */
 
-// File System Access API 类型声明
+// File System Access API type declarations
 declare global {
   interface Window {
     showOpenFilePicker(options?: OpenFilePickerOptions): Promise<FileSystemFileHandle[]>
@@ -36,7 +36,6 @@ declare global {
   }
 }
 
-// 存储文件句柄的映射（文档 ID -> FileSystemFileHandle）
 const fileHandles = new Map<string, FileSystemFileHandle>()
 
 export function getFileHandle(documentId: string): FileSystemFileHandle | undefined {
@@ -51,9 +50,6 @@ export function removeFileHandle(documentId: string): void {
   fileHandles.delete(documentId)
 }
 
-/**
- * 检查浏览器是否支持 File System Access API
- */
 export function isFileSystemAccessSupported(): boolean {
   return 'showOpenFilePicker' in window && 'showSaveFilePicker' in window
 }

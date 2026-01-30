@@ -25,17 +25,12 @@ import { fileExportAll } from '../commands/file-export-all'
 
 let initialized = false
 
-/**
- * 初始化系统内置的菜单组和命令
- */
 export function registerBuiltinActions() {
-  // 防止重复初始化
   if (initialized) {
     return
   }
   initialized = true
 
-  // 1. 先注册菜单组（定义菜单结构）
   menuRegistry.registerMenuGroup({ id: 'file', title: 'File', items: [] })
   menuRegistry.registerMenuGroup({ id: 'edit', title: 'Edit', items: [] })
   menuRegistry.registerMenuGroup({ id: 'view', title: 'View', items: [] })
@@ -43,9 +38,7 @@ export function registerBuiltinActions() {
   menuRegistry.registerMenuGroup({ id: 'plugin', title: 'Plugin', items: [] })
   menuRegistry.registerMenuGroup({ id: 'help', title: 'Help', items: [] })
 
-  // 2. 注册所有内置命令
   actionRegistry.registerActions([
-    // File 菜单
     fileNew(),
     fileOpen(),
     fileClose(),
@@ -53,22 +46,18 @@ export function registerBuiltinActions() {
     fileExport(),
     fileExportAll(),
 
-    // Edit 菜单
     editUndo(),
     editRedo(),
     editCopy(),
     editPaste(),
 
-    // View 菜单
     viewZoomIn(),
     viewZoomOut(),
     viewResetZoom(),
 
-    // Plugin 菜单
     pluginStore(),
     pluginInstall(),
 
-    // Help 菜单
     helpShowCommands(),
     helpColorTheme(),
     helpDocs(),
@@ -76,6 +65,5 @@ export function registerBuiltinActions() {
     helpAbout(),
   ])
 
-  // 3. 手动添加分隔符
   menuRegistry.addMenuItem('edit', { type: 'separator' }, 2)
 }

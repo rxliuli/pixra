@@ -1,12 +1,10 @@
 import { makeAutoObservable } from 'mobx'
 
-// 历史记录条目
 export interface HistoryEntry {
   imageData: ImageBitmap
   timestamp: number
 }
 
-// 编辑器标签页接口
 export interface EditorTab {
   id: string
   name: string
@@ -21,7 +19,6 @@ export interface EditorTab {
   }
 }
 
-// 生成唯一 ID
 function generateId(): string {
   return crypto.randomUUID()
 }
@@ -35,35 +32,29 @@ export class TabStore {
     makeAutoObservable(this)
   }
 
-  // 获取当前活动标签页
   get activeTab(): EditorTab | null {
     if (!this.activeTabId) return null
     return this.tabs.get(this.activeTabId) ?? null
   }
 
-  // 获取标签页列表
   get tabList(): EditorTab[] {
     return Array.from(this.tabs.values())
   }
 
-  // 是否有标签页
   get hasTabs(): boolean {
     return this.tabs.size > 0
   }
 
-  // 是否可以撤销
   get canUndo(): boolean {
     const tab = this.activeTab
     return tab ? tab.historyIndex > 0 : false
   }
 
-  // 是否可以重做
   get canRedo(): boolean {
     const tab = this.activeTab
     return tab ? tab.historyIndex < tab.history.length - 1 : false
   }
 
-  // 创建标签页
   createTab(imageData: ImageBitmap, name?: string, activate = true): string {
     const id = generateId()
     const tab: EditorTab = {
@@ -79,7 +70,6 @@ export class TabStore {
       },
     }
 
-    // 如果有初始图像，添加到历史
     if (imageData) {
       tab.history.push({ imageData, timestamp: Date.now() })
       tab.historyIndex = 0
@@ -92,7 +82,6 @@ export class TabStore {
     return id
   }
 
-  // 设置标签页的视图状态
   setTabViewState(
     tabId: string,
     viewState: Partial<EditorTab['viewState']>,
@@ -107,16 +96,13 @@ export class TabStore {
     }
   }
 
-  // 关闭标签页
   closeTab(id: string): void {
     const tab = this.tabs.get(id)
     if (!tab) return
 
-    // 清理历史记录释放内存
     tab.history = []
     this.tabs.delete(id)
 
-    // 如果关闭的是当前标签页，切换到另一个
     if (this.activeTabId === id) {
       const remaining = Array.from(this.tabs.keys())
       this.activeTabId =
@@ -124,7 +110,6 @@ export class TabStore {
     }
   }
 
-  // 关闭所有标签页
   closeAllTabs(): void {
     for (const tab of this.tabs.values()) {
       tab.history = []
@@ -133,14 +118,12 @@ export class TabStore {
     this.activeTabId = null
   }
 
-  // 切换标签页
   switchTab(id: string): void {
     if (!this.tabs.has(id)) return
     if (this.activeTabId === id) return
     this.activeTabId = id
   }
 
-  // 设置图像数据
   setImageData(imageData: ImageBitmap, addToHistory = true): void {
     const tab = this.activeTab
     if (!tab) return
@@ -152,18 +135,16 @@ export class TabStore {
     }
   }
 
-  // 添加历史记录
   pushHistory(imageData: ImageBitmap): void {
     const tab = this.activeTab
     if (!tab) return
 
-    // 移除当前位置之后的所有历史
+    // Remove all history after current position
     tab.history = tab.history.slice(0, tab.historyIndex + 1)
 
-    // 添加新状态
     tab.history.push({ imageData, timestamp: Date.now() })
 
-    // 限制历史记录大小
+    // Limit history size
     if (tab.history.length > this.maxHistorySize) {
       tab.history.shift()
     } else {
@@ -173,7 +154,6 @@ export class TabStore {
     tab.isDirty = true
   }
 
-  // 撤销
   undo(): ImageBitmap | null {
     const tab = this.activeTab
     if (!tab || !this.canUndo) return null
@@ -184,7 +164,6 @@ export class TabStore {
     return tab.imageData
   }
 
-  // 重做
   redo(): ImageBitmap | null {
     const tab = this.activeTab
     if (!tab || !this.canRedo) return null
@@ -195,21 +174,18 @@ export class TabStore {
     return tab.imageData
   }
 
-  // 设置平移
   setPan(x: number, y: number): void {
     const tab = this.activeTab
     if (!tab) return
     tab.viewState.pan = { x, y }
   }
 
-  // 设置缩放
   setScale(scale: number): void {
     const tab = this.activeTab
     if (!tab) return
     tab.viewState.scale = scale
   }
 
-  // 重置视图
   resetView(): void {
     const tab = this.activeTab
     if (!tab) return
@@ -217,7 +193,6 @@ export class TabStore {
     tab.viewState.scale = 1
   }
 
-  // 标记为脏
   markDirty(): void {
     const tab = this.activeTab
     if (tab) {
@@ -225,7 +200,6 @@ export class TabStore {
     }
   }
 
-  // 标记为干净
   markClean(): void {
     const tab = this.activeTab
     if (tab) {
@@ -233,7 +207,6 @@ export class TabStore {
     }
   }
 
-  // 设置标签页名称
   setTabName(name: string): void {
     const tab = this.activeTab
     if (tab) {

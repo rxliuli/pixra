@@ -5,9 +5,6 @@ import { imageBitmapToBlob } from '@/lib/imageBitmap'
 import { fileSave } from '@/lib/fileSave'
 import { ui } from '@/lib/window'
 
-/**
- * 将 ImageBitmap 转换为 Blob 并下载（支持尺寸调整）
- */
 export async function exportImageWithOptions(
   imageData: ImageBitmap,
   options: ExportOptions,
@@ -16,7 +13,6 @@ export async function exportImageWithOptions(
   const mimeType = options.format === 'png' ? 'image/png' : 'image/jpeg'
   const extension = options.format === 'png' ? 'png' : 'jpg'
 
-  // 使用原始文件名或生成新文件名
   const filename = originalFileName
     ? `${originalFileName}.${extension}`
     : `pixra-${new Date().toISOString().replace(/[:.]/g, '-').split('T')[0]}.${extension}`

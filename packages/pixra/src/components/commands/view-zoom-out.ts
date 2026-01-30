@@ -8,7 +8,7 @@ export function viewZoomOut(): BuiltinAction {
     enablement: 'hasActiveTab',
     execute: () => {
       const currentScale = appStateStore.sceneStore.scale
-      const newScale = Math.max(currentScale / 1.2, 0.1) // 每次缩小 20%，最小 10%
+      const newScale = Math.max(currentScale / 1.2, 0.1)
       appStateStore.sceneStore.setScale(newScale)
     },
     keybinding: {

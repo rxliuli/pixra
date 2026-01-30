@@ -3,15 +3,14 @@ import { contextKeyService } from './ContextKeyService'
 import { appStateStore } from '../store'
 
 /**
- * 上下文键同步器
- * 将应用状态自动同步到 ContextKeyService
+ * Context Key Synchronizer
+ * Automatically syncs application state to ContextKeyService
  */
 export function setupContextKeySynchronizer(): () => void {
   const disposers: (() => void)[] = []
 
   const { tabStore } = appStateStore
 
-  // 同步 hasActiveTab
   disposers.push(
     reaction(
       () => tabStore.activeTab !== null,
@@ -22,7 +21,6 @@ export function setupContextKeySynchronizer(): () => void {
     ),
   )
 
-  // 同步 canUndo
   disposers.push(
     reaction(
       () => tabStore.canUndo,
@@ -33,7 +31,6 @@ export function setupContextKeySynchronizer(): () => void {
     ),
   )
 
-  // 同步 canRedo
   disposers.push(
     reaction(
       () => tabStore.canRedo,
@@ -44,7 +41,6 @@ export function setupContextKeySynchronizer(): () => void {
     ),
   )
 
-  // 同步 hasUnsavedChanges
   disposers.push(
     reaction(
       () => tabStore.activeTab?.isDirty ?? false,
@@ -55,7 +51,6 @@ export function setupContextKeySynchronizer(): () => void {
     ),
   )
 
-  // 同步 tabCount
   disposers.push(
     reaction(
       () => tabStore.tabs.size,
@@ -66,7 +61,6 @@ export function setupContextKeySynchronizer(): () => void {
     ),
   )
 
-  // 返回清理函数
   return () => {
     disposers.forEach((dispose) => dispose())
   }

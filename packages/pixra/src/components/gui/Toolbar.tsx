@@ -33,7 +33,6 @@ function renderMenuItem(
     )
   }
 
-  // 普通菜单项
   if (item.command) {
     const commandRegistry = actionRegistry.getCommandRegistry()
     const command = commandRegistry.getCommand(item.command)

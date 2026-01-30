@@ -60,25 +60,19 @@ export function ExportOptionsContent({
   const handleMaintainAspectRatioChange = (checked: boolean) => {
     setMaintainAspectRatio(checked)
 
-    // 从不保持切换到保持时，智能调整尺寸
     if (checked) {
       const currentAspectRatio = width / height
 
-      // 如果当前宽高比与原始宽高比不同，需要调整
       if (Math.abs(currentAspectRatio - aspectRatio) > 0.01) {
-        // 计算两种方案：基于宽度和基于高度
         const heightBasedOnWidth = Math.round(width / aspectRatio)
         const widthBasedOnHeight = Math.round(height * aspectRatio)
 
-        // 选择变化较小的方案
         const widthDiff = Math.abs(width - widthBasedOnHeight)
         const heightDiff = Math.abs(height - heightBasedOnWidth)
 
         if (widthDiff <= heightDiff) {
-          // 基于高度调整宽度
           setWidth(widthBasedOnHeight)
         } else {
-          // 基于宽度调整高度
           setHeight(heightBasedOnWidth)
         }
       }

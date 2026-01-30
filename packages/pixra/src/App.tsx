@@ -22,22 +22,18 @@ const App = observer(() => {
   const hasTabs = tabStore.hasTabs
   const activeTabId = tabStore.activeTabId
 
-  // 初始化系统内置命令和上下文同步
   useMount(() => {
     registerBuiltinActions()
     setupContextKeySynchronizer()
-    // 初始化插件系统
     pluginManager.initialize()
   })
 
-  // 切换标签页时退出裁剪模式
   useEffect(() => {
     if (editorStore.isCropMode) {
       editorStore.exitCropMode()
     }
   }, [activeTabId])
 
-  // 页面关闭前警告未保存的标签页
   useEffectOnce(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       const hasDirty = tabStore.tabList.some((tab) => tab.isDirty)
@@ -52,7 +48,6 @@ const App = observer(() => {
   })
 
   const handleCropConfirm = () => {
-    // 这个回调会传递给 Renderer
     window.dispatchEvent(new CustomEvent('crop-confirm'))
   }
 

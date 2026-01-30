@@ -8,7 +8,7 @@ export function viewZoomIn(): BuiltinAction {
     enablement: 'hasActiveTab',
     execute: () => {
       const currentScale = appStateStore.sceneStore.scale
-      const newScale = Math.min(currentScale * 1.2, 10) // 每次放大 20%，最大 1000%
+      const newScale = Math.min(currentScale * 1.2, 10)
       appStateStore.sceneStore.setScale(newScale)
     },
     keybinding: {

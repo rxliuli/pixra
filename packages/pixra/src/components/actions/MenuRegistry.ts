@@ -2,8 +2,8 @@ import { makeAutoObservable } from 'mobx'
 import type { MenuGroup, MenuItem } from './types'
 
 /**
- * 菜单注册中心
- * 负责管理顶部菜单栏结构
+ * Menu Registry
+ * Manages top menu bar structure
  */
 export class MenuRegistry {
   private menuGroups = new Map<string, MenuGroup>()
@@ -13,13 +13,9 @@ export class MenuRegistry {
     makeAutoObservable(this)
   }
 
-  /**
-   * 注册菜单组
-   */
   registerMenuGroup(group: MenuGroup, order?: number): void {
     this.menuGroups.set(group.id, group)
-    
-    // 管理菜单组顺序
+
     const index = this.groupOrder.indexOf(group.id)
     if (index !== -1) {
       this.groupOrder.splice(index, 1)
@@ -32,9 +28,6 @@ export class MenuRegistry {
     }
   }
 
-  /**
-   * 向已有菜单组添加菜单项
-   */
   addMenuItem(groupId: string, item: MenuItem, order?: number): void {
     const group = this.menuGroups.get(groupId)
     if (!group) {
@@ -49,25 +42,16 @@ export class MenuRegistry {
     }
   }
 
-  /**
-   * 获取菜单组
-   */
   getMenuGroup(groupId: string): MenuGroup | undefined {
     return this.menuGroups.get(groupId)
   }
 
-  /**
-   * 获取所有菜单组（按顺序）
-   */
   getAllMenuGroups(): MenuGroup[] {
     return this.groupOrder
       .map((id) => this.menuGroups.get(id))
       .filter((group): group is MenuGroup => group !== undefined)
   }
 
-  /**
-   * 移除菜单组
-   */
   removeMenuGroup(groupId: string): void {
     this.menuGroups.delete(groupId)
     const index = this.groupOrder.indexOf(groupId)
@@ -76,9 +60,6 @@ export class MenuRegistry {
     }
   }
 
-  /**
-   * 移除菜单项
-   */
   removeMenuItem(groupId: string, commandId: string): void {
     const group = this.menuGroups.get(groupId)
     if (!group) return
@@ -92,5 +73,4 @@ export class MenuRegistry {
   }
 }
 
-// 导出单例
 export const menuRegistry = new MenuRegistry()
