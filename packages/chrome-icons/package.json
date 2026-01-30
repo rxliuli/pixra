@@ -2,6 +2,12 @@
   "name": "@pixra/chrome-icons",
   "version": "0.0.7",
   "description": "Export Chrome extension icons (16/32/48/96/128) as ZIP",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxliuli/pixra",
+    "directory": "packages/chrome-icons"
+  },
+  "homepage": "https://pixra.rxliuli.com",
   "scripts": {
     "dev": "pixra dev",
     "build": "pixra build",

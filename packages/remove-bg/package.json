@@ -2,6 +2,12 @@
   "name": "@pixra/remove-bg",
   "version": "0.0.4",
   "description": "Remove background from images using AI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxliuli/pixra",
+    "directory": "packages/remove-bg"
+  },
+  "homepage": "https://pixra.rxliuli.com",
   "scripts": {
     "dev": "pixra dev",
     "build": "pixra build",

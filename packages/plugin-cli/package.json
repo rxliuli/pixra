@@ -2,6 +2,12 @@
   "name": "@pixra/plugin-cli",
   "version": "0.0.3",
   "description": "CLI tool for building and packaging Pixra plugins",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxliuli/pixra",
+    "directory": "packages/plugin-cli"
+  },
+  "homepage": "https://pixra.rxliuli.com",
   "type": "module",
   "bin": {
     "pixra": "./bin.js"

@@ -4,8 +4,10 @@
   "description": "Export current image as a Windows .ico file (multi-size)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rxliuli/pixra"
+    "url": "https://github.com/rxliuli/pixra",
+    "directory": "packages/ico-export"
   },
+  "homepage": "https://pixra.rxliuli.com",
   "scripts": {
     "dev": "pixra dev",
     "build": "pixra build",
