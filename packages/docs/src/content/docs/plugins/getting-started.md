@@ -72,13 +72,22 @@ The manifest file defines your plugin's metadata and contributions:
 The entry point exports `activate` and optionally `deactivate` functions:
 
 ```typescript
-import { commands, window, ExtensionContext } from '@pixra/plugin-sdk'
+import { commands, window, workspace, tabs, ExtensionContext } from '@pixra/plugin-sdk'
 
 export function activate(context: ExtensionContext) {
   // Register command handlers
   context.subscriptions.push(
     commands.registerCommand('example.my-plugin.hello', async () => {
-      await window.showInformationMessage('Hello from My Plugin!')
+      // Get information about the current tab
+      const activeTab = await tabs.getActive()
+      
+      if (activeTab) {
+        await window.showInformationMessage(
+          `Hello! Current file: ${activeTab.name}`
+        )
+      } else {
+        await window.showInformationMessage('Hello from My Plugin!')
+      }
     })
   )
 }
@@ -118,6 +127,50 @@ This creates a `.zip` file ready for distribution.
 2. In Pixra, go to **Plugin > Install Plugin from ZIP**
 3. Select the generated `.zip` file from your plugin's directory
 4. Your plugin's commands will now appear in the Tools menu
+
+## Example: Export with Original Filename
+
+Here's a complete example showing how to use the tabs API to export files with a filename based on the original image:
+
+```typescript
+import { commands, window, workspace, tabs, ExtensionContext } from '@pixra/plugin-sdk'
+
+async function exportAsText() {
+  const imageData = await workspace.getActiveImage()
+  if (!imageData) {
+    await window.showErrorMessage('No image is currently open')
+    return
+  }
+
+  // Get the original filename from the active tab
+  const activeTab = await tabs.getActive()
+  const baseName = activeTab?.name.replace(/\.[^.]+$/, '') || 'image'
+  const filename = `${baseName}-metadata.txt`
+
+  // Create text content
+  const text = `Image Metadata
+Width: ${imageData.width}px
+Height: ${imageData.height}px
+Tab: ${activeTab?.name || 'Untitled'}
+Modified: ${activeTab?.isDirty ? 'Yes' : 'No'}
+`
+
+  // Save as text file
+  const encoder = new TextEncoder()
+  const data = encoder.encode(text).buffer
+
+  await window.saveFile({ filename, data })
+  await window.showInformationMessage('Metadata exported!')
+}
+
+export function activate(context: ExtensionContext) {
+  context.subscriptions.push(
+    commands.registerCommand('example.exportMetadata', exportAsText)
+  )
+}
+```
+
+This pattern is useful for any export plugin that should preserve the original filename (e.g., converting `photo.png` to `photo.ico`).
 
 ## Next Steps
 

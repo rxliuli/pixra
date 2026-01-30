@@ -1,7 +1,7 @@
 /**
  * ICO Export Plugin for Pixra
  *
- * Exports the current image as a Windows .ico file.
+ * Exports the current image as a .ico file for website favicons.
  * The generated .ico contains multiple PNG-based icon images.
  */
 

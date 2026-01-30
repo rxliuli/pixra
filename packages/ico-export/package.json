@@ -1,7 +1,7 @@
 {
   "name": "@pixra/ico-export",
-  "version": "0.0.6",
-  "description": "Export current image as a Windows .ico file (multi-size)",
+  "version": "0.0.7",
+  "description": "Export current image as a .ico file for website favicons (multi-size)",
   "repository": {
     "type": "git",
     "url": "https://github.com/rxliuli/pixra",

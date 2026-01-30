@@ -1,10 +1,11 @@
 # ICO Export
 
-A Pixra plugin that exports the current image as a Windows `.ico` file containing multiple sizes.
+A Pixra plugin that exports the current image as a `.ico` file containing multiple sizes, suitable for website favicons.
 
 ## Features
 
-- Generates a single `.ico` with common sizes (16/32/48/64/128/256)
+- Generates a single `.ico` with common sizes (16/32)
+- Optimized for website favicons
 - Preserves aspect ratio (centered with transparent padding)
 - If there is an active selection, exports the selection area
 

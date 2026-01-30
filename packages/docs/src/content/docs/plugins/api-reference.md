@@ -3,12 +3,12 @@ title: API Reference
 description: Complete API documentation for Pixra plugin development.
 ---
 
-The Pixra Plugin SDK provides three main namespaces: `window`, `commands`, and `workspace`.
+The Pixra Plugin SDK provides four main namespaces: `window`, `commands`, `workspace`, and `tabs`.
 
 ## Import
 
 ```typescript
-import { commands, window, workspace, ExtensionContext } from '@pixra/plugin-sdk'
+import { commands, window, workspace, tabs, ExtensionContext } from '@pixra/plugin-sdk'
 ```
 
 ## ExtensionContext
@@ -246,6 +246,106 @@ for (let i = 0; i < data.length; i += 4) {
 }
 
 await workspace.updateActiveImage(imageData)
+```
+
+### getSelection
+
+Get the current selection rectangle (relative to original image coordinates).
+
+```typescript
+workspace.getSelection(): Promise<SelectionRect | null>
+
+interface SelectionRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+```
+
+Returns `null` if no selection is active.
+
+**Example:**
+
+```typescript
+const selection = await workspace.getSelection()
+if (selection) {
+  console.log(`Selection: ${selection.width}x${selection.height} at (${selection.x}, ${selection.y})`)
+}
+```
+
+### clearSelection
+
+Clear the current selection.
+
+```typescript
+workspace.clearSelection(): Promise<void>
+```
+
+**Example:**
+
+```typescript
+await workspace.clearSelection()
+```
+
+## tabs
+
+APIs for interacting with open tabs and their metadata.
+
+### getActive
+
+Get the currently active tab metadata.
+
+```typescript
+tabs.getActive(): Promise<TabMetadata | undefined>
+
+interface TabMetadata {
+  /** Unique tab identifier */
+  readonly id: string
+  /** Tab display name */
+  readonly name: string
+  /** File path if the tab represents a file */
+  readonly filePath?: string
+  /** Whether the tab has unsaved changes */
+  readonly isDirty: boolean
+}
+```
+
+Returns `undefined` if no tab is open.
+
+**Example:**
+
+```typescript
+const activeTab = await tabs.getActive()
+if (activeTab) {
+  console.log(`Current tab: ${activeTab.name}`)
+  
+  // Use the filename for exports
+  const baseName = activeTab.name.replace(/\.[^.]+$/, '') || 'image'
+  await window.saveFile({ 
+    filename: `${baseName}.ico`, 
+    data: processedData 
+  })
+}
+```
+
+### getAll
+
+Get metadata for all open tabs.
+
+```typescript
+tabs.getAll(): Promise<readonly TabMetadata[]>
+```
+
+**Example:**
+
+```typescript
+const allTabs = await tabs.getAll()
+console.log(`${allTabs.length} tabs open`)
+
+for (const tab of allTabs) {
+  console.log(`- ${tab.name} ${tab.isDirty ? '(modified)' : ''}`)
+}
 ```
 
 ## Disposable
