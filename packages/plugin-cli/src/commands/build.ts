@@ -46,7 +46,7 @@ export async function build() {
   // Find entry file
   const entryFile = findEntry(cwd)
   if (!entryFile) {
-    logger.error('No entry file found. Expected src/main.ts or src/main')
+    logger.error('No entry file found. Expected src/plugin.ts')
     process.exit(1)
   }
 

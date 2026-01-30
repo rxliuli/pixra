@@ -67,6 +67,18 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/my-plugin:
+    devDependencies:
+      '@pixra/plugin-cli':
+        specifier: ^0.0.2
+        version: 0.0.2
+      '@pixra/plugin-sdk':
+        specifier: ^0.0.2
+        version: 0.0.2
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   packages/pixra:
     dependencies:
       '@pixra/plugin-sdk':
@@ -203,6 +215,9 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
     devDependencies:
+      '@pixra/plugin-sdk':
+        specifier: workspace:*
+        version: link:../plugin-sdk
       '@types/archiver':
         specifier: ^6.0.2
         version: 6.0.4
@@ -1607,6 +1622,13 @@ packages:
     resolution: {integrity: sha512-NkT+YAdgS2FPCn8mIA9bQhiBs+xmniMGq1LFPDhcFn0+2yIUEiIG06t7bsZlhdjknEQRTSdT7YitP6fC5qwP0g==}
     cpu: [x64]
     os: [win32]
+
+  '@pixra/plugin-cli@0.0.2':
+    resolution: {integrity: sha512-bU3DRt3CSgDjujUt/C4adpGDkcGBT378X6i3eBdFv67htf7Y7MHvtLswrPQlyVcNdtAN58Zfgr1hveR/Z9+oAw==}
+    hasBin: true
+
+  '@pixra/plugin-sdk@0.0.2':
+    resolution: {integrity: sha512-rGNmit+5YYrK9m5kwVlADX+cb3Dxbs/OuKDB6qfm7rzBmeT0JCDH8FhqvnyeZdMS12iSuUE3+pva4J7AQffPFQ==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -5900,6 +5922,18 @@ snapshots:
 
   '@pagefind/windows-x64@1.4.0':
     optional: true
+
+  '@pixra/plugin-cli@0.0.2':
+    dependencies:
+      archiver: 7.0.1
+      cac: 6.7.14
+      esbuild: 0.24.2
+      picocolors: 1.1.1
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - react-native-b4a
+
+  '@pixra/plugin-sdk@0.0.2': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true

@@ -1,6 +1,8 @@
-import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
 import { logger } from '../utils/logger'
+import { version as cliVersion } from '../../package.json'
+import { version as sdkVersion } from '@pixra/plugin-sdk/package.json'
 
 interface InitOptions {
   dirName: string
@@ -36,7 +38,12 @@ export async function init(options: InitOptions) {
 
   // Create directory
   const targetDir = path.join(process.cwd(), dirName)
-  if (fs.existsSync(targetDir)) {
+  if (
+    await fs
+      .access(targetDir)
+      .then(() => true)
+      .catch(() => false)
+  ) {
     logger.error(`Directory "${dirName}" already exists`)
     process.exit(1)
   }
@@ -44,8 +51,8 @@ export async function init(options: InitOptions) {
   logger.info(`Creating plugin in ./${dirName} ...`)
 
   // Create directory structure
-  fs.mkdirSync(targetDir, { recursive: true })
-  fs.mkdirSync(path.join(targetDir, 'src'), { recursive: true })
+  await fs.mkdir(targetDir, { recursive: true })
+  await fs.mkdir(path.join(targetDir, 'src'), { recursive: true })
 
   // Generate command ID from plugin ID
   const commandId = `${pluginId}.hello`
@@ -72,9 +79,9 @@ export async function init(options: InitOptions) {
       },
     },
   }
-  fs.writeFileSync(
+  await fs.writeFile(
     path.join(targetDir, 'plugin.json'),
-    JSON.stringify(pluginJson, null, 2) + '\n'
+    JSON.stringify(pluginJson, null, 2) + '\n',
   )
 
   // Create package.json
@@ -97,14 +104,14 @@ export async function init(options: InitOptions) {
       access: 'public',
     },
     devDependencies: {
-      '@pixra/plugin-cli': '^0.0.1',
-      '@pixra/plugin-sdk': '^0.0.1',
+      '@pixra/plugin-cli': '^' + cliVersion,
+      '@pixra/plugin-sdk': '^' + sdkVersion,
       typescript: '^5.7.0',
     },
   }
-  fs.writeFileSync(
+  await fs.writeFile(
     path.join(targetDir, 'package.json'),
-    JSON.stringify(packageJson, null, 2) + '\n'
+    JSON.stringify(packageJson, null, 2) + '\n',
   )
 
   // Create tsconfig.json
@@ -125,13 +132,13 @@ export async function init(options: InitOptions) {
     },
     include: ['src'],
   }
-  fs.writeFileSync(
+  await fs.writeFile(
     path.join(targetDir, 'tsconfig.json'),
-    JSON.stringify(tsConfig, null, 2) + '\n'
+    JSON.stringify(tsConfig, null, 2) + '\n',
   )
 
-  // Create src/main.ts
-  const mainTs = `import { commands, window, ExtensionContext } from '@pixra/plugin-sdk'
+  // Create src/plugin.ts
+  const pluginTs = `import { commands, window, ExtensionContext } from '@pixra/plugin-sdk'
 
 export function activate(context: ExtensionContext) {
   context.subscriptions.push(
@@ -143,19 +150,19 @@ export function activate(context: ExtensionContext) {
 
 export function deactivate() {}
 `
-  fs.writeFileSync(path.join(targetDir, 'src', 'main.ts'), mainTs)
+  await fs.writeFile(path.join(targetDir, 'src', 'plugin.ts'), pluginTs)
 
   // Create .gitignore
   const gitignore = `node_modules/
 dist/
 *.zip
 `
-  fs.writeFileSync(path.join(targetDir, '.gitignore'), gitignore)
+  await fs.writeFile(path.join(targetDir, '.gitignore'), gitignore)
 
   logger.success('Done!\n')
 
   console.log('Next steps:')
   console.log(`  cd ${dirName}`)
-  console.log('  pnpm install')
-  console.log('  pnpm dev')
+  console.log('  pnpm i')
+  console.log('  pnpm zip')
 }

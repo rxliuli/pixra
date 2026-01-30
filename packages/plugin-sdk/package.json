@@ -9,7 +9,8 @@
     },
     "./runtime": {
       "default": "./src/runtime.ts"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "author": "Pixra Team",
   "license": "MIT",
