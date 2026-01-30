@@ -1,0 +1,21 @@
+{
+  "id": "pixra.ico-export",
+  "name": "ICO Export",
+  "description": "Export current image as a Windows .ico file (multi-size)",
+  "contributes": {
+    "commands": [
+      {
+        "command": "icoExport.export",
+        "title": "Export ICO",
+        "enablement": "hasActiveTab"
+      }
+    ],
+    "menus": {
+      "tools": [
+        {
+          "command": "icoExport.export"
+        }
+      ]
+    }
+  }
+}

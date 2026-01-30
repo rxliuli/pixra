@@ -1,0 +1,30 @@
+{
+  "name": "@pixra/ico-export",
+  "version": "0.0.1",
+  "description": "Export current image as a Windows .ico file (multi-size)",
+  "scripts": {
+    "dev": "pixra dev",
+    "build": "pixra build",
+    "zip": "pixra zip",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "pixra-plugin",
+    "ico",
+    "icon",
+    "export"
+  ],
+  "author": "Pixra Team",
+  "license": "AGPL-3.0-only",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@pixra/plugin-cli": "workspace:*",
+    "@pixra/plugin-sdk": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}
