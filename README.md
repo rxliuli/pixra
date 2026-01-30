@@ -2,6 +2,10 @@
 
 An open-source, extensible web-based image editor.
 
+**Try it now:** <https://pixra.rxliuli.com/>
+
+**Documentation:** <https://pixra.rxliuli.com/docs/>
+
 ## Features
 
 - Basic image editing: crop, resize, brush, marquee selection
@@ -19,7 +23,7 @@ pnpm dev
 
 ## Plugin Development
 
-Coming soon! Documentation will be provided on how to create and integrate plugins.
+See the [documentation](https://pixra.rxliuli.com/docs/) for guides on how to create and integrate plugins.
 
 ## License
 
