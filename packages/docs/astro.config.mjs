@@ -1,10 +1,9 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
-
 import cloudflare from '@astrojs/cloudflare'
-
 import sitemap from '@astrojs/sitemap'
+import starlightBlog from 'starlight-blog'
 
 // https://astro.build/config
 export default defineConfig({
@@ -50,6 +49,7 @@ export default defineConfig({
           ],
         },
       ],
+      plugins: [starlightBlog()],
     }),
     sitemap(),
   ],
