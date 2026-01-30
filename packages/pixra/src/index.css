@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 @plugin "tailwindcss-github-markdown";
 
 @custom-variant dark (&:is(.dark *));
@@ -121,4 +121,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.prose {
+  background-color: var(--background);
 }
