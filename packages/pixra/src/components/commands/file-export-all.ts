@@ -3,7 +3,6 @@ import { appStateStore } from '../store'
 import { imageBitmapToBlob } from '@/lib/imageBitmap'
 import { fileSave } from '@/lib/fileSave'
 import { ui } from '@/lib/window'
-import { lazy } from 'react'
 import type { ExportOptions } from '../gui/ExportOptionsContent'
 
 export function fileExportAll(): BuiltinAction {
@@ -12,8 +11,6 @@ export function fileExportAll(): BuiltinAction {
     title: 'Export All',
     enablement: 'hasActiveTab',
     execute: async () => {
-      const JSZip = (await import('jszip')).default
-
       const { tabStore } = appStateStore
       const tabs = tabStore.tabList
 
@@ -32,12 +29,9 @@ export function fileExportAll(): BuiltinAction {
         maintainAspectRatio: true,
       }
 
-      const LazyExportOptionsContent = lazy(() =>
-        import('../gui/ExportOptionsContent').then((mod) => ({
-          default: mod.ExportOptionsContent,
-        })),
-      )
-      const result = await ui.showDialog(LazyExportOptionsContent, {
+      const Component = (await import('../gui/ExportOptionsContent'))
+        .ExportOptionsContent
+      const result = await ui.showDialog(Component, {
         title: 'Export All Images',
         description: `Export all ${tabs.length} open images as a ZIP archive`,
         footer: true,
@@ -56,6 +50,7 @@ export function fileExportAll(): BuiltinAction {
           { title: 'Exporting images...' },
           async (progress) => {
             try {
+              const JSZip = (await import('jszip')).default
               const zip = new JSZip()
               const mimeType =
                 exportOptions.format === 'png' ? 'image/png' : 'image/jpeg'
