@@ -12,7 +12,7 @@ export interface EditorTab {
   name: string
   filePath?: string
   isDirty: boolean
-  imageData: ImageBitmap | null
+  imageData: ImageBitmap
   history: HistoryEntry[]
   historyIndex: number
   viewState: {
@@ -64,13 +64,13 @@ export class TabStore {
   }
 
   // 创建标签页
-  createTab(imageData?: ImageBitmap | null, name?: string, activate = true): string {
+  createTab(imageData: ImageBitmap, name?: string, activate = true): string {
     const id = generateId()
     const tab: EditorTab = {
       id,
       name: name || 'Untitled',
       isDirty: false,
-      imageData: imageData ?? null,
+      imageData: imageData,
       history: [],
       historyIndex: -1,
       viewState: {
@@ -93,7 +93,10 @@ export class TabStore {
   }
 
   // 设置标签页的视图状态
-  setTabViewState(tabId: string, viewState: Partial<EditorTab['viewState']>): void {
+  setTabViewState(
+    tabId: string,
+    viewState: Partial<EditorTab['viewState']>,
+  ): void {
     const tab = this.tabs.get(tabId)
     if (!tab) return
     if (viewState.pan !== undefined) {
@@ -116,7 +119,8 @@ export class TabStore {
     // 如果关闭的是当前标签页，切换到另一个
     if (this.activeTabId === id) {
       const remaining = Array.from(this.tabs.keys())
-      this.activeTabId = remaining.length > 0 ? remaining[remaining.length - 1] : null
+      this.activeTabId =
+        remaining.length > 0 ? remaining[remaining.length - 1] : null
     }
   }
 
@@ -137,7 +141,7 @@ export class TabStore {
   }
 
   // 设置图像数据
-  setImageData(imageData: ImageBitmap | null, addToHistory = true): void {
+  setImageData(imageData: ImageBitmap, addToHistory = true): void {
     const tab = this.activeTab
     if (!tab) return
 

@@ -21,6 +21,7 @@ import {
   pluginStore,
   helpColorTheme,
 } from '../commands'
+import { fileExportAll } from '../commands/file-export-all'
 
 let initialized = false
 
@@ -50,6 +51,7 @@ export function registerBuiltinActions() {
     fileClose(),
     fileSave(),
     fileExport(),
+    fileExportAll(),
 
     // Edit 菜单
     editUndo(),

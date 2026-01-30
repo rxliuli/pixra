@@ -138,7 +138,7 @@ class SceneStore {
     return this.#tabStore.activeTab?.viewState.scale ?? 1
   }
 
-  setImageData(imageData: ImageBitmap | null, addToHistory = true) {
+  setImageData(imageData: ImageBitmap, addToHistory = true) {
     this.#tabStore.setImageData(imageData, addToHistory)
   }
 
