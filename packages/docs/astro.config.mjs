@@ -4,12 +4,16 @@ import starlight from '@astrojs/starlight'
 
 import cloudflare from '@astrojs/cloudflare'
 
+import sitemap from '@astrojs/sitemap'
+
 // https://astro.build/config
 export default defineConfig({
   base: '/docs',
+  site: 'https://pixra.rxliuli.com/docs/',
   integrations: [
     starlight({
       title: 'Pixra',
+      description: 'A web-based image editor with powerful plugin support.',
       favicon: '/favicon.png',
       social: [
         {
@@ -21,6 +25,11 @@ export default defineConfig({
           icon: 'twitter',
           label: 'Twitter',
           href: 'https://x.com/moeruri',
+        },
+        {
+          icon: 'external',
+          label: 'Pixra Website',
+          href: 'https://pixra.rxliuli.com',
         },
       ],
       sidebar: [
@@ -42,6 +51,7 @@ export default defineConfig({
         },
       ],
     }),
+    sitemap(),
   ],
 
   adapter: cloudflare(),
