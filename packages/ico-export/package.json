@@ -1,6 +1,6 @@
 {
   "name": "@pixra/ico-export",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Export current image as a Windows .ico file (multi-size)",
   "scripts": {
     "dev": "pixra dev",
