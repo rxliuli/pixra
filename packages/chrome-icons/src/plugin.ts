@@ -40,7 +40,7 @@ async function exportChromeIcons(): Promise<void> {
   for (const size of ICON_SIZES) {
     const blob = await resizeImage(imageData, size)
     const arrayBuffer = await blob.arrayBuffer()
-    zip.file(`icon-${size}.png`, arrayBuffer)
+    zip.file(`${size}.png`, arrayBuffer)
   }
 
   // Generate ZIP
