@@ -6,6 +6,8 @@ An open-source, extensible web-based image editor.
 
 **Documentation:** <https://pixra.rxliuli.com/docs/>
 
+<img width="1280" height="800" alt="image" src="https://github.com/user-attachments/assets/ceadbaa8-55a0-4e28-adf5-dea42203c27c" />
+
 ## Features
 
 - Basic image editing: crop, resize, brush, marquee selection
