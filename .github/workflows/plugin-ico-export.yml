@@ -1,0 +1,61 @@
+env:
+  DIRECTORY: packages/ico-export
+
+name: Build and Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/ico-export/package.json'
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.version.outputs.changed }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Check version change
+        id: version
+        uses: rxliuli/version-check@v1
+        with:
+          file: ${{ env.DIRECTORY }}/package.json
+
+  build-and-release:
+    needs: version
+    if: needs.version.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    name: Build and Release
+    environment: npm-publish
+    steps:
+      - name: Checkout npm package repository
+        uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+      - name: Update npm
+        run: npm install -g npm@latest
+      - name: Install dependencies
+        run: pnpm i && pnpm -r run init
+      - name: Build
+        run: |
+          cd ${{ env.DIRECTORY }}
+          pnpm build
+      - name: Publish to npm
+        run: |
+          cd ${{ env.DIRECTORY }}
+          pnpm publish --access public
