@@ -80,19 +80,6 @@ function writeIco(pngImages: ArrayBuffer[], sizes: number[]): ArrayBuffer {
   return out
 }
 
-function formatTimestampForFilename(date: Date): string {
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return (
-    date.getFullYear() +
-    pad(date.getMonth() + 1) +
-    pad(date.getDate()) +
-    '-' +
-    pad(date.getHours()) +
-    pad(date.getMinutes()) +
-    pad(date.getSeconds())
-  )
-}
-
 async function exportIco(): Promise<void> {
   const activeImage = await pixra.workspace.getActiveImage()
   if (!activeImage) {
@@ -118,8 +105,13 @@ async function exportIco(): Promise<void> {
       progress.report({ message: 'Packaging .ico...', percentage: 90 })
       const ico = writeIco(pngBuffers, sizes)
 
-      const timestamp = formatTimestampForFilename(new Date())
-      const filename = `pixra-icon-${timestamp}.ico`
+      // Get the original filename from the active tab
+      const activeTab = await pixra.tabs.getActive()
+      const baseName = activeTab?.name.replace(/\.[^.]+$/, '')
+      if (!baseName) {
+        throw new Error('Failed to determine base filename from active tab')
+      }
+      const filename = `${baseName}.ico`
 
       progress.report({ message: 'Saving file...', percentage: 98 })
       await pixra.window.saveFile({ filename, data: ico })

@@ -7,6 +7,7 @@
  */
 
 import * as pixra from '@pixra/plugin-sdk'
+import JSZip from 'jszip'
 
 const ICON_SIZES = [16, 32, 48, 96, 128] as const
 
@@ -33,7 +34,6 @@ async function exportChromeIcons(): Promise<void> {
   }
 
   // Create ZIP file
-  const JSZip = (await import('jszip')).default
   const zip = new JSZip()
 
   // Generate icons for each size
@@ -46,8 +46,16 @@ async function exportChromeIcons(): Promise<void> {
   // Generate ZIP
   const zipBlob = await zip.generateAsync({ type: 'arraybuffer' })
 
+  // Get the original filename from the active tab
+  const activeTab = await pixra.tabs.getActive()
+  const baseName = activeTab?.name.replace(/\.[^.]+$/, '')
+  if (!baseName) {
+    throw new Error('Failed to determine base filename from active tab')
+  }
+  const filename = `${baseName}-chrome-icons.zip`
+
   // Download
-  await pixra.window.saveFile({ filename: 'chrome-icons.zip', data: zipBlob })
+  await pixra.window.saveFile({ filename, data: zipBlob })
 
   await pixra.window.showInformationMessage(
     `Exported ${ICON_SIZES.length} icons: ${ICON_SIZES.join(', ')}px`,

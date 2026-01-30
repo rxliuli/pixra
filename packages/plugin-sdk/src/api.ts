@@ -87,6 +87,33 @@ export interface SelectionRect {
   height: number
 }
 
+/** Tab metadata */
+export interface TabMetadata {
+  /** Unique tab identifier */
+  readonly id: string
+  /** Tab display name */
+  readonly name: string
+  /** File path if the tab represents a file */
+  readonly filePath?: string
+  /** Whether the tab has unsaved changes */
+  readonly isDirty: boolean
+}
+
+/** Tabs API - tab management */
+export interface Tabs {
+  /**
+   * Get the currently active tab
+   * @returns The active tab or undefined if no tab is open
+   */
+  getActive(): Promise<TabMetadata | undefined>
+
+  /**
+   * Get all open tabs
+   * @returns Array of all tab metadata
+   */
+  getAll(): Promise<readonly TabMetadata[]>
+}
+
 /** Workspace API - workspace interactions */
 export interface Workspace {
   /**
@@ -129,5 +156,6 @@ export interface Progress {
 declare const window: Window
 declare const commands: Commands
 declare const workspace: Workspace
+declare const tabs: Tabs
 
-export { window, commands, workspace }
+export { window, commands, workspace, tabs }

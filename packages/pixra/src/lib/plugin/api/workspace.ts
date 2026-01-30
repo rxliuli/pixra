@@ -8,6 +8,48 @@ import type { ApiContext } from './index'
 import { toJS } from 'mobx'
 
 /**
+ * Tab metadata interface
+ */
+export interface TabMetadata {
+  readonly id: string
+  readonly name: string
+  readonly filePath?: string
+  readonly isDirty: boolean
+}
+
+/**
+ * Get the currently active tab metadata
+ */
+export async function getActiveTab(
+  _ctx: ApiContext,
+): Promise<TabMetadata | undefined> {
+  const tab = appStateStore.tabStore.activeTab
+  if (!tab) {
+    return undefined
+  }
+  return {
+    id: tab.id,
+    name: tab.name,
+    filePath: tab.filePath,
+    isDirty: tab.isDirty,
+  }
+}
+
+/**
+ * Get all tabs metadata
+ */
+export async function getAllTabs(
+  _ctx: ApiContext,
+): Promise<readonly TabMetadata[]> {
+  return appStateStore.tabStore.tabList.map((tab) => ({
+    id: tab.id,
+    name: tab.name,
+    filePath: tab.filePath,
+    isDirty: tab.isDirty,
+  }))
+}
+
+/**
  * Convert ImageBitmap to ImageData
  */
 function imageBitmapToImageData(bitmap: ImageBitmap): ImageData {

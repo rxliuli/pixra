@@ -1,6 +1,6 @@
 {
   "name": "@pixra/ico-export",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Export current image as a Windows .ico file (multi-size)",
   "repository": {
     "type": "git",

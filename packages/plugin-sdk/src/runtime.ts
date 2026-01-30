@@ -119,6 +119,11 @@ export const commands: Commands = {
   },
   executeCommand: createApiProxy('commands.executeCommand'),
 }
+export const tabs = {
+  getActive: createApiProxy('tabs.getActive'),
+  getAll: createApiProxy('tabs.getAll'),
+}
+
 export const workspace = {
   getActiveImage: createApiProxy('workspace.getActiveImage'),
   updateActiveImage: createApiProxy('workspace.updateActiveImage'),
