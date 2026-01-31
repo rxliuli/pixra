@@ -9,12 +9,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Suspense } from 'react'
 
 export const DialogHost = observer(() => {
   const state = dialogStore.currentState
 
-  if (!dialogStore.isOpen || !state) {
+  if (!state) {
     return null
   }
 
@@ -39,9 +38,7 @@ export const DialogHost = observer(() => {
           </DialogHeader>
         )}
 
-        <Suspense>
-          <Component {...props} />
-        </Suspense>
+        <Component {...props} key={state.id} />
 
         {footer && (
           <DialogFooter>

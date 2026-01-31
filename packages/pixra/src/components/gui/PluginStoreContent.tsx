@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 
@@ -17,9 +17,9 @@ import {
   CheckIcon,
   Loader2Icon,
   Trash2Icon,
+  ArrowUpCircleIcon,
 } from 'lucide-react'
-
-const Markdown = lazy(() => import('react-markdown'))
+import Markdown from 'react-markdown'
 
 export function PluginStoreContent() {
   const queryClient = useQueryClient()
@@ -34,13 +34,11 @@ export function PluginStoreContent() {
   } = useQuery({
     queryKey: ['plugins'],
     queryFn: fetchPlugins,
+    refetchOnMount: 'always',
   })
 
   // Filter plugins based on search query
-  const filteredPlugins = useMemo(() => {
-    if (!pluginsData?.plugins) return []
-    return filterPlugins(pluginsData.plugins, searchQuery)
-  }, [pluginsData?.plugins, searchQuery])
+  const filteredPlugins = filterPlugins(pluginsData?.plugins ?? [], searchQuery)
 
   // Auto-select first plugin when list changes
   useEffect(() => {
@@ -50,18 +48,32 @@ export function PluginStoreContent() {
   }, [filteredPlugins, selectedPlugin])
 
   // Fetch installed plugins
-  const { data: installedPlugins = [] } = useQuery({
+  const installedPluginsQuery = useQuery({
     queryKey: ['installed-plugins'],
     queryFn: () => pluginManager.listInstalled(),
+    refetchOnMount: 'always',
   })
 
-  const installedIds = useMemo(
-    () => new Set(installedPlugins.map((p) => p.manifest.id)),
-    [installedPlugins],
+  const installedIds = new Set(
+    installedPluginsQuery.data?.map((p) => p.manifest.id) ?? [],
   )
 
+  // Map of installed plugin id -> version for update detection
+  const installedVersions = new Map(
+    installedPluginsQuery.data?.map((p) => [
+      p.manifest.id,
+      p.manifest.version,
+    ]) ?? [],
+  )
+
+  // Check if a plugin has an update available
+  const hasUpdate = (plugin: PluginInfo) => {
+    const installedVersion = installedVersions.get(plugin.id)
+    return installedVersion && installedVersion !== plugin.version
+  }
+
   // Fetch README for selected plugin
-  const { data: readme } = useQuery({
+  const pluginReadmeQuery = useQuery({
     queryKey: ['plugin-readme', selectedPlugin?.id],
     queryFn: () => fetchReadme(selectedPlugin!.id),
     enabled: !!selectedPlugin,
@@ -163,9 +175,12 @@ export function PluginStoreContent() {
                       v{plugin.version} · {plugin.author}
                     </p>
                   </div>
-                  {installedIds.has(plugin.id) && (
-                    <CheckIcon className="h-4 w-4 text-green-600 shrink-0" />
-                  )}
+                  {installedIds.has(plugin.id) &&
+                    (hasUpdate(plugin) ? (
+                      <ArrowUpCircleIcon className="h-4 w-4 text-orange-500 shrink-0" />
+                    ) : (
+                      <CheckIcon className="h-4 w-4 text-green-600 shrink-0" />
+                    ))}
                 </div>
               </div>
             ))
@@ -192,52 +207,66 @@ export function PluginStoreContent() {
                   )}
                 </div>
               </div>
-              {installedIds.has(selectedPlugin.id) ? (
-                <Button
-                  onClick={() => uninstallMutation.mutate(selectedPlugin)}
-                  disabled={uninstallMutation.isPending}
-                  variant="destructive"
-                  size="sm"
-                >
-                  {uninstallMutation.isPending &&
-                  uninstallMutation.variables?.id === selectedPlugin.id ? (
-                    <Loader2Icon className="animate-spin" />
-                  ) : (
-                    <Trash2Icon />
+              <div className="flex gap-2">
+                {installedIds.has(selectedPlugin.id) &&
+                  hasUpdate(selectedPlugin) && (
+                    <Button
+                      onClick={() => installMutation.mutate(selectedPlugin)}
+                      disabled={installMutation.isPending}
+                      size="sm"
+                    >
+                      {installMutation.isPending &&
+                      installMutation.variables?.id === selectedPlugin.id ? (
+                        <Loader2Icon className="animate-spin" />
+                      ) : (
+                        <ArrowUpCircleIcon />
+                      )}
+                      Update
+                    </Button>
                   )}
-                  Uninstall
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => installMutation.mutate(selectedPlugin)}
-                  disabled={installMutation.isPending}
-                  size="sm"
-                >
-                  {installMutation.isPending &&
-                  installMutation.variables?.id === selectedPlugin.id ? (
-                    <Loader2Icon className="animate-spin" />
-                  ) : (
-                    <DownloadIcon />
-                  )}
-                  Install
-                </Button>
-              )}
+                {installedIds.has(selectedPlugin.id) ? (
+                  <Button
+                    onClick={() => uninstallMutation.mutate(selectedPlugin)}
+                    disabled={uninstallMutation.isPending}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    {uninstallMutation.isPending &&
+                    uninstallMutation.variables?.id === selectedPlugin.id ? (
+                      <Loader2Icon className="animate-spin" />
+                    ) : (
+                      <Trash2Icon />
+                    )}
+                    Uninstall
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => installMutation.mutate(selectedPlugin)}
+                    disabled={installMutation.isPending}
+                    size="sm"
+                  >
+                    {installMutation.isPending &&
+                    installMutation.variables?.id === selectedPlugin.id ? (
+                      <Loader2Icon className="animate-spin" />
+                    ) : (
+                      <DownloadIcon />
+                    )}
+                    Install
+                  </Button>
+                )}
+              </div>
             </div>
 
             {/* README content */}
             <div className="flex-1 overflow-y-auto p-4">
-              {readme ? (
-                <Suspense
-                  fallback={
-                    <div className="flex items-center justify-center h-32">
-                      <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
-                    </div>
-                  }
-                >
-                  <div className="prose prose-sm max-w-none dark:prose-invert [&>h1]:hidden">
-                    <Markdown>{readme}</Markdown>
-                  </div>
-                </Suspense>
+              {pluginReadmeQuery.data ? (
+                <div className="prose prose-sm max-w-none dark:prose-invert [&>h1]:hidden">
+                  <Markdown>{pluginReadmeQuery.data}</Markdown>
+                </div>
+              ) : pluginReadmeQuery.isLoading ? (
+                <div className="text-muted-foreground text-sm">
+                  Loading README...
+                </div>
               ) : (
                 <div className="text-muted-foreground text-sm">
                   No README available

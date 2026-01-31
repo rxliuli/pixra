@@ -24,5 +24,6 @@ export { helpSourceCode } from './help-source-code'
 export { helpColorTheme } from './help-color-theme'
 
 // Plugin commands
-export { pluginInstall } from './plugin-install'
+export { pluginInstallFromZip as pluginInstall } from './plugin-install-from-zip'
 export { pluginStore } from './plugin-store'
+export { pluginCheckUpdates } from './plugin-check-updates'

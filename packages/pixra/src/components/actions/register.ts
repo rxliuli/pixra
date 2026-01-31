@@ -19,6 +19,7 @@ import {
   helpSourceCode,
   pluginInstall,
   pluginStore,
+  pluginCheckUpdates,
   helpColorTheme,
 } from '../commands'
 import { fileExportAll } from '../commands/file-export-all'
@@ -56,6 +57,7 @@ export function registerBuiltinActions() {
     viewResetZoom(),
 
     pluginStore(),
+    pluginCheckUpdates(),
     pluginInstall(),
 
     helpShowCommands(),

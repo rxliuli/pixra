@@ -12,6 +12,7 @@ export interface ShowDialogOptions {
 }
 
 interface DialogState {
+  id: number
   Component: ComponentType<any>
   options: ShowDialogOptions
   resolve: (result: DialogResult) => void
@@ -19,6 +20,7 @@ interface DialogState {
 
 export class DialogStore {
   private state: DialogState | null = null
+  private nextId = 0
 
   constructor() {
     makeAutoObservable(this)
@@ -38,6 +40,7 @@ export class DialogStore {
   ): Promise<DialogResult> {
     return new Promise((resolve) => {
       this.state = {
+        id: this.nextId++,
         Component,
         options: options ?? {},
         resolve,

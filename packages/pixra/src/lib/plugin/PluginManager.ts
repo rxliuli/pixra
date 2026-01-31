@@ -5,8 +5,19 @@ import { commandRegistry, menuRegistry } from '../../components/actions'
 import sdkRuntimeCode from '@pixra/plugin-sdk/runtime?bundle'
 import type { Plugin } from 'esbuild-wasm'
 import { executeApiCall, type ApiContext } from './api'
-import { ui } from '../window'
 import { endProgress, reportProgress } from './api/window'
+import { fetchPlugins, type PluginInfo } from './PluginStoreService'
+
+/**
+ * Information about a plugin that has an update available
+ */
+export interface PluginUpdateInfo {
+  id: string
+  name: string
+  currentVersion: string
+  latestVersion: string
+  remotePlugin: PluginInfo
+}
 
 /**
  * Active plugin instance
@@ -55,7 +66,7 @@ export class PluginManager {
   }
 
   /**
-   * Install plugin from ZIP file
+   * Install or update plugin from ZIP file (no confirmation)
    */
   async installFromZip(file: File): Promise<boolean> {
     // Load plugin
@@ -64,21 +75,6 @@ export class PluginManager {
     // Check if already installed
     const existingPlugin = await this.storage.loadPlugin(manifest.id)
     if (existingPlugin) {
-      // Ask user if they want to update
-      const shouldUpdate = await ui.showQuickPick(
-        [
-          { label: 'Update', value: true },
-          { label: 'Cancel', value: false },
-        ],
-        {
-          title: `Plugin "${manifest.name}" is already installed. Update to version ${manifest.version}?`,
-        },
-      )
-
-      if (!shouldUpdate) {
-        return false
-      }
-
       // Deactivate if running
       if (this.activePlugins.has(manifest.id)) {
         await this.deactivatePlugin(manifest.id)
@@ -104,6 +100,20 @@ export class PluginManager {
   }
 
   /**
+   * Check if a plugin is already installed
+   */
+  async isInstalled(pluginId: string): Promise<boolean> {
+    return this.storage.hasPlugin(pluginId)
+  }
+
+  /**
+   * Get installed plugin info (for checking version, etc.)
+   */
+  async getInstalled(pluginId: string): Promise<InstalledPlugin | null> {
+    return this.storage.loadPlugin(pluginId)
+  }
+
+  /**
    * Uninstall plugin
    */
   async uninstall(pluginId: string): Promise<void> {
@@ -124,6 +134,35 @@ export class PluginManager {
    */
   async listInstalled(): Promise<InstalledPlugin[]> {
     return this.storage.listPlugins()
+  }
+
+  /**
+   * Check for plugin updates by comparing installed versions with remote versions
+   */
+  async checkForUpdates(): Promise<PluginUpdateInfo[]> {
+    const installed = await this.storage.listPlugins()
+    if (installed.length === 0) {
+      return []
+    }
+
+    const { plugins: remotePlugins } = await fetchPlugins()
+    const remotePluginMap = new Map(remotePlugins.map((p) => [p.id, p]))
+
+    const updates: PluginUpdateInfo[] = []
+    for (const plugin of installed) {
+      const remote = remotePluginMap.get(plugin.manifest.id)
+      if (remote && remote.version !== plugin.manifest.version) {
+        updates.push({
+          id: plugin.manifest.id,
+          name: plugin.manifest.name,
+          currentVersion: plugin.manifest.version,
+          latestVersion: remote.version,
+          remotePlugin: remote,
+        })
+      }
+    }
+
+    return updates
   }
 
   /**
