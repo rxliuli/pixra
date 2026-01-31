@@ -5,7 +5,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "removeBg.remove",
+        "command": "remove-bg.remove",
         "title": "Remove Background",
         "enablement": "hasActiveTab"
       }
@@ -13,7 +13,7 @@
     "menus": {
       "tools": [
         {
-          "command": "removeBg.remove"
+          "command": "remove-bg.remove"
         }
       ]
     }

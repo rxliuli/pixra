@@ -5,7 +5,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "removeObject.remove",
+        "command": "remove-object.remove",
         "title": "Remove Object",
         "enablement": "hasActiveTab"
       }
@@ -13,7 +13,7 @@
     "menus": {
       "tools": [
         {
-          "command": "removeObject.remove"
+          "command": "remove-object.remove"
         }
       ]
     }

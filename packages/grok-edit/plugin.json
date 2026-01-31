@@ -1,0 +1,49 @@
+{
+  "id": "pixra.grok-edit",
+  "name": "Grok Image Edit",
+  "description": "AI-powered image editing using Grok AI API",
+  "contributes": {
+    "commands": [
+      {
+        "command": "grok-edit.editImage",
+        "title": "Grok Edit Image",
+        "enablement": "hasActiveTab"
+      }
+    ],
+    "menus": {
+      "tools": [
+        {
+          "command": "grok-edit.editImage"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Grok Image Edit",
+      "properties": {
+        "grok-edit.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Grok AI API Key (from x.ai)"
+        },
+        "grok-edit.baseUrl": {
+          "type": "string",
+          "default": "https://api.x.ai/v1",
+          "description": "API Base URL"
+        },
+        "grok-edit.model": {
+          "type": "string",
+          "default": "grok-imagine-image",
+          "description": "Model to use for image editing"
+        }
+      }
+    }
+  },
+  "permissions": [
+    "fetch"
+  ],
+  "host_permissions": [
+    "https://api.x.ai/*",
+    "https://imgen.x.ai/*",
+    "https://*/*"
+  ]
+}

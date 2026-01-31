@@ -1,0 +1,37 @@
+{
+  "name": "@pixra/grok-edit",
+  "version": "0.0.1",
+  "description": "AI-powered image editing plugin using Grok AI API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxliuli/pixra",
+    "directory": "packages/openai-edit"
+  },
+  "homepage": "https://pixra.rxliuli.com",
+  "scripts": {
+    "dev": "pixra dev",
+    "build": "pixra build",
+    "zip": "pixra zip",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "pixra-plugin",
+    "grok",
+    "xai",
+    "ai",
+    "image-editing"
+  ],
+  "author": "Pixra Team",
+  "license": "AGPL-3.0-only",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@pixra/plugin-cli": "workspace:*",
+    "@pixra/plugin-sdk": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

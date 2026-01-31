@@ -13,6 +13,20 @@ import { fileSave } from '@/lib/fileSave'
 import type { ApiContext } from './index'
 
 /**
+ * Options for input box
+ */
+export interface InputBoxOptions {
+  /** Title shown in the input box */
+  title?: string
+  /** Placeholder text */
+  placeholder?: string
+  /** Prompt text shown above the input */
+  prompt?: string
+  /** Initial value */
+  value?: string
+}
+
+/**
  * Options for saving a file
  */
 export interface SaveFileOptions {
@@ -51,6 +65,13 @@ export async function showErrorMessage(
   message: string,
 ): Promise<void> {
   ui.showErrorMessage(message)
+}
+
+export async function showInputBox(
+  _ctx: ApiContext,
+  options?: InputBoxOptions,
+): Promise<string | undefined> {
+  return ui.showInputBox(options)
 }
 
 /** Active progress sessions with toast IDs */

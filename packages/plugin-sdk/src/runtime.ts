@@ -56,6 +56,7 @@ export const window: Window = {
   showInformationMessage: createApiProxy('window.showInformationMessage'),
   showWarningMessage: createApiProxy('window.showWarningMessage'),
   showErrorMessage: createApiProxy('window.showErrorMessage'),
+  showInputBox: createApiProxy('window.showInputBox'),
   saveFile: createApiProxy('window.saveFile'),
   async withProgress(options, task) {
     const progressId = Math.random().toString(36)

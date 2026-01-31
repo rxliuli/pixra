@@ -113,7 +113,7 @@ async function removeBg(): Promise<void> {
  * Plugin activation
  */
 export function activate(context: pixra.ExtensionContext) {
-  const disposable = pixra.commands.registerCommand('removeBg.remove', removeBg)
+  const disposable = pixra.commands.registerCommand('remove-bg.remove', removeBg)
   context.subscriptions.push(disposable)
 }
 

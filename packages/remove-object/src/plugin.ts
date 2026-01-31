@@ -267,7 +267,7 @@ async function removeObject(): Promise<void> {
  */
 export function activate(context: pixra.ExtensionContext) {
   const disposable = pixra.commands.registerCommand(
-    'removeObject.remove',
+    'remove-object.remove',
     removeObject,
   )
   context.subscriptions.push(disposable)

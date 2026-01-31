@@ -26,6 +26,7 @@ const apiHandlers: Record<string, ApiHandler> = {
   'window.showInformationMessage': windowApi.showInformationMessage,
   'window.showWarningMessage': windowApi.showWarningMessage,
   'window.showErrorMessage': windowApi.showErrorMessage,
+  'window.showInputBox': windowApi.showInputBox,
   'window.startProgress': windowApi.startProgress,
   'commands.registerCommand': commandsApi.registerCommand,
   'tabs.getActive': workspaceApi.getActiveTab,

@@ -28,6 +28,18 @@ export interface SaveFileOptions {
   data: ArrayBuffer
 }
 
+/** Options for input box */
+export interface InputBoxOptions {
+  /** Title shown in the input box */
+  title?: string
+  /** Placeholder text shown in the input field */
+  placeholder?: string
+  /** Prompt text shown above the input field */
+  prompt?: string
+  /** Default value in the input field */
+  value?: string
+}
+
 /** Window API - UI interactions */
 export interface Window {
   /**
@@ -44,6 +56,13 @@ export interface Window {
    * Show an error message
    */
   showErrorMessage(message: string): Promise<void>
+
+  /**
+   * Opens an input box to ask the user for input
+   * @param options - Configuration for the input box
+   * @returns A promise that resolves to the entered string or undefined if cancelled
+   */
+  showInputBox(options?: InputBoxOptions): Promise<string | undefined>
 
   /**
    * Show a progress dialog while executing a task
