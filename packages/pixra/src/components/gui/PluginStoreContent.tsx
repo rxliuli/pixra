@@ -219,11 +219,6 @@ export function PluginStoreContent() {
               <span className="font-medium text-sm truncate">
                 {plugin.name}
               </span>
-              {plugin.official && (
-                <span className="px-1.5 py-0.5 text-xs bg-blue-100 text-blue-700 rounded">
-                  Official
-                </span>
-              )}
             </div>
             <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
               {plugin.description}
