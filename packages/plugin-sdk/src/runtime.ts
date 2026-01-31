@@ -8,7 +8,7 @@
  * This file is bundled and injected into the worker context by the plugin host.
  */
 
-import { Commands, Window } from './api'
+import { Commands, Configuration, Window } from './api'
 
 // Note: We don't import ExtensionContext here to avoid circular dependencies
 // The type will be provided by the consuming code
@@ -129,6 +129,11 @@ export const workspace = {
   updateActiveImage: createApiProxy('workspace.updateActiveImage'),
   getSelection: createApiProxy('workspace.getSelection'),
   clearSelection: createApiProxy('workspace.clearSelection'),
+}
+
+export const configuration: Configuration = {
+  get: createApiProxy('configuration.get'),
+  set: createApiProxy('configuration.set'),
 }
 
 // Clean up dangerous globals

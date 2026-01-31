@@ -22,6 +22,7 @@ export { helpDocs } from './help-docs'
 export { helpShowCommands } from './help-show-commands'
 export { helpSourceCode } from './help-source-code'
 export { helpColorTheme } from './help-color-theme'
+export { helpSettings } from './help-settings'
 
 // Plugin commands
 export { pluginInstallFromZip as pluginInstall } from './plugin-install-from-zip'

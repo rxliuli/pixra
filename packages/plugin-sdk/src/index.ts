@@ -16,6 +16,12 @@ export type {
   Workspace,
   SelectionRect,
   Progress,
+  Configuration,
 } from './api'
 
-export type { PluginManifest, CommandContribution } from './manifest'
+export type {
+  PluginManifest,
+  CommandContribution,
+  ConfigurationContribution,
+  ConfigurationProperty,
+} from './manifest'

@@ -7,6 +7,7 @@ import type { Plugin } from 'esbuild-wasm'
 import { executeApiCall, type ApiContext } from './api'
 import { endProgress, reportProgress } from './api/window'
 import { fetchPlugins, type PluginInfo } from './PluginStoreService'
+import { configurationStorage } from './ConfigurationStorage'
 
 /**
  * Information about a plugin that has an update available
@@ -55,10 +56,11 @@ export class PluginManager {
     // Load all installed plugins from storage
     const plugins = await this.storage.listPlugins()
 
-    // Register commands for all enabled plugins
+    // Register commands and configuration defaults for all enabled plugins
     for (const plugin of plugins) {
       if (plugin.enabled) {
         this.registerPluginCommands(plugin.manifest)
+        this.registerPluginConfigDefaults(plugin.manifest)
       }
     }
 
@@ -94,8 +96,9 @@ export class PluginManager {
 
     await this.storage.savePlugin(plugin)
 
-    // Register commands (lazy activation)
+    // Register commands (lazy activation) and config defaults
     this.registerPluginCommands(manifest)
+    this.registerPluginConfigDefaults(manifest)
     return true
   }
 
@@ -117,6 +120,9 @@ export class PluginManager {
    * Uninstall plugin
    */
   async uninstall(pluginId: string): Promise<void> {
+    // Get plugin manifest before deletion for cleanup
+    const plugin = await this.storage.loadPlugin(pluginId)
+
     // Deactivate if running
     if (this.activePlugins.has(pluginId)) {
       await this.deactivatePlugin(pluginId)
@@ -125,8 +131,11 @@ export class PluginManager {
     // Remove from storage
     await this.storage.deletePlugin(pluginId)
 
-    // Unregister commands
+    // Unregister commands and config defaults
     this.unregisterPluginCommands(pluginId)
+    if (plugin) {
+      this.unregisterPluginConfigDefaults(plugin.manifest)
+    }
   }
 
   /**
@@ -266,6 +275,38 @@ export class PluginManager {
     active.disposables.forEach((dispose) => dispose())
 
     this.activePlugins.delete(pluginId)
+  }
+
+  /**
+   * Register plugin configuration defaults
+   */
+  private registerPluginConfigDefaults(manifest: PluginManifest): void {
+    const config = manifest.contributes?.configuration
+    if (!config?.properties) return
+
+    const defaults: Record<string, unknown> = {}
+    for (const [key, prop] of Object.entries(config.properties)) {
+      if (prop.default !== undefined) {
+        defaults[key] = prop.default
+      }
+    }
+
+    if (Object.keys(defaults).length > 0) {
+      configurationStorage.registerDefaults(defaults)
+    }
+  }
+
+  /**
+   * Unregister plugin configuration defaults
+   */
+  private unregisterPluginConfigDefaults(manifest: PluginManifest): void {
+    const config = manifest.contributes?.configuration
+    if (!config?.properties) return
+
+    const keys = Object.keys(config.properties)
+    if (keys.length > 0) {
+      configurationStorage.unregisterDefaults(keys)
+    }
   }
 
   /**

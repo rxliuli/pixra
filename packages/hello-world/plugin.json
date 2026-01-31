@@ -8,6 +8,16 @@
         "command": "helloWorld.sayHello",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "hello-world",
+      "properties": {
+        "hello-world.greeting": {
+          "type": "string",
+          "default": "Hello, World!",
+          "description": "The greeting message to display"
+        }
+      }
+    }
   }
 }

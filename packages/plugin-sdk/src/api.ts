@@ -114,6 +114,23 @@ export interface Tabs {
   getAll(): Promise<readonly TabMetadata[]>
 }
 
+/** Configuration API - plugin settings management */
+export interface Configuration {
+  /**
+   * Get a configuration value
+   * @param key - The configuration key (e.g., "openai-edit.apiKey")
+   * @returns The configuration value or undefined if not set
+   */
+  get<T extends string | number | boolean>(key: string): Promise<T | undefined>
+
+  /**
+   * Set a configuration value
+   * @param key - The configuration key
+   * @param value - The value to set
+   */
+  set<T extends string | number | boolean>(key: string, value: T): Promise<void>
+}
+
 /** Workspace API - workspace interactions */
 export interface Workspace {
   /**
@@ -157,5 +174,6 @@ declare const window: Window
 declare const commands: Commands
 declare const workspace: Workspace
 declare const tabs: Tabs
+declare const configuration: Configuration
 
-export { window, commands, workspace, tabs }
+export { window, commands, workspace, tabs, configuration }

@@ -17,6 +17,7 @@ import {
   helpDocs,
   helpShowCommands,
   helpSourceCode,
+  helpSettings,
   pluginInstall,
   pluginStore,
   pluginCheckUpdates,
@@ -61,6 +62,7 @@ export function registerBuiltinActions() {
     pluginInstall(),
 
     helpShowCommands(),
+    helpSettings(),
     helpColorTheme(),
     helpDocs(),
     helpSourceCode(),

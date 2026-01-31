@@ -16,6 +16,7 @@ export interface PluginManifest {
   contributes?: {
     commands?: CommandContribution[]
     menus?: MenuContributions
+    configuration?: ConfigurationContribution
   }
   /**
    * Permissions required by the plugin (API access)
@@ -47,4 +48,30 @@ export type MenuContributions = Record<'tools', MenuContribution[]>
 export interface MenuContribution {
   /** Command identifier to execute when menu item is clicked */
   command: string
+}
+
+/**
+ * Configuration contribution - declares plugin settings
+ */
+export interface ConfigurationContribution {
+  /** Display title for the configuration section */
+  title: string
+  /** Configuration properties */
+  properties: Record<string, ConfigurationProperty>
+}
+
+/**
+ * Configuration property definition
+ */
+export interface ConfigurationProperty {
+  /** Property type */
+  type: 'string' | 'number' | 'boolean'
+  /** Default value */
+  default?: string | number | boolean
+  /** Description shown in settings UI */
+  description?: string
+  /** Enum values for string type */
+  enum?: string[]
+  /** Descriptions for enum values */
+  enumDescriptions?: string[]
 }

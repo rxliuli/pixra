@@ -6,6 +6,7 @@
 import * as windowApi from './window'
 import * as commandsApi from './commands'
 import * as workspaceApi from './workspace'
+import * as configurationApi from './configuration'
 
 /**
  * Context passed to API handlers
@@ -34,6 +35,8 @@ const apiHandlers: Record<string, ApiHandler> = {
   'window.saveFile': windowApi.saveFile,
   'workspace.getSelection': workspaceApi.getSelection,
   'workspace.clearSelection': workspaceApi.clearSelection,
+  'configuration.get': configurationApi.getConfiguration,
+  'configuration.set': configurationApi.setConfiguration,
 }
 
 /**

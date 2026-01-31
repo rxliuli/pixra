@@ -13,16 +13,15 @@ import * as pixra from '@pixra/plugin-sdk'
  * This function is called when the plugin is activated
  */
 export function activate(context: pixra.ExtensionContext) {
-  console.log('Hello World plugin is now active!')
-
   // Register a command
   const disposable = pixra.commands.registerCommand(
     'helloWorld.sayHello',
     async () => {
-      // Show a message to the user
-      await pixra.window.showInformationMessage(
-        'Hello World from Pixra Plugin!',
+      const greeting = await pixra.configuration.get<string>(
+        'hello-world.greeting',
       )
+      // Show a message to the user
+      await pixra.window.showInformationMessage(greeting!)
     },
   )
 
