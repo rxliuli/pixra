@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button } from '@/components/ui/button'
 import { pluginManager, type InstalledPlugin } from '@/lib/plugin'
 import { configurationStorage } from '@/lib/plugin/ConfigurationStorage'
 import { toast } from 'sonner'
-import { Loader2Icon, SaveIcon, SettingsIcon } from 'lucide-react'
+import { Loader2Icon, SettingsIcon } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import type {
   ConfigurationProperty,
   ConfigurationContribution,
@@ -19,7 +27,6 @@ export function PluginSettingsContent() {
   const queryClient = useQueryClient()
   const [selectedPluginId, setSelectedPluginId] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, unknown>>({})
-  const [isDirty, setIsDirty] = useState(false)
 
   // Fetch installed plugins that have configuration
   const pluginsQuery = useQuery({
@@ -74,21 +81,14 @@ export function PluginSettingsContent() {
       values[key] = allConfig[key] ?? prop.default
     }
     setFormValues(values)
-    setIsDirty(false)
   }, [selectedPluginId, allConfig, pluginsWithConfig])
 
-  // Save mutation
+  // Auto-save mutation
   const saveMutation = useMutation({
-    mutationFn: async (values: Record<string, unknown>) => {
-      for (const [key, value] of Object.entries(values)) {
-        if (value !== undefined && value !== '') {
-          await configurationStorage.set(key, value)
-        }
-      }
+    mutationFn: async ({ key, value }: { key: string; value: unknown }) => {
+      await configurationStorage.set(key, value)
     },
     onSuccess: () => {
-      toast.success('Settings saved')
-      setIsDirty(false)
       queryClient.invalidateQueries({ queryKey: ['plugin-configurations'] })
     },
     onError: (error) => {
@@ -100,11 +100,8 @@ export function PluginSettingsContent() {
 
   const handleValueChange = (key: string, value: unknown) => {
     setFormValues((prev) => ({ ...prev, [key]: value }))
-    setIsDirty(true)
-  }
-
-  const handleSave = () => {
-    saveMutation.mutate(formValues)
+    // Auto-save on change
+    saveMutation.mutate({ key, value })
   }
 
   const selectedPlugin = pluginsWithConfig.find(
@@ -117,11 +114,9 @@ export function PluginSettingsContent() {
     if (prop.type === 'boolean') {
       return (
         <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
+          <Checkbox
             checked={Boolean(value)}
-            onChange={(e) => handleValueChange(key, e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300"
+            onCheckedChange={(checked) => handleValueChange(key, checked)}
           />
           <span className="text-sm">{prop.description || key}</span>
         </label>
@@ -135,7 +130,7 @@ export function PluginSettingsContent() {
           {prop.description && (
             <p className="text-xs text-muted-foreground">{prop.description}</p>
           )}
-          <input
+          <Input
             type="number"
             value={(value as number) ?? ''}
             onChange={(e) =>
@@ -144,7 +139,6 @@ export function PluginSettingsContent() {
                 e.target.value ? Number(e.target.value) : undefined,
               )
             }
-            className="w-full px-3 py-2 text-sm border rounded-md outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
       )
@@ -158,18 +152,21 @@ export function PluginSettingsContent() {
           {prop.description && (
             <p className="text-xs text-muted-foreground">{prop.description}</p>
           )}
-          <select
+          <Select
             value={(value as string) ?? ''}
-            onChange={(e) => handleValueChange(key, e.target.value)}
-            className="w-full px-3 py-2 text-sm border rounded-md outline-none focus:ring-2 focus:ring-primary bg-background"
+            onValueChange={(val) => handleValueChange(key, val)}
           >
-            <option value="">Select...</option>
-            {prop.enum.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select..." />
+            </SelectTrigger>
+            <SelectContent>
+              {prop.enum.map((opt) => (
+                <SelectItem key={opt} value={opt}>
+                  {opt}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       )
     }
@@ -180,11 +177,10 @@ export function PluginSettingsContent() {
         {prop.description && (
           <p className="text-xs text-muted-foreground">{prop.description}</p>
         )}
-        <input
-          type={'text'}
+        <Input
+          type="text"
           value={(value as string) ?? ''}
           onChange={(e) => handleValueChange(key, e.target.value)}
-          className="w-full px-3 py-2 text-sm border rounded-md outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
     )
@@ -238,28 +234,14 @@ export function PluginSettingsContent() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {selectedPlugin ? (
           <>
-            <div className="p-4 border-b flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold">
-                  {selectedPlugin.config.title ||
-                    selectedPlugin.plugin.manifest.name}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  Configure plugin settings
-                </p>
-              </div>
-              <Button
-                onClick={handleSave}
-                disabled={!isDirty || saveMutation.isPending}
-                size="sm"
-              >
-                {saveMutation.isPending ? (
-                  <Loader2Icon className="animate-spin" />
-                ) : (
-                  <SaveIcon />
-                )}
-                Save
-              </Button>
+            <div className="p-4 border-b">
+              <h3 className="text-lg font-semibold">
+                {selectedPlugin.config.title ||
+                  selectedPlugin.plugin.manifest.name}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Configure plugin settings
+              </p>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
               <div className="space-y-4 max-w-lg">
