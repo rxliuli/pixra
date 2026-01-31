@@ -118,9 +118,6 @@ export function activate(context: pixra.ExtensionContext) {
       try {
         // Get configuration
         const apiKey = await pixra.configuration.get<string>('grok-edit.apiKey')
-        const baseUrl =
-          await pixra.configuration.get<string>('grok-edit.baseUrl')
-        const model = await pixra.configuration.get<string>('grok-edit.model')
 
         if (!apiKey) {
           await pixra.window.showErrorMessage(
@@ -154,8 +151,8 @@ export function activate(context: pixra.ExtensionContext) {
               imageBase64Url,
               prompt,
               apiKey,
-              baseUrl ?? 'https://api.x.ai/v1',
-              model ?? 'grok-imagine-image',
+              'https://api.x.ai/v1',
+              'grok-imagine-image',
             )
 
             progress.report({ message: 'Processing result...' })

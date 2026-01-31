@@ -20,8 +20,6 @@ Before using this plugin, you need to configure your Grok AI API credentials:
 ### Configuration Options
 
 - **API Key**: Your Grok AI API key (required)
-- **Base URL**: API endpoint (default: `https://api.x.ai/v1`)
-- **Model**: Image editing model (default: `grok-imagine-image`)
 
 ## Usage
 
@@ -46,6 +44,10 @@ Before using this plugin, you need to configure your Grok AI API credentials:
 
 - Active Grok AI API subscription
 - Internet connection for API calls
+
+## Pricing
+
+Image editing with Grok AI costs approximately **$0.02 per image**. Make sure you have sufficient credits in your x.ai account.
 
 ## License
 
