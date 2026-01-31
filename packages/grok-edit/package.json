@@ -1,6 +1,6 @@
 {
   "name": "@pixra/grok-edit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "AI-powered image editing plugin using Grok AI API",
   "repository": {
     "type": "git",
