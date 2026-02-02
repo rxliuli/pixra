@@ -1,6 +1,6 @@
 {
   "name": "@pixra/macos-screenshot-crop",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Automatically detect and crop macOS screenshot rounded corners to transparent",
   "repository": {
     "type": "git",
