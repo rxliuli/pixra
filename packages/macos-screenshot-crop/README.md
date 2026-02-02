@@ -4,7 +4,7 @@ A Pixra plugin that removes the rounded corners from macOS window screenshots, m
 
 ## Problem
 
-When you take a screenshot of a window on macOS, the four corners include whatever is behind the window. This plugin detects the corner radius and crops those areas to transparent.
+When you take a screenshot of a window on macOS, the four corners include whatever is behind the window (the shadow area contains the background). This plugin crops those corner areas to transparent.
 
 ## Usage
 
@@ -14,17 +14,15 @@ When you take a screenshot of a window on macOS, the four corners include whatev
 
 ## How it works
 
-The plugin scans the image edges to detect where the window border begins, calculates the corner radius, and applies a circular mask to each corner.
+The plugin applies a fixed 45px radius circular mask to all four corners of the image. For each corner:
 
-## Limitations
+1. Pixels outside the circular boundary are made fully transparent (alpha = 0)
+2. Anti-aliasing is applied at the edge for smooth transitions
 
-- Works best when the window border color differs from the background
-- Detection may be slightly larger than the actual radius in some cases
+The 45px radius is calibrated to cover the macOS window corner radius including the shadow area.
 
 ## Install
 
-```bash
-pnpm add @pixra/macos-screenshot-crop
-```
-
-Or download the zip from releases and install manually in Pixra.
+1. Open <https://pixra.rxliuli.com/>
+2. Click **Plugin** > **Plugin Store**
+3. Find "macOS Screenshot Crop" and install it

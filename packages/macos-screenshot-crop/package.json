@@ -12,6 +12,7 @@
     "dev": "pixra dev",
     "build": "pixra build",
     "zip": "pixra zip",
+    "test": "vitest run",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [
@@ -32,6 +33,9 @@
   "devDependencies": {
     "@pixra/plugin-cli": "workspace:*",
     "@pixra/plugin-sdk": "workspace:*",
-    "typescript": "^5.9.3"
+    "@vitest/browser": "^3.0.5",
+    "playwright": "^1.50.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.5"
   }
 }
