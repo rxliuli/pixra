@@ -2,9 +2,7 @@
 
 An open-source, extensible web-based image editor.
 
-**Try it now:** <https://pixra.rxliuli.com/>
-**Documentation:** <https://pixra.rxliuli.com/docs/>
-**Discussion**: <https://discord.gg/u97Sn38vs2>
+[**Try it now**](https://pixra.rxliuli.com/) [**Documentation:**](https://pixra.rxliuli.com/docs/) [**Discussion**](https://discord.gg/u97Sn38vs2)
 
 <img width="1280" height="800" alt="image" src="https://github.com/user-attachments/assets/ceadbaa8-55a0-4e28-adf5-dea42203c27c" />
 
