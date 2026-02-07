@@ -8,7 +8,7 @@ import starlightBlog from 'starlight-blog'
 // https://astro.build/config
 export default defineConfig({
   base: '/docs',
-  site: 'https://pixra.rxliuli.com/docs/',
+  site: 'https://pixra.rxliuli.com/',
   integrations: [
     starlight({
       title: 'Pixra',
