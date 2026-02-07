@@ -49,6 +49,26 @@ export default defineConfig({
           ],
         },
       ],
+      head: [
+        {
+          tag: 'meta',
+          attrs: { name: 'twitter:card', content: 'summary' },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'twitter:image',
+            content: 'https://pixra.rxliuli.com/docs/logo.png',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image',
+            content: 'https://pixra.rxliuli.com/docs/logo.png',
+          },
+        },
+      ],
       plugins: [starlightBlog()],
     }),
     sitemap(),
