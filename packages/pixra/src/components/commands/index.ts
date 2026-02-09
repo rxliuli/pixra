@@ -10,6 +10,7 @@ export { editUndo } from './edit-undo'
 export { editRedo } from './edit-redo'
 export { editCopy } from './edit-copy'
 export { editPaste } from './edit-paste'
+export { editDeleteSelection } from './edit-delete-selection'
 
 // View commands
 export { viewZoomIn } from './view-zoom-in'

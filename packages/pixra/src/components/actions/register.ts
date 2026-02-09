@@ -10,6 +10,7 @@ import {
   editRedo,
   editCopy,
   editPaste,
+  editDeleteSelection,
   viewZoomIn,
   viewZoomOut,
   viewResetZoom,
@@ -52,6 +53,7 @@ export function registerBuiltinActions() {
     editRedo(),
     editCopy(),
     editPaste(),
+    editDeleteSelection(),
 
     viewZoomIn(),
     viewZoomOut(),

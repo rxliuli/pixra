@@ -9,7 +9,7 @@ import { appStateStore } from '../store'
 export function setupContextKeySynchronizer(): () => void {
   const disposers: (() => void)[] = []
 
-  const { tabStore } = appStateStore
+  const { tabStore, editorStore } = appStateStore
 
   disposers.push(
     reaction(
@@ -56,6 +56,16 @@ export function setupContextKeySynchronizer(): () => void {
       () => tabStore.tabs.size,
       (tabCount) => {
         contextKeyService.set('tabCount', tabCount)
+      },
+      { fireImmediately: true },
+    ),
+  )
+
+  disposers.push(
+    reaction(
+      () => editorStore.selection !== null,
+      (hasSelection) => {
+        contextKeyService.set('hasSelection', hasSelection)
       },
       { fireImmediately: true },
     ),
