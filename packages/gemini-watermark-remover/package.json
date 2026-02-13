@@ -1,0 +1,40 @@
+{
+  "name": "@pixra/gemini-watermark-remover",
+  "version": "0.0.1",
+  "description": "Remove visible watermarks from Gemini AI-generated images",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxliuli/pixra",
+    "directory": "packages/gemini-watermark-remover"
+  },
+  "homepage": "https://pixra.rxliuli.com",
+  "scripts": {
+    "dev": "pixra dev",
+    "build": "pixra build",
+    "zip": "pixra zip",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
+  },
+  "keywords": [
+    "pixra-plugin",
+    "gemini",
+    "watermark",
+    "remove"
+  ],
+  "author": "Pixra Team",
+  "license": "AGPL-3.0-only",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@pixra/plugin-cli": "workspace:*",
+    "@pixra/plugin-sdk": "workspace:*",
+    "@vitest/browser": "^3.0.5",
+    "playwright": "^1.50.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.5"
+  }
+}

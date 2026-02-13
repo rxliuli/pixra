@@ -1,0 +1,65 @@
+const ALPHA_MAP_96 =
+  'data:image/png;base64,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'
+
+const ALPHA_MAP_48 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAAAAAByaaZbAAAEaklEQVR4nFWWT49UVRTEf3Xu6+7pIW4dZyAIBCGEREBiAuqKSIhLZSTxC7jxI/kFDEFcCws3xgkxRoQICkLkzzjMB5iB/nNPubivR+zly3t161TVqdsqAAlCjsSSTB19mV9PBUICsEiBpbAFUhAQMiCCtZXVg0jgzMRWppPAGdhpZCVUS5DA0VIOI4hAMlio60HlEJZBBsm4Do7P58cipZphAIQyMyFANoSUCaSdkW+vzOvqEQtQECIQRsJhDJBGUj8hZzuyew8b0jLCshRIYUAiSbCRpbpyYqKYHH+zNv5pp9NpSxHCjQwGrGL4aGio+86DQyBLWOEEAsiQhJqg7vLAqakgJmf2Z/RfWAgMCqwAFSwlgtSlro01vFQsJ4As2wKHooCcktLUjPr+0VcCiFfHzqVqr4oIYRxtVmy7CJXZgU+mizhMPt5fixABUkYYAidgSxio488GGTSzcnh5XAVOZEwKRbRghRAl3K2vzcILEtPV9S4bpaYPCpAUTVRZV07uqs8CoJcn1+WQDMJCGZbskMEx05V3d3s+xpjYPf1FzAP3ibIUWDJEltm+9RP9++qPxB7/fn2nM0YuqpIsiKS47l9f2xVyvxU9yTp+8e3zokTIkiTLRZrGhxeG02hvL34CnMPZjQ06XKoJdWlCcw5deGea4QV0T7mNUwaPbj5hICdWsSqsnjs9mEiv4QvTc8Nemt/5aZNSSMl0h86cWJ5YgJEWLlhuUhrQcHL/lydTQsODR46tDF9lAK+Nu7c1WFhKx2i2/eDxpr5aLfO5Q+7j6z36sqzFuRirC29HaQyM3UDV+9asa2+yMJrU8trh4ytdE6g9fV3XvkoMLqPZ9sPHTxRJd+jsieHMjXeDl/dsoG3c0u793/6e0qkQWVn74FSZtC39v3Ftjlya3L61xUBYBUQmBy8enWb8h95nDSDL6GEzDqMObBdXzl8cTTo3TXqJhUUdTX/4MbsWRVSamlLWA5ffehU0fRfURI43r2927GF0IBIJZm98enJ3r97dhs7le9d2BqkGVKxhKzALXAefn3oZraxpltTx3avzrkZvjFqRNdec3fyb2+MqtVIQpi7fvUpkM8Ntp1MiHVilhq/dG7deNpLq8r2rFe+FjBKtvW3LaTJm17ZG7uk4h1vX5pEYW+mgla2xREpIDHa+m4YbCjG9vjPo45cokTPSLKRPKT18enPY8PHwxtNhbddCQYGKiJSTIKOdmtltPFxKBB79dWuYshFUYTlToTTuZZctqN9PA0zMb7SKbIK1royIUsAKJCuMs3v+6yiNB3eeDTIxiaPQvqpRa/YhhkRIYmM3QLMNej7GBJJCCjstue71qd1t31+yl/74Z5DR7LJN2MiOULRG6VfUGG7PpfnPSaIIWyVkW7LbtWu3vxR9K1c93irlxdOuMhdEg7GwISKkBBNQnMKpqA+i/Dkp6sPvdr+hxaVYMJkSISsCeOz5IxKogBo2RiqdsRVNiCaIiXi2pefKNpGy0VVJS/8CGgL0KaHos2MAAAAASUVORK5CYII='
+
+export function getWatermarkConfig(width: number, height: number) {
+  if (Math.max(width, height) > 2000) {
+    return { logoSize: 96, margin: 64 }
+  }
+  return { logoSize: 48, margin: 32 }
+}
+
+const alphaMapCache = new Map<number, Float32Array>()
+
+export async function getAlphaMap(size: number): Promise<Float32Array> {
+  const cached = alphaMapCache.get(size)
+  if (cached) return cached
+
+  const dataUrl = size === 96 ? ALPHA_MAP_96 : ALPHA_MAP_48
+  const response = await fetch(dataUrl)
+  const blob = await response.blob()
+  const bitmap = await createImageBitmap(blob)
+
+  const canvas = new OffscreenCanvas(bitmap.width, bitmap.height)
+  const ctx = canvas.getContext('2d')!
+  ctx.drawImage(bitmap, 0, 0)
+
+  const imageData = ctx.getImageData(0, 0, bitmap.width, bitmap.height)
+  const alphaMap = new Float32Array(size * size)
+
+  for (let i = 0; i < size * size; i++) {
+    alphaMap[i] = imageData.data[i * 4] / 255
+  }
+
+  alphaMapCache.set(size, alphaMap)
+  return alphaMap
+}
+
+export function removeWatermark(
+  imageData: ImageData,
+  alphaMap: Float32Array,
+  x: number,
+  y: number,
+  size: number,
+): void {
+  const { data, width } = imageData
+
+  for (let dy = 0; dy < size; dy++) {
+    for (let dx = 0; dx < size; dx++) {
+      const alpha = alphaMap[dy * size + dx]
+      if (alpha < 0.002) continue
+
+      const clampedAlpha = Math.min(alpha, 0.99)
+      const px = x + dx
+      const py = y + dy
+      const idx = (py * width + px) * 4
+
+      for (let c = 0; c < 3; c++) {
+        const original = (data[idx + c] - 255 * clampedAlpha) / (1 - clampedAlpha)
+        data[idx + c] = Math.round(Math.max(0, Math.min(255, original)))
+      }
+    }
+  }
+}
