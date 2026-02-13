@@ -1,6 +1,6 @@
 {
   "name": "@pixra/gemini-watermark-remover",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Remove visible watermarks from Gemini AI-generated images",
   "repository": {
     "type": "git",
