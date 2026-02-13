@@ -180,9 +180,9 @@ function urlPatternToRegex(pattern: string): RegExp {
  * Check if URL is allowed by host_permissions
  */
 function isUrlAllowed(url: string): boolean {
-  if (!hasFetchPermission) return false
-  // Always allow blob: and data: URLs (used internally by libraries)
+  // Always allow blob: and data: URLs (no network request, no permission needed)
   if (url.startsWith('blob:') || url.startsWith('data:')) return true
+  if (!hasFetchPermission) return false
   if (allowedHostPatterns.length === 0) return false
   return allowedHostPatterns.some((pattern) => pattern.test(url))
 }
