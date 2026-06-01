@@ -34,7 +34,7 @@
     "@pixra/plugin-cli": "workspace:*",
     "@pixra/plugin-sdk": "workspace:*",
     "@vitest/browser": "^3.0.5",
-    "playwright": "^1.50.1",
+    "playwright": "^1.60.0",
     "typescript": "^5.9.3",
     "vitest": "^3.0.5"
   }
