@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import { TabStore } from './TabStore'
 
-export type ToolType = 'move' | 'marquee' | 'crop' | 'brush'
+export type ToolType = 'move' | 'marquee' | 'crop' | 'brush' | 'redact'
 export type CropAspectRatio = 'free' | '1:1' | '16:9' | '4:3' | '3:2'
 
 export interface SelectionRect {
@@ -56,6 +56,7 @@ class EditorStore {
   currentTool: ToolType = 'move'
   brushSize = 5
   brushColor = '#000000'
+  redactColor = '#000000'
 
   isCropMode = false
   cropAspectRatio: CropAspectRatio = 'free'
@@ -84,6 +85,10 @@ class EditorStore {
 
   setBrushColor(color: string) {
     this.brushColor = color
+  }
+
+  setRedactColor(color: string) {
+    this.redactColor = color
   }
 
   setCropAspectRatio(ratio: CropAspectRatio) {

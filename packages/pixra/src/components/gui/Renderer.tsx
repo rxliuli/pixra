@@ -51,7 +51,9 @@ export const Renderer = observer((props: { className?: string }) => {
   // Store crop rect position relative to image as ratio (0-1 range), to avoid reset on zoom
   const [cropRectRatio, setCropRectRatio] = useState<SelectionRect | null>(null)
 
-  const { currentTool, brushSize, brushColor, isCropMode, cropAspectRatio, selection } =
+  const [redactPreview, setRedactPreview] = useState<SelectionRect | null>(null)
+
+  const { currentTool, brushSize, brushColor, redactColor, isCropMode, cropAspectRatio, selection } =
     appStateStore.editorStore
   const { imageData, pan, scale } = appStateStore.sceneStore
   const { colorTheme } = appStateStore.settingsStore
@@ -149,6 +151,17 @@ export const Renderer = observer((props: { className?: string }) => {
       ctx.setLineDash([])
     }
 
+    // Draw redact preview
+    if (redactPreview && currentTool === 'redact') {
+      ctx.fillStyle = redactColor
+      ctx.fillRect(
+        redactPreview.x,
+        redactPreview.y,
+        redactPreview.width,
+        redactPreview.height,
+      )
+    }
+
     // Draw crop box
     if (cropRect && isCropMode) {
       // Use path to draw mask, excluding crop area
@@ -209,6 +222,7 @@ export const Renderer = observer((props: { className?: string }) => {
     imageData,
     currentSelection,
     currentStroke,
+    redactPreview,
     pan,
     scale,
     cropRect,
@@ -438,6 +452,7 @@ export const Renderer = observer((props: { className?: string }) => {
     imageData,
     currentSelection,
     currentStroke,
+    redactPreview,
     pan,
     scale,
     cropRect,
@@ -486,6 +501,17 @@ export const Renderer = observer((props: { className?: string }) => {
         points: [point],
         color: brushColor,
         size: brushSize,
+      })
+      return
+    }
+
+    // Redact tool
+    if (currentTool === 'redact') {
+      setRedactPreview({
+        x: point.x,
+        y: point.y,
+        width: 0,
+        height: 0,
       })
       return
     }
@@ -601,6 +627,17 @@ export const Renderer = observer((props: { className?: string }) => {
       return
     }
 
+    // Redact tool
+    if (currentTool === 'redact' && redactPreview) {
+      setRedactPreview({
+        x: Math.min(startPoint.x, point.x),
+        y: Math.min(startPoint.y, point.y),
+        width: Math.abs(point.x - startPoint.x),
+        height: Math.abs(point.y - startPoint.y),
+      })
+      return
+    }
+
     // Brush tool
     if (currentTool === 'brush' && currentStroke) {
       setCurrentStroke({
@@ -623,6 +660,11 @@ export const Renderer = observer((props: { className?: string }) => {
 
   const handleMouseUp = () => {
     if (!isDrawing) return
+
+    // Redact tool - apply filled rectangle to image
+    if (currentTool === 'redact' && redactPreview && redactPreview.width > 0 && redactPreview.height > 0) {
+      applyRedactToImage(redactPreview)
+    }
 
     // Brush tool - apply stroke to image
     if (
@@ -706,6 +748,41 @@ export const Renderer = observer((props: { className?: string }) => {
           appStateStore.sceneStore.setImageData(newImageData)
           // Clear stroke after image update to avoid flicker
           setCurrentStroke(null)
+        })
+      }
+    })
+  }
+
+  // Apply redact rectangle to image
+  const applyRedactToImage = (rect: SelectionRect) => {
+    const canvas = canvasRef.current
+    if (!canvas || !imageData) return
+
+    const imgRect = getImageRect()
+    if (!imgRect) return
+
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = imageData.width
+    tempCanvas.height = imageData.height
+    const tempCtx = tempCanvas.getContext('2d')
+    if (!tempCtx) return
+
+    tempCtx.drawImage(imageData, 0, 0)
+
+    // Convert canvas coordinates to image coordinates
+    const imgX = (rect.x - imgRect.x) / scale
+    const imgY = (rect.y - imgRect.y) / scale
+    const imgW = rect.width / scale
+    const imgH = rect.height / scale
+
+    tempCtx.fillStyle = redactColor
+    tempCtx.fillRect(imgX, imgY, imgW, imgH)
+
+    tempCanvas.toBlob((blob) => {
+      if (blob) {
+        createImageBitmap(blob).then((newImageData) => {
+          appStateStore.sceneStore.setImageData(newImageData)
+          setRedactPreview(null)
         })
       }
     })
@@ -832,6 +909,9 @@ export const Renderer = observer((props: { className?: string }) => {
       return 'crosshair'
     }
     if (currentTool === 'marquee') {
+      return 'crosshair'
+    }
+    if (currentTool === 'redact') {
       return 'crosshair'
     }
     return 'default'

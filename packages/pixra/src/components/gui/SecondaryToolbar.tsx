@@ -17,7 +17,7 @@ interface SecondaryToolbarProps {
 }
 
 export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: SecondaryToolbarProps) => {
-  const { currentTool, cropAspectRatio, brushSize, brushColor } = appStateStore.editorStore
+  const { currentTool, cropAspectRatio, brushSize, brushColor, redactColor } = appStateStore.editorStore
 
   // Crop toolbar
   if (currentTool === 'crop') {
@@ -72,6 +72,24 @@ export const SecondaryToolbar = observer(({ onCropConfirm, onCropCancel }: Secon
             type="color"
             value={brushColor}
             onChange={(e) => appStateStore.editorStore.setBrushColor(e.target.value)}
+            className="h-8 w-16 cursor-pointer rounded border border-border"
+          />
+        </div>
+      </div>
+    )
+  }
+
+  // Redact toolbar
+  if (currentTool === 'redact') {
+    return (
+      <div className="flex h-12 items-center gap-4 border-b border-border bg-background px-4">
+        <span className="text-sm text-muted-foreground">Redact Tool - Drag to cover an area</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Color:</span>
+          <input
+            type="color"
+            value={redactColor}
+            onChange={(e) => appStateStore.editorStore.setRedactColor(e.target.value)}
             className="h-8 w-16 cursor-pointer rounded border border-border"
           />
         </div>
